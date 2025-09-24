@@ -122,7 +122,7 @@ const StudentDashboard = ({
                       ⚡ Instant Debate
                     </CardTitle>
                     <CardDescription className="text-gray-600 group-hover:text-gray-700 transition-colors duration-300">
-                      Quick AI debates with ArguAI and voice synthesis
+                      Quick AI debates with Chanakya AI and voice synthesis
                     </CardDescription>
                   </CardHeader>
                 </Card>

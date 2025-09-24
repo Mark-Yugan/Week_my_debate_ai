@@ -398,7 +398,7 @@ const InstantDebateRoom = ({ config, onBack, onComplete }: InstantDebateRoomProp
                             <div className="flex items-center space-x-2 mb-2">
                               {getMessageIcon(message.speaker, message.side)}
                               <span className="text-sm font-medium">
-                                {message.speaker === 'user' ? 'You' : 'ArguAI'}
+                                {message.speaker === 'user' ? 'You' : 'Chanakya AI'}
                               </span>
                               <span className="text-xs opacity-75">
                                 {formatTime(message.timestamp)}

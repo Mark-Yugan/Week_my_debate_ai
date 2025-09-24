@@ -115,7 +115,7 @@ const DeepSeekWebhookChat = () => {
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <span>ArguAI Chat (Webhook)</span>
+          <span>Chanakya AI Chat (Webhook)</span>
           {isProcessing && <span className="text-sm text-gray-500">Processing...</span>}
         </CardTitle>
       </CardHeader>
@@ -179,7 +179,7 @@ const DeepSeekWebhookChat = () => {
             <div className="flex items-center justify-center space-x-2">
               <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
               <span className="text-sm text-gray-600">
-                ArguAI is speaking...
+                Chanakya AI is speaking...
               </span>
             </div>
           </div>
@@ -189,7 +189,7 @@ const DeepSeekWebhookChat = () => {
         <div className="space-y-3 max-h-96 overflow-y-auto">
           {messages.length === 0 ? (
             <div className="text-center text-gray-500 py-8">
-              Click "Start Recording" to begin chatting with ArguAI
+              Click "Start Recording" to begin chatting with Chanakya AI
             </div>
           ) : (
             messages.map((message) => (

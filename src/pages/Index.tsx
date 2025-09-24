@@ -1,9 +1,9 @@
 
-import { useAuth } from '@/hooks/useAuth';
+import { useCustomAuth } from '@/hooks/useCustomAuth';
 import AuthenticatedApp from '@/components/AuthenticatedApp';
 
 const Index = () => {
-  const { user, loading } = useAuth();
+  const { user, loading } = useCustomAuth();
 
   // Show loading state while checking authentication
   if (loading) {

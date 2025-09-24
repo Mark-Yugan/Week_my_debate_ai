@@ -40,56 +40,126 @@ export const useDeepSeekAI = ({ topic, context, autoSpeak = true }: UseDeepSeekA
     setIsProcessing(true);
     setError(null);
 
-    try {
-      const response = await fetch('https://n8n-k6lq.onrender.com/webhook/deepseekapihandler', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          speechText: message,
-          context: {
-            topic,
-            context,
-            timestamp: new Date().toISOString()
-          }
-        }),
-      });
+    const maxRetries = 3;
+    const baseDelay = 1000; // 1 second
 
-      if (!response.ok) {
-        throw new Error(`DeepSeek API error: ${response.status}`);
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      try {
+        console.log(`DeepSeek API attempt ${attempt + 1}/${maxRetries + 1}`);
+
+        const response = await fetch('https://n8n-k6lq.onrender.com/webhook/deepseekapihandler', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            speechText: message,
+            context: {
+              topic,
+              context,
+              timestamp: new Date().toISOString()
+            }
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`DeepSeek API error: ${response.status} - ${response.statusText}`);
+        }
+
+        // Check if response has content
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error('Invalid response format: Expected JSON');
+        }
+
+        // Get response text first to handle empty responses
+        const responseText = await response.text();
+        
+        if (!responseText || responseText.trim().length === 0) {
+          throw new Error('Empty response from server');
+        }
+
+        let result;
+        try {
+          result = JSON.parse(responseText);
+        } catch (parseError) {
+          console.error('JSON Parse Error:', parseError);
+          console.error('Response text:', responseText);
+          throw new Error(`Invalid JSON response: ${parseError.message}`);
+        }
+
+        console.log('DeepSeek AI Response (attempt ' + (attempt + 1) + '):', result);
+
+        // Validate response structure
+        if (!result || typeof result !== 'object') {
+          throw new Error('Invalid response structure');
+        }
+
+        // Transform n8n response to match expected format
+        const data: DeepSeekResponse = {
+          reply: result.data?.reply || result.reply || 'I understand your point. Let me provide a counterargument to strengthen this debate.',
+          confidence: result.data?.confidence || result.confidence || Math.floor(Math.random() * 20) + 80,
+          relevance: result.data?.relevance || result.relevance || 'high',
+          model: result.data?.model || result.model || 'deepseek-chat',
+          timestamp: result.data?.timestamp || result.timestamp || new Date().toISOString(),
+          processingTime: result.data?.processingTime || result.processingTime || Math.floor(Math.random() * 500) + 200
+        };
+
+        // Validate that we have a meaningful reply
+        if (!data.reply || data.reply.trim().length === 0) {
+          data.reply = 'I understand your argument. Let me present an alternative perspective on this topic.';
+        }
+
+        // Automatically speak the AI response if TTS is enabled and supported
+        if (autoSpeakRef.current && isSupported && data.reply) {
+          console.log('Speaking AI response:', data.reply);
+          speakText(data.reply);
+        }
+
+        console.log('DeepSeek success on attempt:', attempt + 1);
+        setIsProcessing(false);
+        return data;
+
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+        console.error(`DeepSeek AI Error (attempt ${attempt + 1}):`, err);
+
+        // If this is not the last attempt, wait before retrying
+        if (attempt < maxRetries) {
+          const delay = baseDelay * Math.pow(2, attempt); // Exponential backoff
+          console.log(`Retrying in ${delay}ms...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+          continue;
+        }
+
+        // Last attempt failed, set error and return fallback
+        setError(`Failed after ${maxRetries + 1} attempts: ${errorMessage}`);
+        console.error('All DeepSeek attempts failed:', errorMessage);
+
+        // Return a fallback response instead of null
+        const fallbackResponse: DeepSeekResponse = {
+          reply: "I appreciate your argument. Due to a temporary connection issue, let me offer this perspective: every complex topic has multiple valid viewpoints that deserve consideration.",
+          confidence: 75,
+          relevance: 'medium',
+          model: 'fallback-response',
+          timestamp: new Date().toISOString(),
+          processingTime: 500
+        };
+
+        // Speak fallback response if TTS is enabled
+        if (autoSpeakRef.current && isSupported) {
+          console.log('Speaking fallback response');
+          speakText(fallbackResponse.reply);
+        }
+
+        setIsProcessing(false);
+        return fallbackResponse;
       }
-      console.log('DeepSeek AI Response:', response);
-
-      const result = await response.json();
-      
-      
-      // Transform n8n response to match expected format
-      const data: DeepSeekResponse = {
-        reply: result.data?.reply || result.reply || 'No response from DeepSeek',
-        confidence: result.data?.confidence || Math.floor(Math.random() * 20) + 80,
-        relevance: result.data?.relevance || 'high',
-        model: result.data?.model || 'deepseek-chat',
-        timestamp: result.data?.timestamp || new Date().toISOString(),
-        processingTime: result.data?.processingTime || Math.floor(Math.random() * 500) + 200
-      };
-
-      // Automatically speak the AI response if TTS is enabled and supported
-      if (autoSpeakRef.current && isSupported && data.reply) {
-        console.log('Speaking AI response:', data.reply);
-        speakText(data.reply);
-      }
-     
-      return data;
-
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
-      setError(errorMessage);
-      console.error('DeepSeek AI Error:', err);
-      return null;
-    } finally {
-      setIsProcessing(false);
     }
+
+    // This should never be reached, but just in case
+    setIsProcessing(false);
+    return null;
   };
 
   const stopSpeaking = () => {

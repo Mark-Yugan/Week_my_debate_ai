@@ -9,14 +9,18 @@ import PublicSpeakingActivities from '@/components/PublicSpeakingActivities';
 import DebatesHub from '@/components/DebatesHub';
 import HumanDebateRoom from '@/components/HumanDebateRoom';
 import DebateHistoryViewer from '@/components/DebateHistoryViewer';
+import DebateDetailView from '../DebateDetailView.js';
 import InstantDebateSetup from '@/components/InstantDebateSetup';
 import InstantDebateRoom from '@/components/InstantDebateRoom';
+import ChanakyaDebateSetup from '@/components/ChanakyaDebateSetup';
+import ChanakyaDebateRoom from '@/components/ChanakyaDebateRoom';
 import AICoach from '@/components/AICoach';
 import { ErrorBoundary } from '../ErrorBoundary';
 
 interface UtilityViewsProps {
   currentView: string;
   userTokens: number;
+  selectedDebate?: any;
   instantDebateConfig: {
     topic: string;
     userPosition: 'for' | 'against';
@@ -25,16 +29,30 @@ interface UtilityViewsProps {
     category?: string;
     theme?: string;
   } | null;
+  chanakyaDebateConfig: {
+    topic: string;
+    topicType: 'custom' | 'scenario';
+    userPosition: 'for' | 'against';
+    firstSpeaker: 'user' | 'ai';
+    difficulty: 'easy' | 'medium' | 'hard';
+    customTopic?: string;
+    scenario?: string;
+  } | null;
   handlers: {
     handleLiveDebateFormatSelect: (format: '1v1' | '3v3', language: string) => void;
     handleBackToDashboard: () => void;
+    handleViewDebate?: (debate: any) => void;
+    handleBackToDebateHistory?: () => void;
     handleInstantDebateStart: (config: any) => void;
     handleInstantDebateBack: () => void;
     handleInstantDebateComplete: (config: any, messages: any[]) => void;
+    handleChanakyaDebateStart: (config: any) => void;
+    handleChanakyaDebateBack: () => void;
+    handleChanakyaDebateComplete: (config: any, messages: any[]) => void;
   };
 }
 
-const UtilityViews = ({ currentView, userTokens, instantDebateConfig, handlers }: UtilityViewsProps) => {
+const UtilityViews = ({ currentView, userTokens, selectedDebate, instantDebateConfig, chanakyaDebateConfig, handlers }: UtilityViewsProps) => {
   switch (currentView) {
     case 'ai-coach':
       return <AICoach onBack={handlers.handleBackToDashboard} />;
@@ -97,12 +115,25 @@ const UtilityViews = ({ currentView, userTokens, instantDebateConfig, handlers }
       return (
         <DebateHistoryViewer
           onBack={handlers.handleBackToDashboard}
-          onViewDebate={(debate) => {
-            console.log('Viewing debate:', debate);
-            // Handle viewing specific debate
+          onViewDebate={(debate: any) => {
+            if (handlers.handleViewDebate) {
+              handlers.handleViewDebate(debate);
+            }
           }}
         />
       );
+
+    case 'debate-detail':
+      return selectedDebate ? (
+        <DebateDetailView
+          debate={selectedDebate}
+          onBack={() => {
+            if (handlers.handleBackToDebateHistory) {
+              handlers.handleBackToDebateHistory();
+            }
+          }}
+        />
+      ) : null;
 
     case 'instant-debate-setup':
       return (
@@ -127,6 +158,35 @@ const UtilityViews = ({ currentView, userTokens, instantDebateConfig, handlers }
           onComplete={(config, messages) => {
             console.log('Instant debate completed:', { config, messages });
             handlers.handleInstantDebateComplete(config, messages);
+          }}
+        />
+      );
+
+    case 'chanakya-debate-setup':
+      return (
+        <ChanakyaDebateSetup
+          onStartDebate={(config) => {
+            console.log('Starting Chanakya debate with config:', config);
+            handlers.handleChanakyaDebateStart(config);
+          }}
+          onBack={handlers.handleBackToDashboard}
+        />
+      );
+
+    case 'chanakya-debate-room':
+      return (
+        <ChanakyaDebateRoom
+          config={chanakyaDebateConfig || {
+            topic: 'Sample Topic',
+            topicType: 'custom',
+            userPosition: 'for',
+            firstSpeaker: 'user',
+            difficulty: 'medium'
+          }}
+          onBack={handlers.handleChanakyaDebateBack}
+          onComplete={(config, messages) => {
+            console.log('Chanakya debate completed:', { config, messages });
+            handlers.handleChanakyaDebateComplete(config, messages);
           }}
         />
       );

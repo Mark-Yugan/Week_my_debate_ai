@@ -35,7 +35,7 @@ const FloatingMicrophone = ({
           <div className="absolute -top-16 left-1/2 transform -translate-x-1/2 bg-emerald-600 text-white text-xs rounded-lg px-3 py-2 whitespace-nowrap backdrop-blur-sm animate-pulse">
             <div className="flex items-center space-x-2">
               <Brain className="h-3 w-3 animate-spin" />
-              <span className="font-medium">ArguAI thinking...</span>
+              <span className="font-medium">Chanakya AI thinking...</span>
             </div>
             <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-l-transparent border-r-4 border-r-transparent border-t-4 border-t-emerald-600"></div>
           </div>
@@ -106,7 +106,7 @@ const FloatingMicrophone = ({
           <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 bg-black/80 text-white text-xs rounded-lg px-3 py-2 whitespace-nowrap backdrop-blur-sm">
             <div className="flex items-center space-x-2">
               <Radio className="h-3 w-3 text-red-400 animate-pulse" />
-              <span className="font-medium">Recording...</span>
+              <span className="font-medium">Listening... Speak clearly!</span>
             </div>
             <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-l-transparent border-r-4 border-r-transparent border-t-4 border-t-black/80"></div>
           </div>
@@ -117,7 +117,7 @@ const FloatingMicrophone = ({
           <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 bg-black/80 text-white text-xs rounded-lg px-3 py-2 whitespace-nowrap backdrop-blur-sm">
             <div className="flex items-center space-x-2">
               <Volume2 className="h-3 w-3 text-orange-400 animate-pulse" />
-              <span className="font-medium">ArguAI speaking...</span>
+              <span className="font-medium">Chanakya AI speaking...</span>
             </div>
             <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-l-transparent border-r-4 border-r-transparent border-t-4 border-t-black/80"></div>
           </div>

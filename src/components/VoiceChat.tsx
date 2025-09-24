@@ -50,7 +50,7 @@ const VoiceChat = () => {
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold">ArguAI:</h3>
+        <h3 className="text-lg font-semibold">Chanakya AI:</h3>
         <p className="bg-yellow-100 p-3 rounded-md">{response}</p>
       </div>
     </div>

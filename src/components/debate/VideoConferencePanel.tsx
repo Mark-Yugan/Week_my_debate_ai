@@ -242,7 +242,7 @@ const VideoConferencePanel: React.FC<VideoConferencePanelProps> = ({
             
             {/* AI Name and Status */}
             <div className="space-y-2">
-              <h3 className="text-lg font-bold text-white">ArguAI</h3>
+              <h3 className="text-lg font-bold text-white">Chanakya AI</h3>
               <div className="flex items-center justify-center space-x-2">
                 <Sparkles className="h-4 w-4 text-yellow-400" />
                 <span className="text-sm text-gray-300">
@@ -283,35 +283,21 @@ const VideoConferencePanel: React.FC<VideoConferencePanelProps> = ({
 
   return (
     <Card className="h-full">
-      <CardHeader className="pb-3">
+      <CardHeader className="pb-2 pt-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center space-x-2">
-            <Video className="h-5 w-5 text-blue-600" />
+          <CardTitle className="flex items-center space-x-2 text-sm">
+            <Video className="h-4 w-4 text-blue-600" />
             <span>Video Conference</span>
-            {roomId && (
-              <Badge variant="outline" className="text-xs">
-                Room: {roomId.slice(-6)}
-              </Badge>
-            )}
           </CardTitle>
           <div className="flex items-center space-x-2">
             <Button
               variant="outline"
               size="sm"
               onClick={toggleFullscreen}
+              className="h-7 px-2"
             >
-              {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+              {isFullscreen ? <Minimize className="h-3 w-3" /> : <Maximize className="h-3 w-3" />}
             </Button>
-            {onLeaveCall && (
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={onLeaveCall}
-              >
-                <PhoneOff className="h-4 w-4 mr-1" />
-                Leave
-              </Button>
-            )}
           </div>
         </div>
       </CardHeader>
@@ -381,7 +367,7 @@ const VideoConferencePanel: React.FC<VideoConferencePanelProps> = ({
               <div className="absolute top-2 left-2">
                 <Badge className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-xs">
                   <Bot className="h-3 w-3 mr-1" />
-                  ArguAI
+                  Chanakya AI
                 </Badge>
               </div>
             ) : remoteStream && (

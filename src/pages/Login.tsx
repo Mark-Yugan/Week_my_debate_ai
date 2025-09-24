@@ -1,12 +1,12 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
-import AuthPage from '@/components/AuthPage';
+import { useCustomAuth } from '@/hooks/useCustomAuth';
+import NewAuthPage from '@/components/NewAuthPage';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { user, loading } = useAuth();
+  const { user, loading } = useCustomAuth();
 
   useEffect(() => {
     // If user is already authenticated, redirect to main app
@@ -31,7 +31,8 @@ const Login = () => {
     );
   }
 
-  return <AuthPage onAuthSuccess={handleAuthSuccess} />;
+  // If user is not authenticated, show the new auth page
+  return <NewAuthPage />;
 };
 
 export default Login;

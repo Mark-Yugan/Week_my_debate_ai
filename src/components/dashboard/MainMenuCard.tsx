@@ -43,7 +43,7 @@ const MainMenuCard = ({
         {
           icon: Zap,
           title: '⚡ Instant Debate',
-          description: 'Quick AI debates with ArguAI and voice synthesis',
+          description: 'Quick AI debates with Chanakya AI and voice synthesis',
           onClick: onInstantDebate,
           borderColor: 'border-yellow-300',
           bgGradient: 'from-yellow-50 via-orange-50 to-white',

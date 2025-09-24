@@ -46,23 +46,7 @@ const Navigation = ({
           <h1 className="text-xl font-bold text-gray-900">MyDebate.ai</h1>
         </Link>
 
-        {/* Center - Role Switch */}
-        <div className="flex items-center space-x-2">
-          <Button
-            variant={userRole === 'student' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => onRoleSwitch('student')}
-          >
-            Student
-          </Button>
-          <Button
-            variant={userRole === 'teacher' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => onRoleSwitch('teacher')}
-          >
-            Teacher
-          </Button>
-        </div>
+
 
         {/* Right Side */}
         <div className="flex items-center space-x-4">
@@ -98,7 +82,7 @@ const Navigation = ({
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={user?.user_metadata?.avatar_url} />
+                      <AvatarImage src={user?.avatar_url} />
                       <AvatarFallback>
                         <User className="h-4 w-4" />
                       </AvatarFallback>
@@ -108,7 +92,7 @@ const Navigation = ({
                 <DropdownMenuContent className="w-56" align="end" forceMount>
                   <DropdownMenuItem>
                     <User className="mr-2 h-4 w-4" />
-                    <span>{user?.user_metadata?.full_name || 'Demo User'}</span>
+                    <span>{user?.full_name || user?.email || 'Demo User'}</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <Settings className="mr-2 h-4 w-4" />

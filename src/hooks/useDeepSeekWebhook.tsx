@@ -39,7 +39,7 @@ export const useDeepSeekWebhook = ({ onResponse, autoSpeak = true }: UseDeepSeek
     setError(null);
 
     try {
-      const response = await fetch('https://symadmin.app.n8n.cloud/webhook/deepseekapihandler', {
+      const response = await fetch('https://n8n-k6lq.onrender.com/webhook/deepseekapihandler', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -33,27 +33,33 @@ const ForgotPassword = ({ onBack }: ForgotPasswordProps) => {
     setLoading(true);
     
     try {
+      console.log('Attempting to send password reset email to:', values.email);
+      console.log('Redirect URL:', `${window.location.origin}/reset-password`);
+      
       const { error } = await supabase.auth.resetPasswordForEmail(values.email, {
-        redirectTo: `${window.location.origin}/`,
+        redirectTo: `${window.location.origin}/reset-password`,
       });
 
       if (error) {
+        console.error('Password reset error:', error);
         toast({
-          title: "Error",
-          description: error.message,
+          title: "Error sending reset email",
+          description: error.message || "Failed to send password reset email. Please check your email address and try again.",
           variant: "destructive"
         });
       } else {
+        console.log('Password reset email sent successfully');
         setEmailSent(true);
         toast({
           title: "Email sent",
-          description: "Check your email for the password reset link"
+          description: "If an account with this email exists, you will receive a password reset link."
         });
       }
     } catch (error) {
+      console.error('Password reset exception:', error);
       toast({
         title: "Error",
-        description: "Failed to send reset email",
+        description: "Failed to send reset email. Please check your connection and try again.",
         variant: "destructive"
       });
     } finally {

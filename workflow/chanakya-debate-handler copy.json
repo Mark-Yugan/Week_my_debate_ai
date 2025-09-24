@@ -1,0 +1,249 @@
+{
+  "name": "Chanakya Debate Handler",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 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"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ \n  {\n    \"model\": \"deepseek/deepseek-chat-v3-0324:free\",\n    \"messages\": [\n{\n      \"role\": \"system\",\n      \"content\": \"You are Chanakya AI, an intelligent and strategic debate opponent inspired by the ancient Indian strategist Chanakya. Your characteristics:\\n\\n1. DEBATE PERSONA:\\n- You are assertive, logical, and strategic in your arguments\\n- You challenge human arguments with well-reasoned counterpoints\\n- You use evidence, examples, and logical reasoning\\n- You stay focused on the topic and maintain intellectual rigor\\n- You are respectful but firm in your positions\\n\\n2. TOPIC HANDLING:\\n- For custom topics: Analyze the core issue and take a clear stance\\n- For scenarios: Break down the situation and argue from the most logical perspective\\n- Always stay relevant to the user's topic or scenario\\n\\n3. RESPONSE GUIDELINES:\\n- Keep responses concise (40-60 words maximum)\\n- Be direct and impactful\\n- Use strategic reasoning like Chanakya would\\n- If user goes off-topic, gently redirect: 'Let's focus on [topic]. My point is...'\\n- Never act like a helpful assistant - you are a debate opponent\\n\\n4. CONTEXT AWARENESS:\\n- Topic/Scenario: {{$json.body.topic || 'General debate'}}\\n- User Position: {{$json.body.userPosition || 'Unknown'}}\\n- Your Position: Take the opposing stance to create meaningful debate\\n\\nRemember: You are here to challenge, not to help. Debate like Chanakya - strategic, intelligent, and unwavering.\"\n    },      \n{\n        \"role\": \"user\",\n        \"content\": $json[\"body\"][\"speechText\"]\n      }\n    ],\n    \"temperature\": 0.8,\n    \"max_tokens\": 150,\n    \"top_p\": 0.9\n  }\n}}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "=data {{ $json.body.speechText }}"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        400,
+        200
+      ],
+      "id": "chanakya-ai-request",
+      "name": "Chanakya AI Request",
+      "alwaysOutputData": false,
+      "retryOnFail": true,
+      "retrySettings": {
+        "retryIntervals": [1000, 2000, 3000],
+        "retryLimit": 3
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "chanakya-debate-handler",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*",
+          "rawBody": true
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        200
+      ],
+      "id": "chanakya-webhook",
+      "name": "Chanakya Webhook",
+      "webhookId": "chanakya-debate-webhook"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"reply\": {{ $json.choices[0].message.content | tojsonstring }},\n  \"confidence\": {{ ($json.choices[0].finish_reason === 'stop') ? 95 : 75 }},\n  \"relevance\": \"high\",\n  \"processingTime\": {{ $now - $('Chanakya Webhook').item.json.timestamp }},\n  \"model\": \"chanakya-ai-enhanced\",\n  \"topic\": {{ $('Chanakya Webhook').item.json.body.topic | tojsonstring }},\n  \"userPosition\": {{ $('Chanakya Webhook').item.json.body.userPosition | tojsonstring }},\n  \"metadata\": {\n    \"responseType\": \"debate_argument\",\n    \"strategicApproach\": \"chanakya_methodology\",\n    \"contextAwareness\": \"high\"\n  }\n}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "POST, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type, Authorization"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        600,
+        200
+      ],
+      "id": "chanakya-response",
+      "name": "Chanakya Response"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "error-check",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "",
+              "operator": {
+                "operation": "exists",
+                "type": "boolean"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        400,
+        350
+      ],
+      "id": "error-handler",
+      "name": "Error Handler"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": false,\n  \"reply\": \"I understand your point about the topic, but let me offer a different perspective. Every argument has multiple dimensions that deserve consideration.\",\n  \"confidence\": 60,\n  \"relevance\": \"medium\",\n  \"processingTime\": 500,\n  \"model\": \"chanakya-ai-fallback\",\n  \"error\": \"AI service temporarily unavailable\",\n  \"metadata\": {\n    \"responseType\": \"fallback_response\",\n    \"strategicApproach\": \"neutral_engagement\"\n  }\n}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        550,
+        450
+      ],
+      "id": "fallback-response",
+      "name": "Fallback Response"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Pre-process the incoming request\nconst body = $input.item.json.body;\n\n// Extract and validate topic/scenario\nlet topic = body.topic || 'general debate';\nlet userPosition = body.userPosition || 'unknown';\nlet speechText = body.speechText || '';\n\n// Context enhancement for better AI responses\nlet enhancedPrompt = speechText;\n\n// Add context if this is the first message\nif (body.isFirstMessage) {\n  enhancedPrompt = `Debate Topic/Scenario: \"${topic}\". User Position: ${userPosition}. User says: \"${speechText}\". Please provide a strategic counter-argument as Chanakya would.`;\n}\n\n// Check for off-topic content and provide guidance\nconst topicKeywords = topic.toLowerCase().split(' ');\nconst speechWords = speechText.toLowerCase();\nlet isRelevant = topicKeywords.some(keyword => speechWords.includes(keyword));\n\n// If content seems off-topic, add redirect instruction\nif (!isRelevant && speechText.length > 20) {\n  enhancedPrompt += ` [Note: User may be going off-topic from \"${topic}\". Gently redirect while providing your counter-argument.]`;\n}\n\nreturn {\n  ...body,\n  speechText: enhancedPrompt,\n  originalSpeech: speechText,\n  processedAt: new Date().toISOString(),\n  relevanceCheck: isRelevant ? 'high' : 'medium'\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        300,
+        200
+      ],
+      "id": "context-processor",
+      "name": "Context Processor"
+    }
+  ],
+  "connections": {
+    "Chanakya Webhook": {
+      "main": [
+        [
+          {
+            "node": "Context Processor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Context Processor": {
+      "main": [
+        [
+          {
+            "node": "Chanakya AI Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chanakya AI Request": {
+      "main": [
+        [
+          {
+            "node": "Chanakya Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Error Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Handler": {
+      "main": [
+        [
+          {
+            "node": "Fallback Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-01-12T00:00:00.000Z",
+      "updatedAt": "2025-01-12T00:00:00.000Z",
+      "id": "chanakya-debate",
+      "name": "chanakya-debate"
+    }
+  ],
+  "triggerCount": 0,
+  "updatedAt": "2025-01-12T00:00:00.000Z",
+  "versionId": "1.0.0"
+}

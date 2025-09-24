@@ -1,0 +1,297 @@
+{
+  "name": "Chanakya Debate Handler Enhanced",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "chanakya-debate-handler-enhanced",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*",
+          "rawBody": true
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        200
+      ],
+      "id": "chanakya-webhook",
+      "name": "Chanakya Webhook",
+      "webhookId": "chanakya-debate-webhook-enhanced"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Enhanced Context Processor with Memory Management\nconst body = $input.item.json.body;\n\n// Extract core data\nlet topic = body.topic || 'general debate';\nlet userPosition = body.userPosition || 'unknown';\nlet speechText = body.speechText || '';\nlet sessionId = body.sessionId || 'default-session';\nlet conversationHistory = body.conversationHistory || [];\nlet isFirstMessage = body.isFirstMessage || false;\n\n// Enhanced relevance detection\nfunction checkRelevance(text, topic) {\n  const topicKeywords = topic.toLowerCase().split(/\\W+/).filter(word => word.length > 2);\n  const textWords = text.toLowerCase().split(/\\W+/);\n  \n  // Check for direct keyword matches\n  const directMatches = topicKeywords.filter(keyword => \n    textWords.some(word => word.includes(keyword) || keyword.includes(word))\n  ).length;\n  \n  // Check for semantic relevance indicators\n  const debateWords = ['argument', 'point', 'because', 'however', 'therefore', 'evidence', 'fact', 'opinion', 'agree', 'disagree'];\n  const hasDebateWords = debateWords.some(word => textWords.includes(word));\n  \n  // Calculate relevance score\n  const relevanceScore = (directMatches / topicKeywords.length) * 0.7 + (hasDebateWords ? 0.3 : 0);\n  \n  return {\n    score: relevanceScore,\n    isRelevant: relevanceScore > 0.3,\n    directMatches: directMatches,\n    hasDebateWords: hasDebateWords\n  };\n}\n\n// Analyze conversation patterns\nfunction analyzeConversationPattern(history) {\n  if (history.length === 0) return { pattern: 'initial', userStyle: 'unknown' };\n  \n  const userMessages = history.filter(msg => msg.role === 'user');\n  const avgLength = userMessages.reduce((sum, msg) => sum + msg.content.length, 0) / userMessages.length;\n  \n  // Detect user debate style\n  let userStyle = 'analytical';\n  if (avgLength < 50) userStyle = 'concise';\n  else if (avgLength > 200) userStyle = 'elaborate';\n  \n  // Detect if user is being aggressive, evasive, or constructive\n  const recentMessages = userMessages.slice(-3);\n  const hasQuestions = recentMessages.some(msg => msg.content.includes('?'));\n  const hasEmotionalWords = recentMessages.some(msg => \n    /\\b(stupid|wrong|ridiculous|obvious|clearly|definitely)\\b/i.test(msg.content)\n  );\n  \n  let emotionalTone = 'neutral';\n  if (hasEmotionalWords) emotionalTone = 'emotional';\n  if (hasQuestions) emotionalTone = 'inquisitive';\n  \n  return {\n    pattern: history.length > 10 ? 'extended' : 'developing',\n    userStyle: userStyle,\n    emotionalTone: emotionalTone,\n    turnsCount: Math.floor(history.length / 2)\n  };\n}\n\n// Build conversation context\nconst relevanceCheck = checkRelevance(speechText, topic);\nconst conversationAnalysis = analyzeConversationPattern(conversationHistory);\n\n// Enhanced prompt construction\nlet enhancedPrompt = speechText;\nlet contextInstructions = '';\n\n// Handle different scenarios\nif (isFirstMessage) {\n  contextInstructions = `[FIRST MESSAGE] Debate Topic: \"${topic}\". User Position: ${userPosition}. Establish your opposing stance clearly and set the debate tone.`;\n} else if (!relevanceCheck.isRelevant) {\n  contextInstructions = `[OFF-TOPIC DETECTED] User went off-topic from \"${topic}\". Relevance score: ${relevanceCheck.score.toFixed(2)}. Acknowledge briefly but redirect strategically back to the main topic.`;\n} else if (conversationAnalysis.emotionalTone === 'emotional') {\n  contextInstructions = `[EMOTIONAL TONE DETECTED] User seems emotionally charged. Stay composed and use facts to counter their emotional arguments while maintaining Chanakya's strategic calmness.`;\n} else if (conversationAnalysis.turnsCount > 5) {\n  contextInstructions = `[EXTENDED DEBATE] This is turn ${conversationAnalysis.turnsCount + 1}. Escalate your argument sophistication and introduce new angles or evidence.`;\n}\n\n// Prepare conversation history for AI (limit to last 10 messages to manage token usage)\nconst recentHistory = conversationHistory.slice(-10);\n\n// Add current message to history\nconst updatedHistory = [...recentHistory, {\n  role: 'user',\n  content: speechText,\n  timestamp: new Date().toISOString()\n}];\n\nreturn {\n  ...body,\n  speechText: enhancedPrompt,\n  originalSpeech: speechText,\n  topic: topic,\n  userPosition: userPosition,\n  sessionId: sessionId,\n  conversationHistory: updatedHistory,\n  relevanceCheck: relevanceCheck,\n  conversationAnalysis: conversationAnalysis,\n  contextInstructions: contextInstructions,\n  processedAt: new Date().toISOString(),\n  turnNumber: conversationAnalysis.turnsCount + 1\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        300,
+        200
+      ],
+      "id": "enhanced-context-processor",
+      "name": "Enhanced Context Processor"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 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"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ \n  {\n    \"model\": \"deepseek/deepseek-chat-v3-0324:free\",\n    \"messages\": [\n      {\n        \"role\": \"system\",\n        \"content\": \"You are Chanakya AI, an intelligent and strategic debate opponent inspired by the ancient Indian strategist Chanakya. You have access to the full conversation history and must use it strategically.\\n\\n🏛️ CORE IDENTITY:\\n- You are assertive, logical, and strategically brilliant\\n- You challenge arguments with well-reasoned counterpoints\\n- You use evidence, examples, and logical reasoning\\n- You maintain intellectual rigor while being respectful but firm\\n- You NEVER act as a helpful assistant - you are a debate opponent\\n\\n🎯 DEBATE STRATEGY:\\n- **Memory Usage**: Reference previous arguments, acknowledge points already made, build upon the debate history\\n- **Strategic Adaptation**: Adjust your approach based on user's debate style and emotional state\\n- **Escalation**: As debates progress, introduce more sophisticated arguments and new evidence\\n- **Pattern Recognition**: Notice if user repeats arguments or changes positions\\n\\n📋 RESPONSE GUIDELINES:\\n- Keep responses concise (40-80 words based on debate complexity)\\n- Be direct and impactful with strategic reasoning\\n- **Context Instructions**: \" + $json.contextInstructions + \"\\n- Current turn: \" + $json.turnNumber + \"\\n\\n🔄 CONVERSATION AWARENESS:\\n- **Topic**: \" + $json.topic + \"\\n- **User Position**: \" + $json.userPosition + \"\\n- **Your Position**: Take the opposing stance consistently\\n- **User Style**: \" + $json.conversationAnalysis.userStyle + \"\\n- **Emotional Tone**: \" + $json.conversationAnalysis.emotionalTone + \"\\n- **Relevance**: \" + ($json.relevanceCheck.isRelevant ? 'On-topic' : 'Off-topic detected') + \"\\n\\n🛡️ EDGE CASE HANDLING:\\n- **Off-topic**: Briefly acknowledge, then redirect: 'While [brief acknowledgment], let's focus on \" + $json.topic + \". My point is...'\\n- **Repetition**: 'You've mentioned this before. However, consider this new angle...'\\n- **Emotional**: Stay calm, use facts: 'I understand your passion, but the evidence shows...'\\n- **Weak Arguments**: 'That's a surface-level view. The deeper issue is...'\\n\\nRemember: Use the conversation history to create continuity, avoid repetition, and build stronger counter-arguments. Be the strategic mastermind Chanakya was - always thinking several moves ahead.\"\n      },\n      ...($json.conversationHistory || []).slice(-8).map(msg => ({\n        role: msg.role === 'user' ? 'user' : 'assistant',\n        content: msg.content\n      })),\n      {\n        \"role\": \"user\",\n        \"content\": $json.speechText\n      }\n    ],\n    \"temperature\": 0.7,\n    \"max_tokens\": 180,\n    \"top_p\": 0.9,\n    \"frequency_penalty\": 0.3,\n    \"presence_penalty\": 0.2\n  }\n}}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "aiResponse"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        500,
+        200
+      ],
+      "id": "enhanced-ai-request",
+      "name": "Enhanced AI Request",
+      "alwaysOutputData": false,
+      "retryOnFail": true,
+      "retrySettings": {
+        "retryIntervals": [1000, 2000, 3000],
+        "retryLimit": 3
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Post-process AI response and update conversation history\nconst aiResponse = $input.item.json;\nconst contextData = $('Enhanced Context Processor').item.json;\n\n// Extract the AI's response\nlet reply = '';\nlet confidence = 75;\nlet finishReason = '';\n\nif (aiResponse.choices && aiResponse.choices[0]) {\n  reply = aiResponse.choices[0].message.content;\n  finishReason = aiResponse.choices[0].finish_reason;\n  confidence = finishReason === 'stop' ? 95 : 75;\n}\n\n// Update conversation history with AI response\nconst updatedHistory = [...contextData.conversationHistory, {\n  role: 'assistant',\n  content: reply,\n  timestamp: new Date().toISOString(),\n  confidence: confidence\n}];\n\n// Analyze response quality\nfunction analyzeResponseQuality(response, context) {\n  const wordCount = response.split(' ').length;\n  const hasEvidence = /\\b(research|study|data|evidence|statistics|according to)\\b/i.test(response);\n  const hasLogicalConnectors = /\\b(however|therefore|because|furthermore|moreover|consequently)\\b/i.test(response);\n  const addressesUser = response.toLowerCase().includes('you') || response.toLowerCase().includes('your');\n  \n  let qualityScore = 0.5; // Base score\n  if (wordCount >= 30 && wordCount <= 100) qualityScore += 0.2;\n  if (hasEvidence) qualityScore += 0.15;\n  if (hasLogicalConnectors) qualityScore += 0.1;\n  if (addressesUser) qualityScore += 0.05;\n  \n  return Math.min(qualityScore, 1.0);\n}\n\nconst responseQuality = analyzeResponseQuality(reply, contextData);\n\n// Enhanced metadata\nconst metadata = {\n  responseType: \"enhanced_debate_argument\",\n  strategicApproach: \"chanakya_methodology_v2\",\n  contextAwareness: \"high\",\n  conversationTurn: contextData.turnNumber,\n  userStyle: contextData.conversationAnalysis.userStyle,\n  emotionalHandling: contextData.conversationAnalysis.emotionalTone,\n  relevanceHandling: contextData.relevanceCheck.isRelevant ? \"on_topic\" : \"redirected\",\n  responseQuality: responseQuality,\n  historyLength: updatedHistory.length,\n  sessionId: contextData.sessionId\n};\n\nreturn {\n  success: true,\n  reply: reply,\n  confidence: confidence,\n  relevance: contextData.relevanceCheck.isRelevant ? \"high\" : \"medium\",\n  processingTime: Date.now() - new Date(contextData.processedAt).getTime(),\n  model: \"chanakya-ai-enhanced-v2\",\n  topic: contextData.topic,\n  userPosition: contextData.userPosition,\n  conversationHistory: updatedHistory, // Return updated history for client to store\n  metadata: metadata,\n  debug: {\n    turnNumber: contextData.turnNumber,\n    relevanceScore: contextData.relevanceCheck.score,\n    contextInstructions: contextData.contextInstructions,\n    responseQuality: responseQuality\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        700,
+        200
+      ],
+      "id": "response-processor",
+      "name": "Response Processor"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "POST, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type, Authorization"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        900,
+        200
+      ],
+      "id": "enhanced-response",
+      "name": "Enhanced Response"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "error-check",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "",
+              "operator": {
+                "operation": "exists",
+                "type": "boolean"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        500,
+        350
+      ],
+      "id": "error-handler",
+      "name": "Error Handler"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Smart fallback response generator\nconst contextData = $('Enhanced Context Processor').item.json;\nconst error = $input.item.json.error || 'Unknown error';\n\n// Generate contextual fallback based on conversation state\nlet fallbackReply = \"I understand your perspective, but let me offer a different angle.\";\n\nif (contextData.relevanceCheck && !contextData.relevanceCheck.isRelevant) {\n  fallbackReply = `While that's interesting, let's stay focused on ${contextData.topic}. My stance remains that we need to examine the core issues more carefully.`;\n} else if (contextData.turnNumber > 5) {\n  fallbackReply = \"After several exchanges, I maintain my position. The evidence supports a different conclusion than what you're proposing.\";\n} else if (contextData.conversationAnalysis.emotionalTone === 'emotional') {\n  fallbackReply = \"I appreciate your passion on this topic. However, let's examine this through a strategic lens rather than emotional responses.\";\n} else {\n  // Default fallbacks based on topic\n  const topicLower = contextData.topic.toLowerCase();\n  if (topicLower.includes('environment') || topicLower.includes('climate')) {\n    fallbackReply = \"Environmental issues require balanced consideration of economic and ecological factors.\";\n  } else if (topicLower.includes('technology') || topicLower.includes('ai')) {\n    fallbackReply = \"Technology adoption must balance innovation with human welfare considerations.\";\n  } else if (topicLower.includes('education') || topicLower.includes('learning')) {\n    fallbackReply = \"Educational strategies should prioritize long-term societal benefit over short-term convenience.\";\n  }\n}\n\nreturn {\n  success: false,\n  reply: fallbackReply,\n  confidence: 60,\n  relevance: contextData.relevanceCheck?.isRelevant ? \"high\" : \"medium\",\n  processingTime: 500,\n  model: \"chanakya-ai-fallback-enhanced\",\n  topic: contextData.topic,\n  userPosition: contextData.userPosition,\n  error: \"AI service temporarily unavailable\",\n  metadata: {\n    responseType: \"intelligent_fallback\",\n    strategicApproach: \"context_aware_backup\",\n    turnNumber: contextData.turnNumber,\n    fallbackReason: error\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        700,
+        450
+      ],
+      "id": "smart-fallback",
+      "name": "Smart Fallback"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        900,
+        450
+      ],
+      "id": "fallback-response",
+      "name": "Fallback Response"
+    }
+  ],
+  "connections": {
+    "Chanakya Webhook": {
+      "main": [
+        [
+          {
+            "node": "Enhanced Context Processor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enhanced Context Processor": {
+      "main": [
+        [
+          {
+            "node": "Enhanced AI Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enhanced AI Request": {
+      "main": [
+        [
+          {
+            "node": "Response Processor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Error Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Response Processor": {
+      "main": [
+        [
+          {
+            "node": "Enhanced Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Handler": {
+      "main": [
+        [
+          {
+            "node": "Smart Fallback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Smart Fallback": {
+      "main": [
+        [
+          {
+            "node": "Fallback Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-01-12T00:00:00.000Z",
+      "updatedAt": "2025-01-12T00:00:00.000Z",
+      "id": "chanakya-debate-enhanced",
+      "name": "chanakya-debate-enhanced"
+    }
+  ],
+  "triggerCount": 0,
+  "updatedAt": "2025-01-12T00:00:00.000Z",
+  "versionId": "2.0.0"
+}

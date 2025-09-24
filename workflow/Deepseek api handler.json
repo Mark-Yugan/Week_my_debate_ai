@@ -1,0 +1,200 @@
+{
+  "name": "Deepseek api handler",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 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"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ \n  {\n    \"model\": \"deepseek/deepseek-chat-v3-0324:free\",\n    \"messages\": [\n{\n      \"role\": \"system\",\n      \"content\": \"You are an intelligent and assertive debate opponent. You are debating a human user in a structured, logical, and respectful manner. Do not behave like a chatbot or assistant. Your goal is to challenge the user's arguments with counterpoints, evidence, and reasoning. Stay on topic, respond critically, and avoid agreeing too easily. Do not provide summaries or ask how you can help. This is a formal debate. Maximum 50 words, no need to say 50 words out loud\"\n    },      \n{\n        \"role\": \"user\",\n        \"content\": $json[\"body\"][\"speechText\"]\n      }\n    ]\n  }\n}}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "=data {{ $json.body.speechText }}"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        192,
+        0
+      ],
+      "id": "eb924e49-74af-4df6-897b-6034c0ad0797",
+      "name": "HTTP Request",
+      "alwaysOutputData": false,
+      "retryOnFail": false
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "deepseekapihandler",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*",
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": " POST, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "4e1bfd00-ae33-4f34-bb37-164f53e5576c",
+      "name": "Webhook(POST)",
+      "webhookId": "dbf044f1-2449-4be4-8711-ac3c93db59d6"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ \n  (() => {\n    const key = Object.keys($json)[0];\n    const data = JSON.parse($json[key]);\n    return {\n      reply: data.choices[0].message.content,\n      model: data.model,\n      timestamp: $now\n    };\n  })()\n}}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": " POST, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        384,
+        0
+      ],
+      "id": "614617b3-b42e-4a41-afc7-2774d4ee6ee4",
+      "name": "Respond to Webhook(POST)",
+      "notesInFlow": false
+    }
+  ],
+  "pinData": {
+    "Webhook(POST)": [
+      {
+        "json": {
+          "headers": {
+            "host": "nyagamidesu.app.n8n.cloud",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+            "content-length": "275",
+            "accept": "*/*",
+            "accept-encoding": "gzip, br",
+            "accept-language": "en-US,en;q=0.9",
+            "cdn-loop": "cloudflare; loops=1; subreqs=1",
+            "cf-connecting-ip": "2406:7400:c8:27dc:3407:3e00:2cb2:10f5",
+            "cf-ew-via": "15",
+            "cf-ipcountry": "IN",
+            "cf-ray": "96135044a1767f2e-MAA",
+            "cf-visitor": "{\"scheme\":\"https\"}",
+            "cf-worker": "n8n.cloud",
+            "content-type": "application/json",
+            "origin": "https://preview--debateworldai.lovable.app",
+            "priority": "u=1, i",
+            "referer": "https://preview--debateworldai.lovable.app/",
+            "sec-ch-ua": "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Google Chrome\";v=\"138\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "cross-site",
+            "x-forwarded-for": "2406:7400:c8:27dc:3407:3e00:2cb2:10f5, 172.69.123.165",
+            "x-forwarded-host": "nyagamidesu.app.n8n.cloud",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "traefik-prod-users-gwc-63-757945c69-s5cqc",
+            "x-is-trusted": "yes",
+            "x-real-ip": "2406:7400:c8:27dc:3407:3e00:2cb2:10f5"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "speechText": "hello how are you",
+            "context": {
+              "topic": "Should the United Nations have binding power over sovereign nations?",
+              "context": "Debate topic: Should the United Nations have binding power over sovereign nations?, User side: FOR",
+              "timestamp": "2025-07-18T16:21:39.297Z"
+            }
+          },
+          "webhookUrl": "https://nyagamidesu.app.n8n.cloud/webhook/deepseekapihandler",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook(POST)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook(POST)": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ef83fe8a-b298-4662-b2f1-f8efe7638b25",
+  "meta": {
+    "instanceId": "3278a32183da0fb8490359232bfa22c7d869368a2fef1705bc54317933125626"
+  },
+  "id": "cev0YuWbdtSyiKJA",
+  "tags": []
+}

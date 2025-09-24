@@ -13,6 +13,14 @@ export const useAuth = () => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         console.log('Auth state changed:', event, session?.user?.email);
+        
+        // Handle password recovery events
+        if (event === 'PASSWORD_RECOVERY') {
+          console.log('Password recovery event detected');
+          // Don't set the user state here, let the ResetPassword component handle it
+          return;
+        }
+        
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);

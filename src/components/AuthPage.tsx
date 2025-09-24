@@ -86,22 +86,28 @@ const AuthPage = ({ onAuthSuccess }: AuthPageProps) => {
       const redirectUrl = `${window.location.origin}/`;
 
       if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
+        console.log('Attempting login for:', email);
+        const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password
         });
 
+        console.log('Login result:', { data: !!data.session, error });
+
         if (error) {
+          console.error('Login error:', error);
           toast({
-            title: "Error",
+            title: "Login Failed",
             description: error.message,
             variant: "destructive"
           });
         } else {
+          console.log('Login successful');
           onAuthSuccess();
         }
       } else {
-        const { error } = await supabase.auth.signUp({
+        console.log('Attempting user registration for:', email);
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -109,13 +115,17 @@ const AuthPage = ({ onAuthSuccess }: AuthPageProps) => {
           }
         });
 
+        console.log('Registration result:', { data: !!data.user, error });
+
         if (error) {
+          console.error('Registration error:', error);
           toast({
-            title: "Error",
+            title: "Registration Failed",
             description: error.message,
             variant: "destructive"
           });
         } else {
+          console.log('Registration successful');
           toast({
             title: "Success",
             description: "Check your email for verification link"
@@ -124,9 +134,10 @@ const AuthPage = ({ onAuthSuccess }: AuthPageProps) => {
         }
       }
     } catch (error) {
+      console.error('Authentication exception:', error);
       toast({
         title: "Error",
-        description: "Authentication failed",
+        description: "Authentication failed. Please check your connection and try again.",
         variant: "destructive"
       });
     } finally {

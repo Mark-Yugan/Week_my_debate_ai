@@ -316,7 +316,7 @@ const DebateRoom = ({ debateType, topic, language = 'en', onExit }: DebateRoomPr
               </Badge>
               {debateType === 'ai' && (
                 <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">
-                  ArguAI Enhanced
+                  Chanakya AI Enhanced
                 </Badge>
               )}
             </div>

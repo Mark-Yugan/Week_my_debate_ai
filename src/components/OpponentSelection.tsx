@@ -41,7 +41,7 @@ const OpponentSelection = ({ topic, onOpponentSelect, onBack }: OpponentSelectio
 
   const aiOpponents = [
     { 
-      name: 'ArguAI', 
+      name: 'Chanakya AI', 
       description: 'Fierce Indian debater with sharp arguments',
       difficulty: 'Hard',
       specialty: 'Indian Politics & Society'
@@ -114,7 +114,7 @@ const OpponentSelection = ({ topic, onOpponentSelect, onBack }: OpponentSelectio
               onClick={() => onOpponentSelect('ai')}
             >
               <Bot className="h-4 w-4 mr-2" />
-              Challenge ArguAI
+              Challenge Chanakya AI
             </Button>
           </CardContent>
         </Card>

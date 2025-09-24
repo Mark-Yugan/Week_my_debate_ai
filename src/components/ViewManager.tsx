@@ -29,6 +29,7 @@ interface ViewManagerProps {
   selectedTheme: string;
   selectedCommittee: any;
   selectedLiveSession: any;
+  selectedDebate?: any;
   debateType: 'ai' | '1v1' | 'mun';
   selectedProcedureType: 'UNA-USA' | 'Indian Parliamentary' | null;
   selectedLanguage: string;
@@ -40,6 +41,15 @@ interface ViewManagerProps {
     difficulty?: 'easy' | 'medium' | 'hard';
     category?: string;
     theme?: string;
+  } | null;
+  chanakyaDebateConfig: {
+    topic: string;
+    topicType: 'custom' | 'scenario';
+    userPosition: 'for' | 'against';
+    firstSpeaker: 'user' | 'ai';
+    difficulty: 'easy' | 'medium' | 'hard';
+    customTopic?: string;
+    scenario?: string;
   } | null;
   handlers: {
     handleStartDebate: () => void;
@@ -65,10 +75,16 @@ interface ViewManagerProps {
     handleDebatesHub: () => void;
     handleHumanDebate: () => void;
     handleDebateHistory: () => void;
+    handleViewDebate?: (debate: any) => void;
+    handleBackToDebateHistory?: () => void;
     handleInstantDebate: () => void;
     handleInstantDebateStart: (config: any) => void;
     handleInstantDebateBack: () => void;
     handleInstantDebateComplete: (config: any, messages: any[]) => void;
+    handleChanakyaDebate: () => void;
+    handleChanakyaDebateStart: (config: any) => void;
+    handleChanakyaDebateBack: () => void;
+    handleChanakyaDebateComplete: (config: any, messages: any[]) => void;
   };
   requireAuth?: (callback: () => void) => void;
   isAuthenticated?: boolean;
@@ -83,11 +99,13 @@ const ViewManager = ({
   selectedTheme,
   selectedCommittee,
   selectedLiveSession,
+  selectedDebate,
   debateType,
   selectedProcedureType,
   selectedLanguage,
   selectedDebateFormat,
   instantDebateConfig,
+  chanakyaDebateConfig,
   handlers,
   requireAuth,
   isAuthenticated
@@ -148,17 +166,22 @@ const ViewManager = ({
       case 'public-speaking':
       case 'human-debate':
       case 'debate-history':
+      case 'debate-detail':
       case 'instant-debate-setup':
       case 'instant-debate-room':
       case 'instant-debate-evaluation':
       case 'debate-history-viewer':
       case 'instant-debate-viewer':
+      case 'chanakya-debate-setup':
+      case 'chanakya-debate-room':
       case 'ai-coach':
         return (
           <UtilityViews
             currentView={currentView}
             userTokens={userTokens}
+            selectedDebate={selectedDebate}
             instantDebateConfig={instantDebateConfig}
+            chanakyaDebateConfig={chanakyaDebateConfig}
             handlers={handlers}
           />
         );

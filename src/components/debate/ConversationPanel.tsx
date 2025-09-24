@@ -82,9 +82,9 @@ const ConversationPanel = ({ messages, showAI = true }: ConversationPanelProps) 
       case 'user':
         return 'You';
       case 'gabbar-ai':
-        return 'ArguAI';
+        return 'Chanakya AI';
       case 'deepseek-ai':
-        return 'ArguAI';
+        return 'Chanakya AI';
       default:
         return 'System';
     }
@@ -105,22 +105,14 @@ const ConversationPanel = ({ messages, showAI = true }: ConversationPanelProps) 
 
   return (
     <Card className="flex-1 card-shadow-lg border-0 bg-white/70 dark:bg-gray-800/70 backdrop-blur-lg">
-      <CardHeader className="pb-4">
-        <CardTitle className="flex items-center space-x-2">
-          <MessageSquare className="h-5 w-5 text-indigo-600" />
+      <CardHeader className="pb-2 pt-3">
+        <CardTitle className="flex items-center space-x-2 text-sm">
+          <MessageSquare className="h-4 w-4 text-indigo-600" />
           <span>Live Conversation</span>
-          <Badge variant="outline" className="bg-indigo-50 text-indigo-700 border-indigo-200 text-xs">
-            Real-time STT
-          </Badge>
           {showAI && (
-            <>
-              <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200 text-xs">
-                AI Enabled
-              </Badge>
-              <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-xs">
-                ArguAI Ready
-              </Badge>
-            </>
+            <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200 text-xs px-2 py-0">
+              Chanakya AI
+            </Badge>
           )}
         </CardTitle>
       </CardHeader>
@@ -135,7 +127,7 @@ const ConversationPanel = ({ messages, showAI = true }: ConversationPanelProps) 
               </h3>
               <p className="text-sm text-gray-400 max-w-sm leading-relaxed">
                 Click "Start Speaking" below to begin your conversation
-                {showAI ? ' with ArguAI' : ' with your opponent'}
+                {showAI ? ' with Chanakya AI' : ' with your opponent'}
               </p>
             </div>
           ) : (
@@ -202,7 +194,7 @@ const ConversationPanel = ({ messages, showAI = true }: ConversationPanelProps) 
                                 ? 'bg-emerald-400 text-black' 
                                 : 'bg-yellow-400 text-black'
                             }`}>
-                              {message.type === 'deepseek-ai' ? '🧠 ArguAI' : '🤖 AI OPPONENT'}
+                              {message.type === 'deepseek-ai' ? '🧠 Chanakya AI' : '🤖 AI OPPONENT'}
                             </Badge>
                             
                             {message.relevance && (

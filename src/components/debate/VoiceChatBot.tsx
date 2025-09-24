@@ -37,13 +37,13 @@ const VoiceChatBot = ({
   const [isMuted, setIsMuted] = useState(false);
   const recognitionRef = useRef<any>(null);
 
-  // Placeholder responses from ArguAI
+  // Placeholder responses from Chanakya AI
   const bharatAIResponses = [
-    "अरे O साले, बहुत बोलता है तू! मैं ArguAI हूँ, तेरे साथ debate करूंगा।",
+    "अरे O साले, बहुत बोलता है तू! मैं Chanakya AI हूँ, तेरे साथ debate करूंगा।",
     "जो डर गया समझो मर गया! तू कमजोर arguments दे रहा है।",
     "मैंने बहुत सारे debates जीते हैं, तेरा क्या है?",
     "तेरा logic कमजोर है, मेरे सामने बहुत strong points लाना पड़ेगा।",
-    "अच्छा point है, लेकिन ArguAI से बेहतर बोलना पड़ेगा!"
+    "अच्छा point है, लेकिन Chanakya AI से बेहतर बोलना पड़ेगा!"
   ];
 
   // Initialize speech recognition

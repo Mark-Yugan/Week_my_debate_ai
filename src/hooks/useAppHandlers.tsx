@@ -27,7 +27,9 @@ interface UseAppHandlersProps {
   setUserTokens: (tokens: number | ((prev: number) => number)) => void;
   setSelectedLanguage: (language: string) => void;
   setSelectedDebateFormat: (format: '1v1' | '3v3') => void;
+  setSelectedDebate: (debate: any) => void;
   setInstantDebateConfig: (config: any) => void;
+  setChanakyaDebateConfig: (config: any) => void;
 }
 
 export const useAppHandlers = ({
@@ -42,7 +44,9 @@ export const useAppHandlers = ({
   setUserTokens,
   setSelectedLanguage,
   setSelectedDebateFormat,
-  setInstantDebateConfig
+  setSelectedDebate,
+  setInstantDebateConfig,
+  setChanakyaDebateConfig
 }: UseAppHandlersProps) => {
   const handleStartDebate = () => {
     setCurrentView('difficulty');
@@ -217,6 +221,48 @@ export const useAppHandlers = ({
     setCurrentView('ai-coach');
   };
 
+  const handleChanakyaDebate = () => {
+    console.log('Navigating to Chanakya Debate');
+    setCurrentView('chanakya-debate-setup');
+  };
+
+  const handleChanakyaDebateStart = (config: {
+    topic: string;
+    topicType: 'custom' | 'scenario';
+    userPosition: 'for' | 'against';
+    firstSpeaker: 'user' | 'ai';
+    difficulty: 'easy' | 'medium' | 'hard';
+    customTopic?: string;
+    scenario?: string;
+  }) => {
+    console.log('Starting Chanakya debate with config:', config);
+    setChanakyaDebateConfig(config);
+    setCurrentView('chanakya-debate-room');
+  };
+
+  const handleChanakyaDebateBack = () => {
+    console.log('Going back to Chanakya debate setup');
+    setCurrentView('chanakya-debate-setup');
+  };
+
+  const handleChanakyaDebateComplete = (config: any, messages: any[]) => {
+    console.log('Chanakya debate completed:', { config, messages });
+    // Award tokens for completing debate - more tokens for Chanakya debates due to strategic nature
+    setUserTokens(prev => prev + Math.floor(Math.random() * 15) + 10);
+    setCurrentView('dashboard');
+  };
+
+  // New handlers for debate detail view
+  const handleViewDebate = (debate: any) => {
+    setSelectedDebate(debate);
+    setCurrentView('debate-detail');
+  };
+
+  const handleBackToDebateHistory = () => {
+    setSelectedDebate(null);
+    setCurrentView('debate-history');
+  };
+
   return {
     handleStartDebate,
     handleJoinMUN,
@@ -241,10 +287,16 @@ export const useAppHandlers = ({
     handleDebatesHub,
     handleHumanDebate,
     handleDebateHistory,
+    handleViewDebate,
+    handleBackToDebateHistory,
     handleInstantDebate,
     handleInstantDebateStart,
     handleInstantDebateBack,
     handleInstantDebateComplete,
-    handleAICoach
+    handleAICoach,
+    handleChanakyaDebate,
+    handleChanakyaDebateStart,
+    handleChanakyaDebateBack,
+    handleChanakyaDebateComplete
   };
 };
