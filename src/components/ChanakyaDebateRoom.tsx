@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import { Mic, MicOff, Video, VideoOff, Users, Trophy, ArrowLeft, Send, Type } from 'lucide-react';
+import { Mic, MicOff, Video, VideoOff, Users, Trophy, ArrowLeft, Send, Type, Square } from 'lucide-react';
 import { useDeepSeekAI } from '@/hooks/useDeepSeekAI';
 import { useCustomAuth } from '@/hooks/useCustomAuth';
 import { DebateService } from '@/services/DebateService';
@@ -586,8 +586,17 @@ const ChanakyaDebateRoom = ({ config, onBack, onComplete }: ChanakyaDebateRoomPr
               </div>
             </div>
             
-            {/* Right Side - Exit Button */}
-            <div className="flex items-center space-x-3">
+            {/* Right Side - Control Buttons */}
+            <div className="flex items-center space-x-2">
+              <Button 
+                variant="destructive" 
+                size="sm" 
+                onClick={handleExit} 
+                className="flex items-center space-x-1 bg-red-600 hover:bg-red-700"
+              >
+                <Square className="h-4 w-4" />
+                <span>End Debate</span>
+              </Button>
               <Button variant="outline" size="sm" onClick={handleExit} className="flex items-center space-x-1">
                 <ArrowLeft className="h-4 w-4" />
                 <span>Exit</span>
@@ -629,19 +638,30 @@ const ChanakyaDebateRoom = ({ config, onBack, onComplete }: ChanakyaDebateRoomPr
             
             {/* Text Input Area */}
             <div className="mt-2 p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
-              <div className="flex items-center space-x-2 mb-2">
-                <Button
-                  variant={isTextMode ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setIsTextMode(!isTextMode)}
-                  className="flex items-center space-x-1"
-                >
-                  <Type className="h-4 w-4" />
-                  <span>Text Mode</span>
-                </Button>
-                <div className="text-xs text-gray-500 dark:text-gray-400">
-                  {isTextMode ? 'Type your argument' : 'Use voice or switch to text mode'}
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center space-x-2">
+                  <Button
+                    variant={isTextMode ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setIsTextMode(!isTextMode)}
+                    className="flex items-center space-x-1"
+                  >
+                    <Type className="h-4 w-4" />
+                    <span>Text Mode</span>
+                  </Button>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                    {isTextMode ? 'Type your argument' : 'Use voice or switch to text mode'}
+                  </div>
                 </div>
+                <Button 
+                  variant="destructive" 
+                  size="sm" 
+                  onClick={handleExit} 
+                  className="flex items-center space-x-1 bg-red-600 hover:bg-red-700 lg:hidden"
+                >
+                  <Square className="h-4 w-4" />
+                  <span>End</span>
+                </Button>
               </div>
               
               {isTextMode && (
