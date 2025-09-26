@@ -4,7 +4,7 @@
  * Handles password reset with email verification
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -47,6 +47,7 @@ const CustomForgotPassword = ({ onBackToLogin, onResetSuccess }: CustomForgotPas
   const [resetEmail, setResetEmail] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   const [loading, setLoading] = useState(false);
+  const [formKey, setFormKey] = useState(0); // Force form re-render
   const { toast } = useToast();
   const { requestPasswordReset, resetPassword } = useCustomAuth();
 
@@ -65,6 +66,14 @@ const CustomForgotPassword = ({ onBackToLogin, onResetSuccess }: CustomForgotPas
     defaultValues: { newPassword: "", confirmPassword: "" },
   });
 
+  // Force reset verification form when step changes to verify
+  useEffect(() => {
+    if (step === 'verify') {
+      verificationForm.reset({ verificationCode: "" });
+      setFormKey(prev => prev + 1); // Force re-render
+    }
+  }, [step, verificationForm]);
+
   const onEmailSubmit = async (values: z.infer<typeof forgotPasswordSchema>) => {
     setLoading(true);
     
@@ -73,6 +82,12 @@ const CustomForgotPassword = ({ onBackToLogin, onResetSuccess }: CustomForgotPas
       
       if (response.success) {
         setResetEmail(values.email);
+        // Force complete form reset and re-render
+        setTimeout(() => {
+          verificationForm.reset({ verificationCode: "" });
+          verificationForm.clearErrors();
+          setFormKey(prev => prev + 1);
+        }, 0);
         setStep('verify');
         toast({
           title: "Reset Code Sent",
@@ -144,7 +159,7 @@ const CustomForgotPassword = ({ onBackToLogin, onResetSuccess }: CustomForgotPas
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Form {...verificationForm}>
+          <Form {...verificationForm} key={`verify-form-${formKey}`}>
             <form onSubmit={verificationForm.handleSubmit(onVerifySubmit)} className="space-y-4">
               <FormField
                 control={verificationForm.control}
@@ -156,9 +171,21 @@ const CustomForgotPassword = ({ onBackToLogin, onResetSuccess }: CustomForgotPas
                       <Input
                         type="text"
                         placeholder="Enter 6-digit code"
-                        {...field}
+                        value={field.value || ""}
                         className="text-center text-lg tracking-widest"
                         maxLength={6}
+                        autoComplete="one-time-code"
+                        autoFocus
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        onChange={(e) => {
+                          // Only allow numeric input for verification code
+                          const value = e.target.value.replace(/\D/g, '').slice(0, 6);
+                          field.onChange(value);
+                        }}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
                       />
                     </FormControl>
                     <FormMessage />
@@ -177,7 +204,11 @@ const CustomForgotPassword = ({ onBackToLogin, onResetSuccess }: CustomForgotPas
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => setStep('email')}
+                onClick={() => {
+                  // Reset verification form when going back to email
+                  verificationForm.reset({ verificationCode: "" });
+                  setStep('email');
+                }}
                 className="w-full"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
@@ -260,7 +291,11 @@ const CustomForgotPassword = ({ onBackToLogin, onResetSuccess }: CustomForgotPas
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => setStep('verify')}
+                onClick={() => {
+                  // Reset verification form when going back
+                  verificationForm.reset({ verificationCode: "" });
+                  setStep('verify');
+                }}
                 className="w-full"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
