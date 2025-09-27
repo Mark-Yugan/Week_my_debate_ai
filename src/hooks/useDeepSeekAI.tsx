@@ -47,20 +47,27 @@ export const useDeepSeekAI = ({ topic, context, autoSpeak = true }: UseDeepSeekA
       try {
         console.log(`DeepSeek API attempt ${attempt + 1}/${maxRetries + 1}`);
 
+        const requestPayload = {
+          speechText: message,
+          context: {
+            topic,
+            context,
+            timestamp: new Date().toISOString()
+          }
+        };
+        
+        console.log('Sending request to n8n:', requestPayload);
+        
         const response = await fetch('https://n8n-k6lq.onrender.com/webhook/deepseekapihandler', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
           },
-          body: JSON.stringify({
-            speechText: message,
-            context: {
-              topic,
-              context,
-              timestamp: new Date().toISOString()
-            }
-          }),
+          body: JSON.stringify(requestPayload),
         });
+        
+        console.log('Response received:', response);
 
         if (!response.ok) {
           throw new Error(`DeepSeek API error: ${response.status} - ${response.statusText}`);
@@ -68,15 +75,22 @@ export const useDeepSeekAI = ({ topic, context, autoSpeak = true }: UseDeepSeekA
 
         // Check if response has content
         const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-          throw new Error('Invalid response format: Expected JSON');
-        }
-
+        console.log('Response Content-Type:', contentType);
+        console.log('Response Status:', response.status);
+        console.log('Response Headers:', Object.fromEntries(response.headers.entries()));
+        
         // Get response text first to handle empty responses
         const responseText = await response.text();
+        console.log('Raw response text:', responseText);
+        console.log('Response text length:', responseText?.length);
         
         if (!responseText || responseText.trim().length === 0) {
           throw new Error('Empty response from server');
+        }
+
+        // Be more lenient with content type check for n8n webhooks
+        if (contentType && !contentType.includes('application/json') && !contentType.includes('text/plain')) {
+          console.warn('Unexpected content type, but proceeding:', contentType);
         }
 
         let result;
@@ -85,7 +99,8 @@ export const useDeepSeekAI = ({ topic, context, autoSpeak = true }: UseDeepSeekA
         } catch (parseError) {
           console.error('JSON Parse Error:', parseError);
           console.error('Response text:', responseText);
-          throw new Error(`Invalid JSON response: ${parseError.message}`);
+          const errorMessage = parseError instanceof Error ? parseError.message : 'Unknown parse error';
+          throw new Error(`Invalid JSON response: ${errorMessage}`);
         }
 
         console.log('DeepSeek AI Response (attempt ' + (attempt + 1) + '):', result);
@@ -95,14 +110,17 @@ export const useDeepSeekAI = ({ topic, context, autoSpeak = true }: UseDeepSeekA
           throw new Error('Invalid response structure');
         }
 
+        // Handle n8n array response format
+        const responseData = Array.isArray(result) ? result[0] : result;
+        
         // Transform n8n response to match expected format
         const data: DeepSeekResponse = {
-          reply: result.data?.reply || result.reply || 'I understand your point. Let me provide a counterargument to strengthen this debate.',
-          confidence: result.data?.confidence || result.confidence || Math.floor(Math.random() * 20) + 80,
-          relevance: result.data?.relevance || result.relevance || 'high',
-          model: result.data?.model || result.model || 'deepseek-chat',
-          timestamp: result.data?.timestamp || result.timestamp || new Date().toISOString(),
-          processingTime: result.data?.processingTime || result.processingTime || Math.floor(Math.random() * 500) + 200
+          reply: responseData?.reply || result.data?.reply || result.reply || 'I understand your point. Let me provide a counterargument to strengthen this debate.',
+          confidence: responseData?.confidence || result.data?.confidence || result.confidence || Math.floor(Math.random() * 20) + 80,
+          relevance: responseData?.relevance || result.data?.relevance || result.relevance || 'high',
+          model: responseData?.model || result.data?.model || result.model || 'deepseek-chat',
+          timestamp: responseData?.timestamp || result.data?.timestamp || result.timestamp || new Date().toISOString(),
+          processingTime: responseData?.processingTime || result.data?.processingTime || result.processingTime || Math.floor(Math.random() * 500) + 200
         };
 
         // Validate that we have a meaningful reply
