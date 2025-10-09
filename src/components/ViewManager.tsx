@@ -30,6 +30,7 @@ interface ViewManagerProps {
   selectedCommittee: any;
   selectedLiveSession: any;
   selectedDebate?: any;
+  selectedEvent?: any;
   debateType: 'ai' | '1v1' | 'mun';
   selectedProcedureType: 'UNA-USA' | 'Indian Parliamentary' | null;
   selectedLanguage: string;
@@ -100,6 +101,7 @@ const ViewManager = ({
   selectedCommittee,
   selectedLiveSession,
   selectedDebate,
+  selectedEvent,
   debateType,
   selectedProcedureType,
   selectedLanguage,
@@ -159,6 +161,7 @@ const ViewManager = ({
       case 'live-debate-selection':
       case 'create-debate-room':
       case 'events':
+      case 'event-detail':
       case 'debates-hub':
       case 'pricing':
       case 'resources':
@@ -180,6 +183,7 @@ const ViewManager = ({
             currentView={currentView}
             userTokens={userTokens}
             selectedDebate={selectedDebate}
+            selectedEvent={selectedEvent}
             instantDebateConfig={instantDebateConfig}
             chanakyaDebateConfig={chanakyaDebateConfig}
             handlers={handlers}

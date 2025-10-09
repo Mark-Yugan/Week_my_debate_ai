@@ -28,6 +28,7 @@ interface UseAppHandlersProps {
   setSelectedLanguage: (language: string) => void;
   setSelectedDebateFormat: (format: '1v1' | '3v3') => void;
   setSelectedDebate: (debate: any) => void;
+  setSelectedEvent: (event: any) => void;
   setInstantDebateConfig: (config: any) => void;
   setChanakyaDebateConfig: (config: any) => void;
 }
@@ -45,6 +46,7 @@ export const useAppHandlers = ({
   setSelectedLanguage,
   setSelectedDebateFormat,
   setSelectedDebate,
+  setSelectedEvent,
   setInstantDebateConfig,
   setChanakyaDebateConfig
 }: UseAppHandlersProps) => {
@@ -263,6 +265,16 @@ export const useAppHandlers = ({
     setCurrentView('debate-history');
   };
 
+  const handleViewEvent = (event: any) => {
+    setSelectedEvent(event);
+    setCurrentView('event-detail');
+  };
+
+  const handleBackToEvents = () => {
+    setSelectedEvent(null);
+    setCurrentView('events');
+  };
+
   return {
     handleStartDebate,
     handleJoinMUN,
@@ -297,6 +309,8 @@ export const useAppHandlers = ({
     handleChanakyaDebate,
     handleChanakyaDebateStart,
     handleChanakyaDebateBack,
-    handleChanakyaDebateComplete
+    handleChanakyaDebateComplete,
+    handleViewEvent,
+    handleBackToEvents
   };
 };

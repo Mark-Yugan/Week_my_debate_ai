@@ -103,7 +103,7 @@ const StudentDashboard = ({
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
                 {/* Debate with Chanakya */}
                 <Card className="group relative overflow-hidden border-0 bg-gradient-to-br from-yellow-50 via-orange-50 to-white hover:shadow-2xl transition-all duration-700 cursor-pointer hover:scale-[1.02] hover:-translate-y-1 shadow-lg backdrop-blur-sm">
                   <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/10 via-orange-400/10 to-red-400/10 opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
@@ -154,6 +154,33 @@ const StudentDashboard = ({
                     </CardTitle>
                     <CardDescription className="text-gray-600 group-hover:text-gray-700 transition-colors duration-500 text-base leading-relaxed">
                       Model United Nations simulations with Gavel Bro AI moderator
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+
+                {/* Events */}
+                <Card className="group relative overflow-hidden border-0 bg-gradient-to-br from-rose-50 via-pink-50 to-white hover:shadow-2xl transition-all duration-700 cursor-pointer hover:scale-[1.02] hover:-translate-y-1 shadow-lg backdrop-blur-sm">
+                  <div className="absolute inset-0 bg-gradient-to-br from-rose-400/10 via-pink-400/10 to-red-400/10 opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 transform -skew-x-12 -translate-x-full group-hover:translate-x-full"></div>
+                  
+                  <CardHeader 
+                    className="text-center relative z-10 pb-6 cursor-pointer px-6 pt-8" 
+                    onClick={() => requireAuth ? requireAuth(onViewEvents) : onViewEvents()}
+                  >
+                    <div className="relative mx-auto mb-6">
+                      <div className="absolute inset-0 bg-gradient-to-r from-rose-500 to-pink-600 rounded-full blur-xl opacity-30 group-hover:opacity-60 transition-all duration-700 animate-pulse"></div>
+                      <div className="relative bg-gradient-to-r from-rose-500 to-pink-600 p-5 rounded-2xl w-20 h-20 flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-700 transform group-hover:scale-110 group-hover:rotate-3">
+                        <Calendar className="h-9 w-9 text-white" />
+                      </div>
+                      <div className="absolute -top-2 -right-2 bg-gradient-to-r from-rose-400 to-pink-500 text-white text-xs px-3 py-1 rounded-full font-bold shadow-lg">
+                        <Star className="h-3 w-3" />
+                      </div>
+                    </div>
+                    <CardTitle className="text-2xl font-bold text-gray-900 group-hover:text-gray-800 transition-colors duration-500 mb-3">
+                      🎭 Events
+                    </CardTitle>
+                    <CardDescription className="text-gray-600 group-hover:text-gray-700 transition-colors duration-500 text-base leading-relaxed">
+                      Discover upcoming debate tournaments, workshops, and community events
                     </CardDescription>
                   </CardHeader>
                 </Card>

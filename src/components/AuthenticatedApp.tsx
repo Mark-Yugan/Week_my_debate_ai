@@ -57,6 +57,7 @@ const AuthenticatedApp = ({ isAuthenticated }: AuthenticatedAppProps) => {
   const [selectedLanguage, setSelectedLanguage] = useState<string>('en');
   const [selectedDebateFormat, setSelectedDebateFormat] = useState<'1v1' | '3v3'>('1v1');
   const [selectedDebate, setSelectedDebate] = useState<any>(null);
+  const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [instantDebateConfig, setInstantDebateConfig] = useState<{
     topic: string;
     userPosition: 'for' | 'against';
@@ -97,6 +98,7 @@ const AuthenticatedApp = ({ isAuthenticated }: AuthenticatedAppProps) => {
     setSelectedLanguage,
     setSelectedDebateFormat,
     setSelectedDebate,
+    setSelectedEvent,
     setInstantDebateConfig,
     setChanakyaDebateConfig
   });
@@ -132,6 +134,7 @@ const AuthenticatedApp = ({ isAuthenticated }: AuthenticatedAppProps) => {
           selectedLanguage={selectedLanguage}
           selectedDebateFormat={selectedDebateFormat}
           selectedDebate={selectedDebate}
+          selectedEvent={selectedEvent}
           instantDebateConfig={instantDebateConfig}
           chanakyaDebateConfig={chanakyaDebateConfig}
           handlers={handlers}
