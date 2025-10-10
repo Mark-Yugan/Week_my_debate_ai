@@ -9,7 +9,11 @@ import { useNavigate } from 'react-router-dom';
 import { useCustomAuth } from '@/hooks/useCustomAuth';
 import CustomAuthRouter from './auth/CustomAuthRouter';
 
-const NewAuthPage = () => {
+interface NewAuthPageProps {
+  message?: string;
+}
+
+const NewAuthPage = ({ message }: NewAuthPageProps) => {
   const { user, loading } = useCustomAuth();
   const navigate = useNavigate();
 
@@ -45,8 +49,13 @@ const NewAuthPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-violet-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome to DebateWorld</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome to MyDebate.AI</h1>
           <p className="text-gray-600">Join the conversation and debate the world's most important topics</p>
+          {message && (
+            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-sm text-blue-700">{message}</p>
+            </div>
+          )}
         </div>
         
         <CustomAuthRouter onAuthSuccess={handleAuthSuccess} />

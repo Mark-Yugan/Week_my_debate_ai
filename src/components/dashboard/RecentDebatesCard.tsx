@@ -65,63 +65,93 @@ const RecentDebatesCard = ({ isAuthenticated = true }: RecentDebatesCardProps) =
   }
 
   return (
-    <Card className="card-shadow">
-      <CardHeader>
-        <CardTitle className="flex items-center space-x-2">
-          <Clock className="h-5 w-5 text-blue-600" />
+    <Card className="group relative overflow-hidden border border-gray-200/50 bg-white/80 backdrop-blur-sm hover:bg-white hover:shadow-xl hover:shadow-[#009]/10 transition-all duration-500 shadow-lg">
+      <div className="absolute inset-0 bg-gradient-to-br from-[#009]/5 via-[#0066cc]/5 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#009] to-[#0066cc] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+      
+      <CardHeader className="relative z-10 pb-6">
+        <CardTitle className="flex items-center space-x-3 text-xl font-semibold text-gray-900 group-hover:text-[#009] transition-colors duration-300">
+          <div className="relative">
+            <div className="absolute inset-0 bg-[#009] rounded-xl blur-xl opacity-20 group-hover:opacity-30 transition-all duration-500"></div>
+            <div className="relative bg-gradient-to-br from-[#009] to-[#0066cc] p-3 rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-500">
+              <Clock className="h-6 w-6 text-white" />
+            </div>
+          </div>
           <span>Recent Debates</span>
         </CardTitle>
-        <CardDescription>Your latest debate performances with Freud scores</CardDescription>
+        <CardDescription className="text-gray-600 group-hover:text-gray-700 transition-colors duration-300 font-light">
+          Your latest debate performances with Freud scores
+        </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="relative z-10 space-y-4">
         {loading ? (
-          <div className="flex items-center justify-center py-8">
-            <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
-            <span className="ml-2 text-gray-600">Loading your recent debates...</span>
+          <div className="flex items-center justify-center py-12">
+            <div className="text-center space-y-3">
+              <div className="relative">
+                <div className="absolute inset-0 bg-[#009] rounded-full blur-xl opacity-20 animate-pulse"></div>
+                <Loader2 className="relative h-8 w-8 animate-spin text-[#009]" />
+              </div>
+              <span className="text-gray-600 font-light">Loading your recent debates...</span>
+            </div>
           </div>
         ) : error ? (
-          <div className="flex items-center justify-center py-8 text-center">
-            <div>
-              <AlertCircle className="h-6 w-6 text-red-500 mx-auto mb-2" />
-              <p className="text-sm text-red-600">{error}</p>
-              <p className="text-xs text-gray-500 mt-1">Please try again later</p>
+          <div className="flex items-center justify-center py-12 text-center">
+            <div className="space-y-3">
+              <div className="relative">
+                <div className="absolute inset-0 bg-red-500 rounded-full blur-xl opacity-20"></div>
+                <AlertCircle className="relative h-8 w-8 text-red-500 mx-auto" />
+              </div>
+              <div>
+                <p className="text-sm text-red-600 font-medium">{error}</p>
+                <p className="text-xs text-gray-500 mt-1">Please try again later</p>
+              </div>
             </div>
           </div>
         ) : debates.length === 0 ? (
-          <div className="text-center py-8">
-            <Clock className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-            <p className="text-sm text-gray-600">No debates yet</p>
-            <p className="text-xs text-gray-500">Start your first debate to see your progress here</p>
+          <div className="text-center py-12">
+            <div className="space-y-4">
+              <div className="relative">
+                <div className="absolute inset-0 bg-[#009] rounded-full blur-2xl opacity-10"></div>
+                <Clock className="relative h-12 w-12 text-[#009] mx-auto opacity-60" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 font-medium">No debates yet</p>
+                <p className="text-xs text-gray-500 mt-1">Start your first debate to see your progress here</p>
+              </div>
+            </div>
           </div>
         ) : (
           debates.map((debate, index) => (
-            <div key={debate.id || index} className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+            <div key={debate.id || index} className="group/item p-4 bg-gradient-to-r from-gray-50/50 to-white/50 backdrop-blur-sm rounded-xl border border-gray-200/50 hover:bg-gradient-to-r hover:from-[#009]/5 hover:to-[#0066cc]/5 hover:border-[#009]/20 transition-all duration-300 hover:shadow-md">
               <div className="flex justify-between items-start">
                 <div className="flex-1">
-                  <p className="font-medium text-sm text-gray-900">{debate.topic}</p>
-                  <p className="text-xs text-gray-500">vs {debate.opponent}</p>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="font-semibold text-sm text-gray-900 group-hover/item:text-[#009] transition-colors duration-300">{debate.topic}</p>
+                  <p className="text-xs text-gray-600 font-medium mt-1">vs {debate.opponent}</p>
+                  <p className="text-xs text-gray-500 mt-1 font-light">
                     {debate.createdAt.toLocaleDateString()} • {debate.difficulty}
                   </p>
                 </div>
-                <div className="text-right">
+                <div className="text-right space-y-2">
                   <Badge 
                     variant={debate.result === 'Win' ? 'default' : debate.result === 'Loss' ? 'secondary' : 'outline'}
                     className={
-                      debate.result === 'Win' ? 'bg-green-100 text-green-700' : 
-                      debate.result === 'Loss' ? 'bg-red-100 text-red-700' :
-                      'bg-blue-100 text-blue-700'
+                      debate.result === 'Win' ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-sm' : 
+                      debate.result === 'Loss' ? 'bg-gradient-to-r from-red-500 to-rose-600 text-white shadow-sm' :
+                      'bg-gradient-to-r from-[#009] to-[#0066cc] text-white shadow-sm'
                     }
                   >
                     {debate.result}
                   </Badge>
-                  <p className="text-xs text-yellow-600 mt-1">+{debate.tokens} tokens</p>
+                  <div className="flex items-center space-x-1">
+                    <div className="w-1.5 h-1.5 bg-[#0066cc] rounded-full animate-pulse"></div>
+                    <p className="text-xs text-[#009] font-semibold">+{debate.tokens} tokens</p>
+                  </div>
                 </div>
               </div>
-              <div className="flex space-x-2 mt-2">
-                <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded">Id: {debate.freudScore.id}</span>
-                <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">Ego: {debate.freudScore.ego}</span>
-                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">Superego: {debate.freudScore.superego}</span>
+              <div className="flex flex-wrap gap-2 mt-3">
+                <span className="text-xs bg-gradient-to-r from-red-100 to-red-50 text-red-700 px-3 py-1.5 rounded-full font-medium border border-red-200/50">Id: {debate.freudScore.id}</span>
+                <span className="text-xs bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 px-3 py-1.5 rounded-full font-medium border border-blue-200/50">Ego: {debate.freudScore.ego}</span>
+                <span className="text-xs bg-gradient-to-r from-green-100 to-green-50 text-green-700 px-3 py-1.5 rounded-full font-medium border border-green-200/50">Superego: {debate.freudScore.superego}</span>
               </div>
             </div>
           ))

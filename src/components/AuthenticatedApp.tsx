@@ -24,9 +24,10 @@ interface Topic {
 
 interface AuthenticatedAppProps {
   isAuthenticated: boolean;
+  requireAuth?: (callback: () => void) => void;
 }
 
-const AuthenticatedApp = ({ isAuthenticated }: AuthenticatedAppProps) => {
+const AuthenticatedApp = ({ isAuthenticated, requireAuth }: AuthenticatedAppProps) => {
   const { user, signOut } = useCustomAuth();
   const navigate = useNavigate();
   
@@ -76,14 +77,14 @@ const AuthenticatedApp = ({ isAuthenticated }: AuthenticatedAppProps) => {
     scenario?: string;
   } | null>(null);
 
-  // Function to check authentication and redirect to login if needed
-  const requireAuth = (callback: () => void) => {
+  // Use the requireAuth function passed from parent, or create a default one
+  const authHandler = requireAuth || ((callback: () => void) => {
     if (!isAuthenticated) {
       navigate('/login');
       return;
     }
     callback();
-  };
+  });
 
   const handlers = useAppHandlers({
     setCurrentView,
@@ -104,7 +105,7 @@ const AuthenticatedApp = ({ isAuthenticated }: AuthenticatedAppProps) => {
   });
 
   const handleGetPremium = () => {
-    requireAuth(() => setCurrentView('pricing'));
+    authHandler(() => setCurrentView('pricing'));
   };
 
   return (
@@ -138,7 +139,7 @@ const AuthenticatedApp = ({ isAuthenticated }: AuthenticatedAppProps) => {
           instantDebateConfig={instantDebateConfig}
           chanakyaDebateConfig={chanakyaDebateConfig}
           handlers={handlers}
-          requireAuth={requireAuth}
+          requireAuth={authHandler}
           isAuthenticated={isAuthenticated}
         />
       </main>

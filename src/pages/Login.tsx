@@ -1,22 +1,27 @@
 
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useCustomAuth } from '@/hooks/useCustomAuth';
 import NewAuthPage from '@/components/NewAuthPage';
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, loading } = useCustomAuth();
+  
+  // Get return URL from location state
+  const returnTo = location.state?.returnTo || '/';
+  const message = location.state?.message;
 
   useEffect(() => {
-    // If user is already authenticated, redirect to main app
+    // If user is already authenticated, redirect to return URL
     if (!loading && user) {
-      navigate('/');
+      navigate(returnTo);
     }
-  }, [user, loading, navigate]);
+  }, [user, loading, navigate, returnTo]);
 
   const handleAuthSuccess = () => {
-    navigate('/');
+    navigate(returnTo);
   };
 
   // Show loading state while checking authentication
@@ -32,7 +37,7 @@ const Login = () => {
   }
 
   // If user is not authenticated, show the new auth page
-  return <NewAuthPage />;
+  return <NewAuthPage message={message} />;
 };
 
 export default Login;
