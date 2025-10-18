@@ -16,7 +16,7 @@ export interface DebateConfig {
 }
 
 export interface DebateTopic {
-  id?: string;
+  id?: string;  
   topic_name: string;
   category: string;
   description?: string;

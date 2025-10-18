@@ -110,15 +110,18 @@ const AuthenticatedApp = ({ isAuthenticated, requireAuth }: AuthenticatedAppProp
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation 
-        userTokens={userTokens} 
-        userRole={userRole} 
-        onRoleSwitch={setUserRole}
-        onGetPremium={handleGetPremium}
-        onSignOut={signOut}
-        user={user}
-        isAuthenticated={isAuthenticated}
-      />
+      {/* Only show Navigation when NOT on dashboard */}
+      {currentView !== 'dashboard' && (
+        <Navigation 
+          userTokens={userTokens} 
+          userRole={userRole} 
+          onRoleSwitch={setUserRole}
+          onGetPremium={handleGetPremium}
+          onSignOut={signOut}
+          user={user}
+          isAuthenticated={isAuthenticated}
+        />
+      )}
       
       <main className="animate-fade-in">
         <ViewManager

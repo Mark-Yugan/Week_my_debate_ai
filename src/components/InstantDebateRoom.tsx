@@ -203,9 +203,9 @@ const InstantDebateRoom = ({ config, onBack, onComplete }: InstantDebateRoomProp
 
   const getMessageStyles = (speaker: string, side: string) => {
     if (speaker === 'user') {
-      return 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg p-4 max-w-xs lg:max-w-md';
+      return 'bg-azul text-white rounded-lg p-4 max-w-xs lg:max-w-md shadow-sm';
     } else {
-      return 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-900 rounded-lg p-4 max-w-xs lg:max-w-md';
+      return 'bg-neutral-100 text-gunmetal rounded-lg p-4 max-w-xs lg:max-w-md border border-neutral-200';
     }
   };
 
@@ -218,7 +218,7 @@ const InstantDebateRoom = ({ config, onBack, onComplete }: InstantDebateRoomProp
   }, [messages]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+    <div className="min-h-screen bg-neutral-50">
       {/* Header */}
       <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-6 py-4">
@@ -355,7 +355,7 @@ const InstantDebateRoom = ({ config, onBack, onComplete }: InstantDebateRoomProp
                   <div className="pt-4 border-t border-gray-200">
                     <Button 
                       onClick={startDebate}
-                      className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold py-3"
+                      className="w-full bg-azul hover:bg-steel-blue text-white font-semibold py-3 transition-colors duration-200"
                       size="lg"
                     >
                       <Zap className="h-5 w-5 mr-2" />
@@ -450,7 +450,7 @@ const InstantDebateRoom = ({ config, onBack, onComplete }: InstantDebateRoomProp
                     <Button
                       onClick={handleSendMessage}
                       disabled={!currentMessage.trim() || isAIResponding}
-                      className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white"
+                      className="bg-azul hover:bg-steel-blue text-white transition-colors duration-200"
                     >
                       <Send className="h-4 w-4 mr-2" />
                       Send

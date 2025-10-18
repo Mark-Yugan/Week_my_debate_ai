@@ -1,0 +1,166 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "AIzaSyBoUtmHN_zVYD1o2ro6idslSTxQ5y5Rpd8"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ \n  {\n    \"contents\": [\n      {\n        \"parts\": [\n          {\n            \"text\": \"You are a skilled debater engaging in a thoughtful discussion with another person. Your role is to:\\n\\n- Present counterarguments naturally and conversationally\\n- Handle unclear or incomplete statements gracefully by asking for clarification or making reasonable interpretations\\n- Adapt to the user's communication style - whether formal or casual\\n- Stay engaged even with typos, incomplete thoughts, or rambling statements\\n- Use natural language with occasional hesitations, acknowledgments, and conversational markers\\n- Challenge ideas respectfully without being dismissive\\n- Keep responses concise (40-60 words) and focused\\n- Sound human, not robotic\\n\\nDebate topic: \" + $json[\"body\"][\"context\"][\"topic\"] + \"\\nUser position: \" + $json[\"body\"][\"context\"][\"context\"].split('User side: ')[1] + \"\\n\\nRespond to their argument naturally, as a real person would in a debate.\"\n          }\n        ],\n        \"role\": \"model\"\n      },\n      {\n        \"parts\": [\n          {\n            \"text\": $json[\"body\"][\"speechText\"]\n          }\n        ],\n        \"role\": \"user\"\n      }\n    ],\n    \"generationConfig\": {\n      \"temperature\": 0.9,\n      \"topK\": 40,\n      \"topP\": 0.95,\n      \"maxOutputTokens\": 150,\n      \"candidateCount\": 1\n    }\n  }\n}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -48,
+        16
+      ],
+      "id": "3cf6d1c4-56d7-47b3-be22-f6eb40aec9b2",
+      "name": "HTTP Request - Gemini",
+      "alwaysOutputData": false,
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "deepseekapihandler",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*",
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "POST, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        16
+      ],
+      "id": "0de627dd-515e-4f76-8fd7-8bafcbbcbb18",
+      "name": "Webhook(POST)",
+      "webhookId": "dbf044f1-2449-4be4-8711-ac3c93db59d6"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Enhanced Response Processor for Frontend Compatibility\nconst requestStartTime = Date.now();\n\ntry {\n  const data = $input.item.json || $input.item;\n  \n  // Extract Gemini response\n  const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || \n               \"I need a moment to think about that. Could you rephrase?\";\n  \n  // Calculate processing time\n  const processingTime = Date.now() - requestStartTime;\n  \n  // Extract usage metadata for confidence calculation\n  const usageMetadata = data.usageMetadata || {};\n  const promptTokens = usageMetadata.promptTokenCount || 0;\n  const responseTokens = usageMetadata.candidatesTokenCount || 0;\n  const totalTokens = usageMetadata.totalTokenCount || 0;\n  \n  // Calculate confidence based on response quality and token usage\n  let confidence = 85; // Base confidence\n  \n  // Adjust confidence based on response length and completeness\n  const responseLength = reply.trim().length;\n  if (responseLength > 100) confidence += 10; // Longer, more detailed responses\n  if (responseLength < 20) confidence -= 15; // Very short responses\n  \n  // Adjust based on finish reason\n  const finishReason = data.candidates?.[0]?.finishReason;\n  if (finishReason === 'STOP') confidence += 5; // Complete response\n  if (finishReason === 'LENGTH') confidence -= 5; // Truncated response\n  \n  // Ensure confidence is within valid range\n  confidence = Math.max(60, Math.min(98, confidence));\n  \n  // Determine relevance based on response characteristics\n  let relevance = 'high';\n  const responseText = reply.toLowerCase();\n  if (responseText.includes('rephrase') || responseText.includes('clarify')) {\n    relevance = 'medium';\n  }\n  if (responseText.includes('i don\\'t understand') || responseText.includes('confused')) {\n    relevance = 'low';\n  }\n  \n  // Return the exact format expected by useDeepSeekWebhook\n  return {\n    reply: reply.trim(),\n    confidence: confidence,\n    relevance: relevance,\n    model: data.modelVersion || \"gemini-2.0-flash-exp\",\n    timestamp: new Date().toISOString(),\n    processingTime: processingTime,\n    // Additional metadata for debugging\n    metadata: {\n      tokenUsage: {\n        prompt: promptTokens,\n        response: responseTokens,\n        total: totalTokens\n      },\n      finishReason: finishReason,\n      responseId: data.responseId\n    }\n  };\n  \n} catch (error) {\n  console.error('Error processing Gemini response:', error);\n  \n  return {\n    reply: \"Hmm, I'm having trouble processing that. Can you say it differently?\",\n    confidence: 65,\n    relevance: 'medium',\n    model: \"gemini-2.0-flash-exp\",\n    timestamp: new Date().toISOString(),\n    processingTime: Date.now() - requestStartTime,\n    error: error.message\n  };\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        72,
+        16
+      ],
+      "id": "enhanced-processor",
+      "name": "Enhanced Response Processor"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "POST, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        264,
+        16
+      ],
+      "id": "11843cc8-4759-4e5a-962f-5e9051756fc5",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "connections": {
+    "HTTP Request - Gemini": {
+      "main": [
+        [
+          {
+            "node": "Enhanced Response Processor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook(POST)": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request - Gemini",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enhanced Response Processor": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "instanceId": "0e213998d277da23b2c1a0f4e5716052c40608de741b8ae5d4a99fd33f3114bf"
+  }
+}

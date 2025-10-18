@@ -99,6 +99,61 @@ const StudentDashboard = ({
                 <p className="text-gray-600">Jump right into your debate journey</p>
               </div>
               
+              {/* Home Quick Menu: Four primary cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {/* Chanakyas Card */}
+                <button onClick={onInstantDebate} className="text-left bg-white rounded-2xl-card shadow-card p-6 hover-glow focus:outline-none focus:ring-4 focus:ring-indigo-100">
+                  <div className="flex items-start gap-4">
+                    <div className="w-14 h-14 rounded-xl bg-gradient-primary flex items-center justify-center shadow-soft">
+                      <Brain className="h-7 w-7 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-black text-lg font-semibold">Chanakyas</h3>
+                      <p className="text-black text-sm opacity-80">AI debates with Chanakya-style adversary</p>
+                    </div>
+                  </div>
+                </button>
+
+                {/* MUN Card */}
+                <button onClick={onJoinMUN} className="text-left bg-white rounded-2xl-card shadow-card p-6 hover-glow focus:outline-none focus:ring-4 focus:ring-indigo-100">
+                  <div className="flex items-start gap-4">
+                    <div className="w-14 h-14 rounded-xl bg-gradient-primary flex items-center justify-center shadow-soft">
+                      <Globe className="h-7 w-7 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-black text-lg font-semibold">MUN</h3>
+                      <p className="text-black text-sm opacity-80">Model United Nations simulations and committees</p>
+                    </div>
+                  </div>
+                </button>
+
+                {/* Events Card */}
+                <button onClick={onViewEvents} className="text-left bg-white rounded-2xl-card shadow-card p-6 hover-glow focus:outline-none focus:ring-4 focus:ring-indigo-100">
+                  <div className="flex items-start gap-4">
+                    <div className="w-14 h-14 rounded-xl bg-gradient-primary flex items-center justify-center shadow-soft">
+                      <Calendar className="h-7 w-7 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-black text-lg font-semibold">Events</h3>
+                      <p className="text-black text-sm opacity-80">Competitions, tournaments, and schedules</p>
+                    </div>
+                  </div>
+                </button>
+
+                {/* History Card */}
+                <button onClick={onDebateHistory} className="text-left bg-white rounded-2xl-card shadow-card p-6 hover-glow focus:outline-none focus:ring-4 focus:ring-indigo-100">
+                  <div className="flex items-start gap-4">
+                    <div className="w-14 h-14 rounded-xl bg-gradient-primary flex items-center justify-center shadow-soft">
+                      <History className="h-7 w-7 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-black text-lg font-semibold">History</h3>
+                      <p className="text-black text-sm opacity-80">View past debates and performance analytics</p>
+                    </div>
+                  </div>
+                </button>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Instant Debate - Featured */}
                 <Card 

@@ -648,16 +648,16 @@ const HumanDebateRoom = ({ topic, onExit, roomId }: HumanDebateRoomProps) => {
     const baseStyles = 'max-w-[85%] rounded-2xl px-5 py-4 relative';
     
     if (isCurrentUser) {
-      return `${baseStyles} bg-gradient-to-br from-indigo-500 to-indigo-600 text-white shadow-lg ml-auto`;
+      return `${baseStyles} bg-azul text-white shadow-sm ml-auto`;
     }
     
     switch (side) {
       case 'FOR':
-        return `${baseStyles} bg-gradient-to-br from-green-500 to-green-600 text-white shadow-lg`;
+        return `${baseStyles} bg-green-600 text-white shadow-sm`;
       case 'AGAINST':
-        return `${baseStyles} bg-gradient-to-br from-red-500 to-red-600 text-white shadow-lg`;
+        return `${baseStyles} bg-red-600 text-white shadow-sm`;
       case 'OBSERVER':
-        return `${baseStyles} bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg`;
+        return `${baseStyles} bg-steel-blue text-white shadow-sm`;
       default:
         return `${baseStyles} bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-md`;
     }
@@ -1225,7 +1225,7 @@ const HumanDebateRoom = ({ topic, onExit, roomId }: HumanDebateRoomProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+    <div className="min-h-screen bg-neutral-50">
       {/* Header bar always visible */}
       <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-6 py-4">
