@@ -81,253 +81,282 @@ const MunArena = ({ committee, liveSession, onExit, onBackToCommittees }: MunAre
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <div className="gradient-indigo p-3 rounded-lg">
-            <Crown className="h-8 w-8 text-white" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">{getCommitteeTitle()}</h1>
-            <p className="text-gray-600">{getCurrentAgenda()}</p>
-            {committee && (
-              <p className="text-sm text-gray-500">{committee.fullName} • {committee.rulesOfProcedure} Rules</p>
-            )}
-          </div>
-        </div>
-        <div className="flex items-center space-x-3">
-          {liveSession && (
-            <Badge variant="secondary" className="bg-red-50 text-red-700">
-              🔴 Live Session
-            </Badge>
-          )}
-          <Badge variant="secondary" className="bg-green-50 text-green-700">
-            Session Active
-          </Badge>
-          <Button variant="outline" onClick={onBackToCommittees}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Committees
-          </Button>
-          <Button variant="outline" onClick={onExit}>Exit Session</Button>
-        </div>
-      </div>
-
-      {/* Crisis Alert - Updated for committee */}
-      <Card className="border-orange-200 bg-orange-50">
-        <CardContent className="p-4">
-          <div className="flex items-center space-x-3">
-            <AlertTriangle className="h-6 w-6 text-orange-600" />
-            <div className="flex-1">
-              <h3 className="font-semibold text-orange-900">
-                {committee?.type === 'indian' 
-                  ? 'Breaking: Opposition walks out over digital privacy concerns' 
-                  : 'Breaking: Economic Sanctions Announced'
-                }
-              </h3>
-              <p className="text-sm text-orange-800">
-                {committee?.type === 'indian'
-                  ? 'Parliament session disrupted. Delegates must address privacy vs security balance.'
-                  : 'Major economic sanctions have been imposed affecting global trade relations. Delegates must adjust their positions accordingly.'
-                }
-              </p>
+    <div className="min-h-screen bg-gray-950 relative overflow-hidden">
+      {/* Animated background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-cyan-950/20 via-gray-950 to-fuchsia-950/20"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.1),transparent_50%)]"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(217,70,239,0.1),transparent_50%)]"></div>
+      
+      <div className="max-w-7xl mx-auto p-6 space-y-6 relative z-10">
+        {/* Header Section */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <button 
+              onClick={onBackToCommittees}
+              className="btn-neon-secondary flex items-center gap-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to Committees
+            </button>
+            
+            <div className="text-right">
+              <h1 className="text-4xl font-bold font-orbitron neon-text">
+                {getCommitteeTitle()}
+              </h1>
+              <p className="text-gray-300 mt-1 font-inter">{getCurrentAgenda()}</p>
+              {committee && (
+                <p className="text-sm text-gray-400">{committee.fullName} • {committee.rulesOfProcedure} Rules</p>
+              )}
             </div>
-            <Badge variant="destructive">
-              {committee?.type === 'indian' ? 'Parliamentary Alert' : 'Crisis Update'}
-            </Badge>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Main Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Country/Party Seats */}
-        <div className="lg:col-span-2 space-y-6">
-          <Card className="card-shadow">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Globe className="h-5 w-5 text-blue-600" />
-                <span>{committee?.type === 'indian' ? 'Party Seats' : 'Delegate Seats'}</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {countries.map((country, index) => (
-                  <div
-                    key={index}
-                    className={`p-3 border-2 rounded-lg cursor-pointer transition-all duration-200 ${
-                      country.name === selectedCountry
-                        ? 'border-indigo-500 bg-indigo-50'
-                        : country.status === 'speaking'
-                        ? 'border-green-500 bg-green-50'
-                        : country.status === 'queued'
-                        ? 'border-yellow-500 bg-yellow-50'
-                        : country.status === 'inactive'
-                        ? 'border-gray-300 bg-gray-50'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                    onClick={() => setSelectedCountry(country.name)}
-                  >
-                    <div className="text-center">
-                      <div className="text-2xl mb-1">{country.avatar}</div>
-                      <div className="text-xs font-medium text-gray-900 truncate">
-                        {country.name}
-                      </div>
-                      <div className="text-xs text-gray-500 truncate">
-                        {country.delegate}
-                      </div>
-                      <div className="mt-1">
-                        <Badge
-                          variant="secondary"
-                          className={`text-xs ${
-                            country.status === 'speaking'
-                              ? 'bg-green-100 text-green-700'
-                              : country.status === 'queued'
-                              ? 'bg-yellow-100 text-yellow-700'
-                              : country.status === 'inactive'
-                              ? 'bg-gray-100 text-gray-500'
-                              : 'bg-blue-100 text-blue-700'
-                          }`}
-                        >
-                          {country.status}
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+          
+          {/* Status Badges */}
+          <div className="flex justify-end items-center space-x-3">
+            {liveSession && (
+              <div className="badge-neon text-red-300 border-red-400/50 bg-red-400/10">
+                🔴 Live Session
               </div>
-            </CardContent>
-          </Card>
+            )}
+            <div className="badge-neon text-emerald-300 border-emerald-400/50 bg-emerald-400/10">
+              Session Active
+            </div>
+            <button 
+              onClick={onExit}
+              className="btn-neon-secondary"
+            >
+              Exit Session
+            </button>
+          </div>
+        </div>
 
-          {/* Current Agenda/Resolution */}
-          <Card className="card-shadow">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <FileText className="h-5 w-5 text-purple-600" />
-                <span>{committee?.type === 'indian' ? 'Current Bill' : 'Current Resolution'}</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="p-4 border border-gray-200 rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <div>
-                      <h4 className="font-medium text-gray-900">{getCurrentAgenda()}</h4>
-                      <p className="text-sm text-gray-500">
-                        {committee?.type === 'indian' ? 'Bill No. 2024/001' : 'Resolution A/78/123'}
-                      </p>
+        {/* Crisis Alert - Updated for committee */}
+        <div className="card-neon border-orange-400/30 bg-gradient-to-r from-orange-950/30 to-red-950/30">
+          <div className="p-4">
+            <div className="flex items-center space-x-3">
+              <AlertTriangle className="h-6 w-6 text-orange-400" />
+              <div className="flex-1">
+                <h3 className="font-semibold text-orange-300 font-orbitron">
+                  {committee?.type === 'indian' 
+                    ? 'Breaking: Opposition walks out over digital privacy concerns' 
+                    : 'Breaking: Economic Sanctions Announced'
+                  }
+                </h3>
+                <p className="text-sm text-orange-200">
+                  {committee?.type === 'indian'
+                    ? 'Parliament session disrupted. Delegates must address privacy vs security balance.'
+                    : 'Major economic sanctions have been imposed affecting global trade relations. Delegates must adjust their positions accordingly.'
+                  }
+                </p>
+              </div>
+              <div className="badge-neon text-red-300 border-red-400/50 bg-red-400/10">
+                {committee?.type === 'indian' ? 'Parliamentary Alert' : 'Crisis Update'}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Country/Party Seats */}
+          <div className="lg:col-span-2 space-y-6">
+            <div className="card-neon">
+              <div className="p-6 border-b border-cyan-400/20">
+                <h3 className="flex items-center space-x-2 text-cyan-300 font-orbitron text-lg">
+                  <Globe className="h-5 w-5" />
+                  <span>{committee?.type === 'indian' ? 'Party Seats' : 'Delegate Seats'}</span>
+                </h3>
+              </div>
+              <div className="p-6">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {countries.map((country, index) => (
+                    <div
+                      key={index}
+                      className={`p-3 border-2 rounded-lg cursor-pointer transition-all duration-200 ${
+                        country.name === selectedCountry
+                          ? 'border-cyan-400 bg-cyan-400/20 shadow-neon'
+                          : country.status === 'speaking'
+                          ? 'border-emerald-400 bg-emerald-400/20'
+                          : country.status === 'queued'
+                          ? 'border-amber-400 bg-amber-400/20'
+                          : country.status === 'inactive'
+                          ? 'border-gray-600 bg-gray-800/30'
+                          : 'border-gray-600 hover:border-gray-500 bg-gray-800/50'
+                      }`}
+                      onClick={() => setSelectedCountry(country.name)}
+                    >
+                      <div className="text-center">
+                        <div className="text-2xl mb-1">{country.avatar}</div>
+                        <div className="text-xs font-medium text-white truncate">
+                          {country.name}
+                        </div>
+                        <div className="text-xs text-gray-400 truncate">
+                          {country.delegate}
+                        </div>
+                        <div className="mt-1">
+                          <div
+                            className={`badge-neon text-xs ${
+                              country.status === 'speaking'
+                                ? 'text-emerald-300 border-emerald-400/50 bg-emerald-400/10'
+                                : country.status === 'queued'
+                                ? 'text-amber-300 border-amber-400/50 bg-amber-400/10'
+                                : country.status === 'inactive'
+                                ? 'text-gray-400 border-gray-500/50 bg-gray-500/10'
+                                : 'text-cyan-300 border-cyan-400/50 bg-cyan-400/10'
+                            }`}
+                          >
+                            {country.status}
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <Badge variant="default">Under Discussion</Badge>
-                  </div>
-                  
-                  <div className="grid grid-cols-3 gap-4 mt-3">
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-green-600">12</div>
-                      <div className="text-xs text-gray-500">In Favor</div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Current Agenda/Resolution */}
+            <div className="card-neon">
+              <div className="p-6 border-b border-fuchsia-400/20">
+                <h3 className="flex items-center space-x-2 text-fuchsia-300 font-orbitron text-lg">
+                  <FileText className="h-5 w-5" />
+                  <span>{committee?.type === 'indian' ? 'Current Bill' : 'Current Resolution'}</span>
+                </h3>
+              </div>
+              <div className="p-6">
+                <div className="space-y-4">
+                  <div className="p-4 border border-gray-700 rounded-lg bg-gray-800/30">
+                    <div className="flex items-center justify-between mb-2">
+                      <div>
+                        <h4 className="font-medium text-white">{getCurrentAgenda()}</h4>
+                        <p className="text-sm text-gray-400">
+                          {committee?.type === 'indian' ? 'Bill No. 2024/001' : 'Resolution A/78/123'}
+                        </p>
+                      </div>
+                      <div className="badge-neon text-blue-300 border-blue-400/50 bg-blue-400/10">Under Discussion</div>
                     </div>
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-red-600">3</div>
-                      <div className="text-xs text-gray-500">Against</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-yellow-600">2</div>
-                      <div className="text-xs text-gray-500">Abstain</div>
+                    
+                    <div className="grid grid-cols-3 gap-4 mt-3">
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-emerald-400">12</div>
+                        <div className="text-xs text-gray-400">In Favor</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-red-400">3</div>
+                        <div className="text-xs text-gray-400">Against</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-amber-400">2</div>
+                        <div className="text-xs text-gray-400">Abstain</div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        </div>
+            </div>
+          </div>
 
-        {/* Control Panel */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Session Controls */}
-          <Card className="card-shadow">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Gavel className="h-5 w-5 text-yellow-600" />
-                <span>Session Controls</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-3 gap-2">
-                <Button
-                  variant={currentMode === 'general' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setCurrentMode('general')}
-                >
-                  General
-                </Button>
-                <Button
-                  variant={currentMode === 'moderated' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setCurrentMode('moderated')}
-                >
-                  Moderated
-                </Button>
-                <Button
-                  variant={currentMode === 'unmoderated' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setCurrentMode('unmoderated')}
-                >
-                  Unmoderated
-                </Button>
+          {/* Control Panel */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Session Controls */}
+            {/* Session Controls */}
+            <div className="card-neon">
+              <div className="p-6 border-b border-amber-400/20">
+                <h3 className="flex items-center space-x-2 text-amber-300 font-orbitron text-lg">
+                  <Gavel className="h-5 w-5" />
+                  <span>Session Controls</span>
+                </h3>
               </div>
+              <div className="p-6 space-y-4">
+                <div className="grid grid-cols-3 gap-2">
+                  <button
+                    className={`py-2 px-3 text-sm rounded-lg border transition-all ${
+                      currentMode === 'general' 
+                        ? 'btn-neon-primary' 
+                        : 'bg-gray-800/50 border-gray-600 text-gray-300 hover:border-cyan-400/50 hover:text-cyan-300'
+                    }`}
+                    onClick={() => setCurrentMode('general')}
+                  >
+                    General
+                  </button>
+                  <button
+                    className={`py-2 px-3 text-sm rounded-lg border transition-all ${
+                      currentMode === 'moderated' 
+                        ? 'btn-neon-primary' 
+                        : 'bg-gray-800/50 border-gray-600 text-gray-300 hover:border-cyan-400/50 hover:text-cyan-300'
+                    }`}
+                    onClick={() => setCurrentMode('moderated')}
+                  >
+                    Moderated
+                  </button>
+                  <button
+                    className={`py-2 px-3 text-sm rounded-lg border transition-all ${
+                      currentMode === 'unmoderated' 
+                        ? 'btn-neon-primary' 
+                        : 'bg-gray-800/50 border-gray-600 text-gray-300 hover:border-cyan-400/50 hover:text-cyan-300'
+                    }`}
+                    onClick={() => setCurrentMode('unmoderated')}
+                  >
+                    Unmoderated
+                  </button>
+                </div>
 
-              <div className="flex items-center space-x-2">
-                <Button
-                  variant={micStatus ? "destructive" : "default"}
-                  size="sm"
-                  onClick={() => setMicStatus(!micStatus)}
-                  className="flex-1"
-                >
-                  {micStatus ? <MicOff className="h-4 w-4 mr-2" /> : <Mic className="h-4 w-4 mr-2" />}
-                  {micStatus ? 'Mute' : 'Unmute'}
-                </Button>
-                
-                <Button
-                  variant={isInSpeakerQueue ? "secondary" : "default"}
-                  size="sm"
-                  onClick={() => setIsInSpeakerQueue(!isInSpeakerQueue)}
-                  className="flex-1"
-                >
-                  <Users className="h-4 w-4 mr-2" />
-                  {isInSpeakerQueue ? 'Leave Queue' : 'Join Queue'}
-                </Button>
+                <div className="flex items-center space-x-2">
+                  <button
+                    className={`flex-1 py-2 px-3 text-sm rounded-lg border transition-all flex items-center justify-center gap-2 ${
+                      micStatus 
+                        ? 'bg-red-500/20 border-red-400 text-red-300 hover:bg-red-500/30' 
+                        : 'btn-neon-primary'
+                    }`}
+                    onClick={() => setMicStatus(!micStatus)}
+                  >
+                    {micStatus ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                    {micStatus ? 'Mute' : 'Unmute'}
+                  </button>
+                  
+                  <button
+                    className={`flex-1 py-2 px-3 text-sm rounded-lg border transition-all flex items-center justify-center gap-2 ${
+                      isInSpeakerQueue 
+                        ? 'btn-neon-secondary' 
+                        : 'btn-neon-primary'
+                    }`}
+                    onClick={() => setIsInSpeakerQueue(!isInSpeakerQueue)}
+                  >
+                    <Users className="h-4 w-4" />
+                    {isInSpeakerQueue ? 'Leave Queue' : 'Join Queue'}
+                  </button>
+                </div>
+
+                <button className="w-full btn-neon-secondary py-2 flex items-center justify-center gap-2">
+                  <Vote className="h-4 w-4" />
+                  Cast Vote
+                </button>
               </div>
+            </div>
 
-              <Button className="w-full" variant="outline">
-                <Vote className="h-4 w-4 mr-2" />
-                Cast Vote
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* Speaker Queue */}
-          <Card className="card-shadow">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <MessageSquare className="h-5 w-5 text-green-600" />
-                <span>Speaker Queue</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {speakerQueue.map((speaker, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
-                        <span className="text-sm font-medium text-indigo-700">{index + 1}</span>
+            {/* Speaker Queue */}
+            <div className="card-neon">
+              <div className="p-6 border-b border-emerald-400/20">
+                <h3 className="flex items-center space-x-2 text-emerald-300 font-orbitron text-lg">
+                  <MessageSquare className="h-5 w-5" />
+                  <span>Speaker Queue</span>
+                </h3>
+              </div>
+              <div className="p-6">
+                <div className="space-y-3">
+                  {speakerQueue.map((speaker, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg border border-gray-700">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-cyan-400/20 rounded-full flex items-center justify-center border border-cyan-400/50">
+                          <span className="text-sm font-medium text-cyan-300">{index + 1}</span>
+                        </div>
+                        <div>
+                          <p className="font-medium text-sm text-white">{speaker.country}</p>
+                          <p className="text-xs text-gray-400">{speaker.delegate}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-medium text-sm text-gray-900">{speaker.country}</p>
-                        <p className="text-xs text-gray-500">{speaker.delegate}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Clock className="h-4 w-4 text-gray-400" />
-                      <span className="text-sm text-gray-600">3:00</span>
+                      <div className="flex items-center space-x-2">
+                        <Clock className="h-4 w-4 text-gray-400" />
+                        <span className="text-sm text-gray-300">3:00</span>
                     </div>
                   </div>
                 ))}
@@ -343,60 +372,61 @@ const MunArena = ({ committee, liveSession, onExit, onBackToCommittees }: MunAre
                         <p className="text-xs text-blue-700">You</p>
                       </div>
                     </div>
-                    <Badge variant="secondary" className="bg-blue-100 text-blue-700">
+                    <div className="badge-neon text-blue-300 border-blue-400/50 bg-blue-400/10">
                       Queued
-                    </Badge>
+                    </div>
                   </div>
                 )}
+                </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
 
-          {/* Country Position */}
-          <Card className="card-shadow">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Flag className="h-5 w-5 text-red-600" />
-                <span>Your Position</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div className="p-3 bg-blue-50 rounded-lg">
-                  <h4 className="font-medium text-blue-900 mb-1">
-                    {committee?.type === 'indian' ? `Representing: ${selectedCountry} Party` : `Representing: ${selectedCountry}`}
-                  </h4>
-                  <p className="text-sm text-blue-800">
-                    {committee?.type === 'indian' 
-                      ? `As a ${selectedCountry} representative, you advocate for transparent digital governance while ensuring citizen privacy protection and constitutional rights.`
-                      : `As the delegate for ${selectedCountry}, you support innovative climate solutions while maintaining economic stability and international cooperation.`
-                    }
-                  </p>
-                </div>
-                
-                <div className="space-y-2">
-                  <h5 className="font-medium text-gray-900">Key Talking Points:</h5>
-                  <ul className="text-sm text-gray-600 space-y-1">
-                    {committee?.type === 'indian' ? (
-                      <>
-                        <li>• Data protection and privacy rights</li>
-                        <li>• Digital infrastructure development</li>
-                        <li>• Cybersecurity framework</li>
-                        <li>• Constitutional compliance</li>
-                      </>
-                    ) : (
-                      <>
-                        <li>• Technology transfer for developing nations</li>
-                        <li>• Carbon pricing mechanisms</li>
-                        <li>• Green energy investment frameworks</li>
-                        <li>• Climate adaptation funding</li>
-                      </>
-                    )}
-                  </ul>
+            {/* Country Position */}
+            <div className="card-neon">
+              <div className="p-6 border-b border-red-400/20">
+                <h3 className="flex items-center space-x-2 text-red-300 font-orbitron text-lg">
+                  <Flag className="h-5 w-5" />
+                  <span>Your Position</span>
+                </h3>
+              </div>
+              <div className="p-6">
+                <div className="space-y-3">
+                  <div className="p-3 bg-blue-950/30 rounded-lg border border-blue-400/30">
+                    <h4 className="font-medium text-blue-300 mb-1">
+                      {committee?.type === 'indian' ? `Representing: ${selectedCountry} Party` : `Representing: ${selectedCountry}`}
+                    </h4>
+                    <p className="text-sm text-blue-200">
+                      {committee?.type === 'indian' 
+                        ? `As a ${selectedCountry} representative, you advocate for transparent digital governance while ensuring citizen privacy protection and constitutional rights.`
+                        : `As the delegate for ${selectedCountry}, you support innovative climate solutions while maintaining economic stability and international cooperation.`
+                      }
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <h5 className="font-medium text-white">Key Talking Points:</h5>
+                    <ul className="text-sm text-gray-300 space-y-1">
+                      {committee?.type === 'indian' ? (
+                        <>
+                          <li>• Data protection and privacy rights</li>
+                          <li>• Digital infrastructure development</li>
+                          <li>• Cybersecurity framework</li>
+                          <li>• Constitutional compliance</li>
+                        </>
+                      ) : (
+                        <>
+                          <li>• Technology transfer for developing nations</li>
+                          <li>• Carbon pricing mechanisms</li>
+                          <li>• Green energy investment frameworks</li>
+                          <li>• Climate adaptation funding</li>
+                        </>
+                      )}
+                    </ul>
+                  </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
     </div>

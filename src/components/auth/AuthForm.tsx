@@ -27,15 +27,15 @@ const AuthForm = ({ form, onSubmit, isLogin, loading, onForgotPassword }: AuthFo
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel className="text-gray-50">Email</FormLabel>
               <FormControl>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Mail className="absolute left-3 top-3 h-4 w-4 text-cyan-400" />
                   <Input
                     type="email"
                     placeholder="Enter your email"
                     {...field}
-                    className="pl-10"
+                    className="input-neon pl-10"
                   />
                   {/* REMOVED: Email check indicator */}
                 </div>
@@ -51,20 +51,20 @@ const AuthForm = ({ form, onSubmit, isLogin, loading, onForgotPassword }: AuthFo
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel className="text-gray-50">Password</FormLabel>
               <FormControl>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Lock className="absolute left-3 top-3 h-4 w-4 text-cyan-400" />
                   <Input
                     type="password"
                     placeholder="Enter your password"
                     {...field}
-                    className="pl-10"
+                    className="input-neon pl-10"
                   />
                 </div>
               </FormControl>
               {!isLogin && (
-                <FormDescription className="text-xs">
+                <FormDescription className="text-xs text-gray-400">
                   Password must be at least 8 characters and contain an uppercase letter, a lowercase letter, a number, and a special character.
                 </FormDescription>
               )}
@@ -79,15 +79,15 @@ const AuthForm = ({ form, onSubmit, isLogin, loading, onForgotPassword }: AuthFo
             name="confirmPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
+                <FormLabel className="text-gray-50">Confirm Password</FormLabel>
                 <FormControl>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                    <Lock className="absolute left-3 top-3 h-4 w-4 text-cyan-400" />
                     <Input
                       type="password"
                       placeholder="Confirm your password"
                       {...field}
-                      className="pl-10"
+                      className="input-neon pl-10"
                     />
                   </div>
                 </FormControl>
@@ -103,7 +103,7 @@ const AuthForm = ({ form, onSubmit, isLogin, loading, onForgotPassword }: AuthFo
               type="button"
               variant="link"
               onClick={onForgotPassword}
-              className="text-sm p-0 h-auto"
+              className="text-sm p-0 h-auto text-cyan-400 hover:text-cyan-300"
             >
               Forgot your password?
             </Button>
@@ -113,7 +113,7 @@ const AuthForm = ({ form, onSubmit, isLogin, loading, onForgotPassword }: AuthFo
         <Button
           type="submit"
           disabled={loading}
-          className="w-full gradient-indigo text-white"
+          className="w-full btn-neon-primary"
         >
           {loading ? 'Loading...' : isLogin ? 'Sign In' : 'Sign Up'}
         </Button>

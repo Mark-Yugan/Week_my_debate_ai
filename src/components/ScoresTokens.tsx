@@ -1,5 +1,6 @@
 
 // @ts-nocheck
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -33,6 +34,8 @@ interface ScoresTokensProps {
 }
 
 const ScoresTokens = ({ userTokens, onBack }: ScoresTokensProps) => {
+  const [activeTab, setActiveTab] = useState('badges');
+  
   // Indian Mythical Achievement Badges
   const mythicalBadges = [
     { 
@@ -200,109 +203,137 @@ const ScoresTokens = ({ userTokens, onBack }: ScoresTokensProps) => {
   const availableRewards = redemptionOptions.filter(r => r.available).length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
-      <div className="max-w-7xl mx-auto p-6 space-y-8">
+    <div className="min-h-screen bg-gray-950 relative overflow-hidden">
+      {/* Cyberpunk Background Effects */}
+      <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/5 via-transparent to-fuchsia-500/5"></div>
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-400/10 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-fuchsia-500/10 rounded-full blur-3xl"></div>
+      
+      <div className="relative max-w-7xl mx-auto p-6 space-y-8">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="space-y-2">
             <div className="flex items-center space-x-3">
-              <div className="p-3 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl shadow-lg">
-                <Coins className="h-8 w-8 text-white" />
+              <div className="p-3 bg-cyan-400/20 border border-cyan-400/30 rounded-2xl">
+                <Coins className="h-8 w-8 text-cyan-400" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
+                <h1 className="text-3xl font-bold font-orbitron neon-text">
                   My Tokens
                 </h1>
-                <p className="text-slate-600 text-lg">Track your progress and unlock rewards</p>
+                <p className="text-gray-300 text-lg font-inter">Track your progress and unlock rewards</p>
               </div>
             </div>
           </div>
-          <Button 
-            variant="ghost" 
+          <button 
             onClick={onBack}
-            className="hover:bg-slate-100 transition-colors"
+            className="btn-neon-secondary"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back
-          </Button>
+          </button>
         </div>
 
         {/* Token Overview Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-            <CardContent className="p-6">
+          <div className="card-neon hover:shadow-neon transition-all duration-300">
+            <div className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-2xl font-bold text-slate-900">{userTokens}</p>
-                  <p className="text-sm text-slate-600 font-medium">Current Balance</p>
+                  <p className="text-2xl font-bold text-cyan-400 font-orbitron">{userTokens}</p>
+                  <p className="text-sm text-gray-300 font-medium font-inter">Current Balance</p>
                 </div>
-                <div className="p-3 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl">
-                  <Coins className="h-6 w-6 text-white" />
+                <div className="p-3 bg-cyan-400/20 border border-cyan-400/30 rounded-xl">
+                  <Coins className="h-6 w-6 text-cyan-400" />
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-            <CardContent className="p-6">
+          <div className="card-neon hover:shadow-neon transition-all duration-300">
+            <div className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-2xl font-bold text-slate-900">{totalEarnedTokens}</p>
-                  <p className="text-sm text-slate-600 font-medium">Total Earned</p>
+                  <p className="text-2xl font-bold text-green-400 font-orbitron">{totalEarnedTokens}</p>
+                  <p className="text-sm text-gray-300 font-medium font-inter">Total Earned</p>
                 </div>
-                <div className="p-3 bg-gradient-to-br from-emerald-400 to-green-500 rounded-xl">
-                  <TrendingUp className="h-6 w-6 text-white" />
+                <div className="p-3 bg-green-400/20 border border-green-400/30 rounded-xl">
+                  <TrendingUp className="h-6 w-6 text-green-400" />
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-            <CardContent className="p-6">
+          <div className="card-neon hover:shadow-neon transition-all duration-300">
+            <div className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-2xl font-bold text-slate-900">{earnedBadges}</p>
-                  <p className="text-sm text-slate-600 font-medium">Badges Earned</p>
+                  <p className="text-2xl font-bold text-fuchsia-400 font-orbitron">{earnedBadges}</p>
+                  <p className="text-sm text-gray-300 font-medium font-inter">Badges Earned</p>
                 </div>
-                <div className="p-3 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-xl">
-                  <Star className="h-6 w-6 text-white" />
+                <div className="p-3 bg-fuchsia-400/20 border border-fuchsia-400/30 rounded-xl">
+                  <Star className="h-6 w-6 text-fuchsia-400" />
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-            <CardContent className="p-6">
+          <div className="card-neon hover:shadow-neon transition-all duration-300">
+            <div className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-2xl font-bold text-slate-900">{availableRewards}</p>
-                  <p className="text-sm text-slate-600 font-medium">Available Rewards</p>
+                  <p className="text-2xl font-bold text-violet-400 font-orbitron">{availableRewards}</p>
+                  <p className="text-sm text-gray-300 font-medium font-inter">Available Rewards</p>
                 </div>
-                <div className="p-3 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-xl">
-                  <Gift className="h-6 w-6 text-white" />
+                <div className="p-3 bg-violet-400/20 border border-violet-400/30 rounded-xl">
+                  <Gift className="h-6 w-6 text-violet-400" />
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
 
         {/* Main Content Tabs */}
-        <Tabs defaultValue="badges" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 bg-white/80 backdrop-blur-sm border-0 shadow-lg">
-            <TabsTrigger value="badges" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-indigo-500 data-[state=active]:text-white">
-              <Award className="h-4 w-4 mr-2" />
-              Badges
-            </TabsTrigger>
-            <TabsTrigger value="rewards" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-cyan-500 data-[state=active]:text-white">
-              <Gift className="h-4 w-4 mr-2" />
-              Rewards
-            </TabsTrigger>
-            <TabsTrigger value="history" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-green-500 data-[state=active]:text-white">
-              <Calendar className="h-4 w-4 mr-2" />
-              History
-            </TabsTrigger>
-          </TabsList>
+        <div className="space-y-6">
+          <div className="card-neon p-2">
+            <div className="grid w-full grid-cols-3 gap-2">
+              <button 
+                onClick={() => setActiveTab('badges')} 
+                className={`flex items-center justify-center py-3 px-4 rounded-xl transition-all duration-200 font-inter ${
+                  activeTab === 'badges' 
+                    ? 'bg-fuchsia-400/20 text-fuchsia-400 border border-fuchsia-400/30' 
+                    : 'text-gray-400 hover:text-fuchsia-400 hover:bg-gray-800/50'
+                }`}
+              >
+                <Award className="h-4 w-4 mr-2" />
+                Badges
+              </button>
+              <button 
+                onClick={() => setActiveTab('rewards')} 
+                className={`flex items-center justify-center py-3 px-4 rounded-xl transition-all duration-200 font-inter ${
+                  activeTab === 'rewards' 
+                    ? 'bg-cyan-400/20 text-cyan-400 border border-cyan-400/30' 
+                    : 'text-gray-400 hover:text-cyan-400 hover:bg-gray-800/50'
+                }`}
+              >
+                <Gift className="h-4 w-4 mr-2" />
+                Rewards
+              </button>
+              <button 
+                onClick={() => setActiveTab('history')} 
+                className={`flex items-center justify-center py-3 px-4 rounded-xl transition-all duration-200 font-inter ${
+                  activeTab === 'history' 
+                    ? 'bg-green-400/20 text-green-400 border border-green-400/30' 
+                    : 'text-gray-400 hover:text-green-400 hover:bg-gray-800/50'
+                }`}
+              >
+                <Calendar className="h-4 w-4 mr-2" />
+                History
+              </button>
+            </div>
+          </div>
 
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           {/* Badges Tab */}
           <TabsContent value="badges" className="space-y-6">
             <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
@@ -512,7 +543,8 @@ const ScoresTokens = ({ userTokens, onBack }: ScoresTokensProps) => {
               </CardContent>
             </Card>
           </TabsContent>
-        </Tabs>
+          </Tabs>
+        </div>
       </div>
     </div>
   );

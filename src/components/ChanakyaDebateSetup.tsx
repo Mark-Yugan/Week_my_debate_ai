@@ -117,21 +117,6 @@ const ChanakyaDebateSetup = ({ onStartDebate, onBack }: ChanakyaDebateSetupProps
     setScenario(scenarioText);
   };
 
-  const getDifficultyColor = (level: string) => {
-    switch (level) {
-      case 'easy': return 'bg-emerald-100 text-emerald-800 border-emerald-200';
-      case 'medium': return 'bg-amber-100 text-amber-800 border-amber-200';
-      case 'hard': return 'bg-rose-100 text-rose-800 border-rose-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
-  };
-
-  const getPositionColor = (position: string) => {
-    return position === 'for' 
-      ? 'bg-emerald-100 text-emerald-800 border-emerald-200'
-      : 'bg-rose-100 text-rose-800 border-rose-200';
-  };
-
   const getDifficultyIcon = (level: string) => {
     switch (level) {
       case 'easy': return '🌱';
@@ -142,70 +127,53 @@ const ChanakyaDebateSetup = ({ onStartDebate, onBack }: ChanakyaDebateSetupProps
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900">
-      {/* Royal Header */}
-      <div className="sticky top-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            {/* Left Side - Navigation */}
-            <Button 
-              variant="outline" 
-              size="sm"
+    <div className="min-h-screen bg-gray-950 relative overflow-hidden">
+      {/* Animated background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-cyan-950/20 via-gray-950 to-fuchsia-950/20"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.1),transparent_50%)]"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(217,70,239,0.1),transparent_50%)]"></div>
+      
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-6 py-8 relative z-10">
+        {/* Header Section */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <button 
               onClick={onBack}
-              className="flex items-center space-x-2 hover:bg-purple-50 hover:border-purple-300"
+              className="btn-neon-secondary flex items-center gap-2"
             >
               <ArrowLeft className="h-4 w-4" />
-              <span>Back to Dashboard</span>
-            </Button>
+              Back to Dashboard
+            </button>
             
-            {/* Center - Branding */}
-            <div className="flex items-center space-x-3">
-              <div className="p-2 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-xl">
-                <Crown className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-lg font-bold text-gray-900 dark:text-white flex items-center">
-                  Chanakya AI Challenge
-                  <Sparkles className="h-4 w-4 text-purple-500 ml-2" />
-                </h1>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Ancient Strategy • Modern Intelligence</p>
-              </div>
-            </div>
-            
-            {/* Right Side - Status */}
-            <div className="flex items-center space-x-3">
-              <Badge variant="secondary" className="text-xs">
-                <Shield className="h-3 w-3 mr-1" />
-                Ready for Battle
-              </Badge>
+            <div className="text-right">
+              <h1 className="text-4xl font-bold font-orbitron neon-text">
+                Debate Arena
+              </h1>
+              <p className="text-gray-300 mt-1 font-inter">Challenge Chanakya AI</p>
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Hero Section */}
         <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
+          <div className="flex justify-center mb-6">
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full blur-xl opacity-25 animate-pulse"></div>
-              <div className="relative bg-gradient-to-r from-purple-600 to-indigo-600 p-4 rounded-full shadow-2xl">
-                <Swords className="h-10 w-10 text-white" />
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-fuchsia-500 rounded-full blur-xl opacity-25 animate-pulse"></div>
+              <div className="relative bg-gradient-to-r from-cyan-400 to-fuchsia-500 p-4 rounded-full shadow-neon">
+                <Swords className="h-12 w-12 text-gray-950" />
               </div>
             </div>
           </div>
           
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
-            Enter the{' '}
-            <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
-              Debate Arena
+          <h2 className="text-3xl font-bold text-white mb-4 font-orbitron">
+            Challenge the{' '}
+            <span className="neon-text">
+              Master Strategist
             </span>
-          </h1>
+          </h2>
           
-          <p className="text-base text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Challenge the legendary strategist Chanakya AI in intellectual combat. Present your topic or scenario, 
-            choose your stance, and engage in strategic debate.
+          <p className="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            Present your topic or scenario, choose your stance, and engage in strategic debate with Chanakya AI.
           </p>
         </div>
 
@@ -214,26 +182,26 @@ const ChanakyaDebateSetup = ({ onStartDebate, onBack }: ChanakyaDebateSetupProps
           <div className="xl:col-span-3 space-y-8">
             
             {/* Topic Selection Arena */}
-            <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200 dark:border-gray-700 shadow-2xl">
-              <CardHeader className="pb-6">
+            <div className="card-neon">
+              <div className="p-6 border-b border-cyan-400/20">
                 <div className="flex items-center space-x-4">
-                  <div className="p-3 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl">
-                    <Target className="h-6 w-6 text-white" />
+                  <div className="p-3 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-xl shadow-neon">
+                    <Target className="h-6 w-6 text-gray-950" />
                   </div>
                   <div>
-                    <CardTitle className="text-2xl text-gray-900 dark:text-white">Choose Your Battlefield</CardTitle>
-                    <p className="text-gray-600 dark:text-gray-400 mt-1">Select your weapon of choice: a focused topic or complex scenario</p>
+                    <h2 className="text-2xl font-bold text-white font-orbitron">Choose Your Battlefield</h2>
+                    <p className="text-gray-400 mt-1">Select your weapon of choice: a focused topic or complex scenario</p>
                   </div>
                 </div>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <Tabs value={topicType} onValueChange={(value) => setTopicType(value as 'custom' | 'scenario')} className="w-full">
-                  <TabsList className="grid w-full grid-cols-2 h-14 bg-gray-100 dark:bg-gray-700">
-                    <TabsTrigger value="custom" className="flex items-center space-x-3 h-12 text-base">
+              </div>
+              <div className="p-6 space-y-6">
+                <Tabs value={topicType} onValueChange={(value: string) => setTopicType(value as 'custom' | 'scenario')} className="w-full">
+                  <TabsList className="grid w-full grid-cols-2 h-14 bg-gray-800/50 border border-cyan-400/20">
+                    <TabsTrigger value="custom" className="flex items-center space-x-3 h-12 text-base data-[state=active]:bg-cyan-400/20 data-[state=active]:text-cyan-400 text-gray-400 hover:text-cyan-300">
                       <Lightbulb className="h-5 w-5" />
                       <span>Topic Debate</span>
                     </TabsTrigger>
-                    <TabsTrigger value="scenario" className="flex items-center space-x-3 h-12 text-base">
+                    <TabsTrigger value="scenario" className="flex items-center space-x-3 h-12 text-base data-[state=active]:bg-cyan-400/20 data-[state=active]:text-cyan-400 text-gray-400 hover:text-cyan-300">
                       <BookOpen className="h-5 w-5" />
                       <span>Scenario Challenge</span>
                     </TabsTrigger>
@@ -242,24 +210,26 @@ const ChanakyaDebateSetup = ({ onStartDebate, onBack }: ChanakyaDebateSetupProps
                   <TabsContent value="custom" className="space-y-6 mt-6">
                     <div className="space-y-4">
                       <div className="flex items-center space-x-2">
-                        <Wand2 className="h-5 w-5 text-purple-500" />
-                        <Label className="text-lg font-semibold">Craft Your Debate Topic</Label>
+                        <Wand2 className="h-5 w-5 text-cyan-400" />
+                        <Label className="text-lg font-semibold text-white">Craft Your Debate Topic</Label>
                       </div>
-                      <Input
-                        placeholder="Enter a clear, debatable statement (e.g., 'Artificial intelligence will replace human creativity in the next decade')"
-                        value={customTopic}
-                        onChange={(e) => setCustomTopic(e.target.value)}
-                        className="h-14 text-base bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600"
-                      />
-                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                      <div className="input-neon">
+                        <Input
+                          placeholder="Enter a clear, debatable statement (e.g., 'Artificial intelligence will replace human creativity in the next decade')"
+                          value={customTopic}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCustomTopic(e.target.value)}
+                          className="h-14 text-base bg-gray-800/50 border-cyan-400/30 text-white placeholder:text-gray-500 focus:border-cyan-400 focus:ring-cyan-400/20"
+                        />
+                      </div>
+                      <div className="text-sm text-gray-400">
                         {customTopic.length}/200 characters • Make it clear and specific for better debates
                       </div>
                     </div>
                     
                     <div className="space-y-4">
                       <div className="flex items-center space-x-2">
-                        <Sparkles className="h-4 w-4 text-amber-500" />
-                        <Label className="text-base font-medium text-gray-700 dark:text-gray-300">
+                        <Sparkles className="h-4 w-4 text-fuchsia-400" />
+                        <Label className="text-base font-medium text-gray-300">
                           Or choose from these compelling topics:
                         </Label>
                       </div>
@@ -268,18 +238,18 @@ const ChanakyaDebateSetup = ({ onStartDebate, onBack }: ChanakyaDebateSetupProps
                           <button
                             key={index}
                             onClick={() => fillSampleTopic(topic)}
-                            className="group text-left p-4 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-600 hover:from-purple-50 hover:to-indigo-50 dark:hover:from-purple-900/30 dark:hover:to-indigo-900/30 rounded-xl border border-gray-200 dark:border-gray-600 hover:border-purple-300 dark:hover:border-purple-600 transition-all duration-300 hover:shadow-lg"
+                            className="group text-left p-4 bg-gray-800/30 hover:bg-gray-800/60 rounded-xl border border-gray-700/50 hover:border-cyan-400/50 transition-all duration-300 hover:shadow-neon"
                           >
                             <div className="flex items-start space-x-3">
-                              <div className="p-1 bg-purple-100 dark:bg-purple-900/50 rounded-lg group-hover:bg-purple-200 dark:group-hover:bg-purple-800/50 transition-colors">
-                                <Trophy className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                              <div className="p-1 bg-cyan-400/20 rounded-lg group-hover:bg-cyan-400/30 transition-colors">
+                                <Trophy className="h-4 w-4 text-cyan-400" />
                               </div>
                               <div className="flex-1">
-                                <p className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-purple-700 dark:group-hover:text-purple-300 transition-colors">
+                                <p className="text-sm font-medium text-white group-hover:text-cyan-300 transition-colors">
                                   {topic}
                                 </p>
                               </div>
-                              <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-purple-500 transform group-hover:translate-x-1 transition-all" />
+                              <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-cyan-400 transform group-hover:translate-x-1 transition-all" />
                             </div>
                           </button>
                         ))}
@@ -290,24 +260,26 @@ const ChanakyaDebateSetup = ({ onStartDebate, onBack }: ChanakyaDebateSetupProps
                   <TabsContent value="scenario" className="space-y-6 mt-6">
                     <div className="space-y-4">
                       <div className="flex items-center space-x-2">
-                        <BookOpen className="h-5 w-5 text-indigo-500" />
-                        <Label className="text-lg font-semibold">Describe Your Complex Scenario</Label>
+                        <BookOpen className="h-5 w-5 text-cyan-400" />
+                        <Label className="text-lg font-semibold text-white">Describe Your Complex Scenario</Label>
                       </div>
-                      <Textarea
-                        placeholder="Present a complex situation, dilemma, or decision-making scenario that involves multiple perspectives and stakeholders. Be detailed and specific about the context, constraints, and stakes involved."
-                        value={scenario}
-                        onChange={(e) => setScenario(e.target.value)}
-                        className="min-h-[140px] text-base bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 resize-none"
-                      />
-                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                      <div className="input-neon">
+                        <Textarea
+                          placeholder="Present a complex situation, dilemma, or decision-making scenario that involves multiple perspectives and stakeholders. Be detailed and specific about the context, constraints, and stakes involved."
+                          value={scenario}
+                          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setScenario(e.target.value)}
+                          className="min-h-[140px] text-base bg-gray-800/50 border-cyan-400/30 text-white placeholder:text-gray-500 focus:border-cyan-400 focus:ring-cyan-400/20 resize-none"
+                        />
+                      </div>
+                      <div className="text-sm text-gray-400">
                         {scenario.length}/800 characters • Provide context, stakeholders, and constraints for richer debates
                       </div>
                     </div>
                     
                     <div className="space-y-4">
                       <div className="flex items-center space-x-2">
-                        <Sparkles className="h-4 w-4 text-amber-500" />
-                        <Label className="text-base font-medium text-gray-700 dark:text-gray-300">
+                        <Sparkles className="h-4 w-4 text-fuchsia-400" />
+                        <Label className="text-base font-medium text-gray-300">
                           Or explore these strategic scenarios:
                         </Label>
                       </div>
@@ -316,18 +288,18 @@ const ChanakyaDebateSetup = ({ onStartDebate, onBack }: ChanakyaDebateSetupProps
                           <button
                             key={index}
                             onClick={() => fillSampleScenario(scenarioText)}
-                            className="group text-left p-4 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-600 hover:from-indigo-50 hover:to-blue-50 dark:hover:from-indigo-900/30 dark:hover:to-blue-900/30 rounded-xl border border-gray-200 dark:border-gray-600 hover:border-indigo-300 dark:hover:border-indigo-600 transition-all duration-300 hover:shadow-lg"
+                            className="group text-left p-4 bg-gray-800/30 hover:bg-gray-800/60 rounded-xl border border-gray-700/50 hover:border-cyan-400/50 transition-all duration-300 hover:shadow-neon"
                           >
                             <div className="flex items-start space-x-3">
-                              <div className="p-1 bg-indigo-100 dark:bg-indigo-900/50 rounded-lg group-hover:bg-indigo-200 dark:group-hover:bg-indigo-800/50 transition-colors">
-                                <Swords className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                              <div className="p-1 bg-cyan-400/20 rounded-lg group-hover:bg-cyan-400/30 transition-colors">
+                                <Swords className="h-4 w-4 text-cyan-400" />
                               </div>
                               <div className="flex-1">
-                                <p className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-indigo-700 dark:group-hover:text-indigo-300 transition-colors leading-relaxed">
+                                <p className="text-sm font-medium text-white group-hover:text-cyan-300 transition-colors leading-relaxed">
                                   {scenarioText}
                                 </p>
                               </div>
-                              <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-indigo-500 transform group-hover:translate-x-1 transition-all flex-shrink-0 mt-0.5" />
+                              <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-cyan-400 transform group-hover:translate-x-1 transition-all flex-shrink-0 mt-0.5" />
                             </div>
                           </button>
                         ))}
@@ -335,242 +307,240 @@ const ChanakyaDebateSetup = ({ onStartDebate, onBack }: ChanakyaDebateSetupProps
                     </div>
                   </TabsContent>
                 </Tabs>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
             {/* Battle Configuration */}
-            <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200 dark:border-gray-700 shadow-2xl">
-              <CardHeader className="pb-4">
+            <div className="card-neon">
+              <div className="p-6 border-b border-cyan-400/20">
                 <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-lg">
-                    <Settings className="h-5 w-5 text-white" />
+                  <div className="p-3 bg-gradient-to-r from-fuchsia-500 to-pink-500 rounded-xl shadow-neon">
+                    <Settings className="h-5 w-5 text-gray-950" />
                   </div>
                   <div>
-                    <CardTitle className="text-lg text-gray-900 dark:text-white">Strategic Configuration</CardTitle>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Define your battle stance and parameters</p>
+                    <h3 className="text-lg font-bold text-white font-orbitron">Strategic Configuration</h3>
+                    <p className="text-sm text-gray-400 mt-1">Define your battle stance and parameters</p>
                   </div>
                 </div>
-              </CardHeader>
-              <CardContent className="space-y-6">
+              </div>
+              <div className="p-6 space-y-6">
                 {/* Your Position */}
                 <div className="space-y-3">
                   <div className="flex items-center space-x-2">
-                    <Shield className="h-4 w-4 text-amber-500" />
-                    <Label className="text-sm font-medium">Choose Your Position</Label>
+                    <Shield className="h-4 w-4 text-cyan-400" />
+                    <Label className="text-sm font-medium text-white">Choose Your Position</Label>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
-                    <Button
-                      variant={userPosition === 'for' ? 'default' : 'outline'}
+                    <button
                       onClick={() => setUserPosition('for')}
-                      className={`h-10 flex items-center justify-center space-x-2 text-sm ${
+                      className={`h-12 flex items-center justify-center space-x-2 text-sm rounded-lg border transition-all ${
                         userPosition === 'for' 
-                          ? 'bg-emerald-500 hover:bg-emerald-600 text-white border-emerald-500' 
-                          : 'hover:bg-emerald-50 hover:border-emerald-300 dark:hover:bg-emerald-900/20'
+                          ? 'btn-neon-primary' 
+                          : 'bg-gray-800/50 border-gray-600 text-gray-300 hover:border-cyan-400/50 hover:text-cyan-300'
                       }`}
                     >
                       <span className="text-sm">⚔️</span>
                       <span className="font-medium">Supporting</span>
-                    </Button>
-                    <Button
-                      variant={userPosition === 'against' ? 'default' : 'outline'}
+                    </button>
+                    <button
                       onClick={() => setUserPosition('against')}
-                      className={`h-10 flex items-center justify-center space-x-2 text-sm ${
+                      className={`h-12 flex items-center justify-center space-x-2 text-sm rounded-lg border transition-all ${
                         userPosition === 'against' 
-                          ? 'bg-rose-500 hover:bg-rose-600 text-white border-rose-500' 
-                          : 'hover:bg-rose-50 hover:border-rose-300 dark:hover:bg-rose-900/20'
+                          ? 'btn-neon-secondary' 
+                          : 'bg-gray-800/50 border-gray-600 text-gray-300 hover:border-fuchsia-400/50 hover:text-fuchsia-300'
                       }`}
                     >
                       <span className="text-sm">🛡️</span>
                       <span className="font-medium">Opposing</span>
-                    </Button>
+                    </button>
                   </div>
                 </div>
 
                 {/* First Speaker */}
                 <div className="space-y-3">
                   <div className="flex items-center space-x-2">
-                    <Users className="h-4 w-4 text-blue-500" />
-                    <Label className="text-sm font-medium">Opening Move</Label>
+                    <Users className="h-4 w-4 text-cyan-400" />
+                    <Label className="text-sm font-medium text-white">Opening Move</Label>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
-                    <Button
-                      variant={firstSpeaker === 'user' ? 'default' : 'outline'}
+                    <button
                       onClick={() => setFirstSpeaker('user')}
-                      className={`h-10 flex items-center justify-center space-x-2 text-sm ${
+                      className={`h-12 flex items-center justify-center space-x-2 text-sm rounded-lg border transition-all ${
                         firstSpeaker === 'user' 
-                          ? 'bg-blue-500 hover:bg-blue-600 text-white border-blue-500' 
-                          : 'hover:bg-blue-50 hover:border-blue-300 dark:hover:bg-blue-900/20'
+                          ? 'btn-neon-primary' 
+                          : 'bg-gray-800/50 border-gray-600 text-gray-300 hover:border-cyan-400/50 hover:text-cyan-300'
                       }`}
                     >
                       <span className="text-sm">👤</span>
                       <span className="font-medium">You Start</span>
-                    </Button>
-                    <Button
-                      variant={firstSpeaker === 'ai' ? 'default' : 'outline'}
+                    </button>
+                    <button
                       onClick={() => setFirstSpeaker('ai')}
-                      className={`h-10 flex items-center justify-center space-x-2 text-sm ${
+                      className={`h-12 flex items-center justify-center space-x-2 text-sm rounded-lg border transition-all ${
                         firstSpeaker === 'ai' 
-                          ? 'bg-purple-500 hover:bg-purple-600 text-white border-purple-500' 
-                          : 'hover:bg-purple-50 hover:border-purple-300 dark:hover:bg-purple-900/20'
+                          ? 'btn-neon-secondary' 
+                          : 'bg-gray-800/50 border-gray-600 text-gray-300 hover:border-fuchsia-400/50 hover:text-fuchsia-300'
                       }`}
                     >
                       <span className="text-sm">👑</span>
                       <span className="font-medium">Chanakya Opens</span>
-                    </Button>
+                    </button>
                   </div>
                 </div>
 
                 {/* Difficulty Level */}
                 <div className="space-y-3">
                   <div className="flex items-center space-x-2">
-                    <Zap className="h-4 w-4 text-orange-500" />
-                    <Label className="text-sm font-medium">Combat Intensity</Label>
+                    <Zap className="h-4 w-4 text-cyan-400" />
+                    <Label className="text-sm font-medium text-white">Combat Intensity</Label>
                   </div>
                   <div className="grid grid-cols-3 gap-2">
                     {(['easy', 'medium', 'hard'] as const).map((level) => (
-                      <Button
+                      <button
                         key={level}
-                        variant={difficulty === level ? 'default' : 'outline'}
                         onClick={() => setDifficulty(level)}
-                        className={`h-10 flex items-center justify-center space-x-1 text-sm ${
+                        className={`h-12 flex items-center justify-center space-x-1 text-sm rounded-lg border transition-all ${
                           difficulty === level
                             ? level === 'easy' 
-                              ? 'bg-emerald-500 hover:bg-emerald-600 text-white border-emerald-500'
+                              ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300 shadow-emerald-400/20 shadow-lg'
                               : level === 'medium'
-                              ? 'bg-amber-500 hover:bg-amber-600 text-white border-amber-500'
-                              : 'bg-rose-500 hover:bg-rose-600 text-white border-rose-500'
-                            : `hover:${level === 'easy' ? 'bg-emerald-50 border-emerald-300' : level === 'medium' ? 'bg-amber-50 border-amber-300' : 'bg-rose-50 border-rose-300'} dark:hover:${level === 'easy' ? 'bg-emerald-900/20' : level === 'medium' ? 'bg-amber-900/20' : 'bg-rose-900/20'}`
+                              ? 'bg-amber-500/20 border-amber-400 text-amber-300 shadow-amber-400/20 shadow-lg'
+                              : 'bg-rose-500/20 border-rose-400 text-rose-300 shadow-rose-400/20 shadow-lg'
+                            : 'bg-gray-800/50 border-gray-600 text-gray-300 hover:border-cyan-400/50 hover:text-cyan-300'
                         }`}
                       >
                         <span className="text-sm">{getDifficultyIcon(level)}</span>
                         <span className="font-medium capitalize">{level}</span>
-                      </Button>
+                      </button>
                     ))}
                   </div>
-                  <div className="text-center text-xs text-gray-600 dark:text-gray-400">
+                  <div className="text-center text-xs text-gray-400">
                     {difficulty === 'easy' && '🌱 Gentle approach with thoughtful responses'}
                     {difficulty === 'medium' && '⚡ Balanced challenge with strategic depth'}
                     {difficulty === 'hard' && '🔥 Intense intellectual combat experience'}
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
 
           {/* Side Panel - Takes 1 column */}
           <div className="xl:col-span-1 space-y-6">
             {/* Battle Preview */}
-            <Card className="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 border-purple-200 dark:border-purple-700 shadow-xl">
-              <CardHeader className="pb-4">
-                <CardTitle className="flex items-center space-x-3 text-purple-900 dark:text-purple-100">
-                  <div className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg">
-                    <Eye className="h-5 w-5 text-white" />
+            <div className="card-neon bg-gradient-to-br from-cyan-950/30 to-fuchsia-950/30 border-cyan-400/30">
+              <div className="p-6 border-b border-cyan-400/20">
+                <h3 className="flex items-center space-x-3 text-cyan-300 font-orbitron">
+                  <div className="p-2 bg-gradient-to-r from-cyan-400 to-fuchsia-500 rounded-lg shadow-neon">
+                    <Eye className="h-5 w-5 text-gray-950" />
                   </div>
                   <span>Battle Preview</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+                </h3>
+              </div>
+              <div className="p-6">
                 {(customTopic || scenario) ? (
                   <div className="space-y-4">
                     <div className="space-y-3">
-                      <div className="p-3 bg-white/70 dark:bg-gray-800/70 rounded-lg">
-                        <div className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">BATTLEFIELD:</div>
-                        <p className="text-sm text-gray-900 dark:text-white font-medium leading-relaxed">
+                      <div className="p-3 bg-gray-800/70 rounded-lg border border-gray-700/50">
+                        <div className="text-xs font-medium text-gray-400 mb-1">BATTLEFIELD:</div>
+                        <p className="text-sm text-white font-medium leading-relaxed">
                           {topicType === 'custom' ? customTopic : scenario}
                         </p>
                       </div>
                       
                       <div className="grid grid-cols-1 gap-2">
-                        <div className="flex items-center justify-between p-2 bg-white/50 dark:bg-gray-800/50 rounded-lg">
-                          <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Position:</span>
-                          <Badge className={getPositionColor(userPosition)} variant="secondary">
+                        <div className="flex items-center justify-between p-2 bg-gray-800/50 rounded-lg border border-gray-700/30">
+                          <span className="text-xs font-medium text-gray-400">Position:</span>
+                          <div className={`badge-neon ${userPosition === 'for' ? 'text-emerald-300 border-emerald-400/50 bg-emerald-400/10' : 'text-rose-300 border-rose-400/50 bg-rose-400/10'}`}>
                             {userPosition === 'for' ? '⚔️ SUPPORT' : '🛡️ OPPOSE'}
-                          </Badge>
+                          </div>
                         </div>
                         
-                        <div className="flex items-center justify-between p-2 bg-white/50 dark:bg-gray-800/50 rounded-lg">
-                          <span className="text-xs font-medium text-gray-600 dark:text-gray-400">First Move:</span>
-                          <Badge variant="outline" className="text-xs">
+                        <div className="flex items-center justify-between p-2 bg-gray-800/50 rounded-lg border border-gray-700/30">
+                          <span className="text-xs font-medium text-gray-400">First Move:</span>
+                          <div className="badge-neon">
                             {firstSpeaker === 'user' ? '👤 You' : '👑 Chanakya'}
-                          </Badge>
+                          </div>
                         </div>
                         
-                        <div className="flex items-center justify-between p-2 bg-white/50 dark:bg-gray-800/50 rounded-lg">
-                          <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Intensity:</span>
-                          <Badge className={getDifficultyColor(difficulty)} variant="secondary">
+                        <div className="flex items-center justify-between p-2 bg-gray-800/50 rounded-lg border border-gray-700/30">
+                          <span className="text-xs font-medium text-gray-400">Intensity:</span>
+                          <div className={`badge-neon ${
+                            difficulty === 'easy' ? 'text-emerald-300 border-emerald-400/50 bg-emerald-400/10' : 
+                            difficulty === 'medium' ? 'text-amber-300 border-amber-400/50 bg-amber-400/10' : 
+                            'text-rose-300 border-rose-400/50 bg-rose-400/10'
+                          }`}>
                             {getDifficultyIcon(difficulty)} {difficulty.toUpperCase()}
-                          </Badge>
+                          </div>
                         </div>
                       </div>
                     </div>
 
-                    <div className="pt-4 border-t border-purple-200 dark:border-purple-700">
-                      <Button 
+                    <div className="pt-4 border-t border-cyan-400/20">
+                      <button 
                         onClick={handleStartDebate}
-                        className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold py-4 text-base shadow-xl"
-                        size="lg"
+                        className="btn-neon-primary w-full py-4 text-base font-bold"
                       >
                         <Play className="h-5 w-5 mr-2" />
                         Enter Battle Arena
                         <ArrowRight className="h-5 w-5 ml-2" />
-                      </Button>
+                      </button>
                     </div>
                   </div>
                 ) : (
                   <div className="text-center py-12">
-                    <div className="mx-auto w-16 h-16 bg-gradient-to-r from-purple-400 to-indigo-400 rounded-full flex items-center justify-center mb-4">
-                      <Crown className="h-8 w-8 text-white" />
+                    <div className="mx-auto w-16 h-16 bg-gradient-to-r from-cyan-400 to-fuchsia-500 rounded-full flex items-center justify-center mb-4 shadow-neon">
+                      <Crown className="h-8 w-8 text-gray-950" />
                     </div>
-                    <h3 className="text-lg font-semibold text-purple-900 dark:text-purple-100 mb-2">
+                    <h3 className="text-lg font-semibold text-cyan-300 mb-2 font-orbitron">
                       Prepare for Battle
                     </h3>
-                    <p className="text-sm text-purple-700 dark:text-purple-300">
+                    <p className="text-sm text-gray-400">
                       Choose your topic or scenario to challenge the master strategist
                     </p>
                   </div>
                 )}
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
             {/* Chanakya's Arsenal */}
-            <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200 dark:border-gray-700 shadow-xl">
-              <CardHeader className="pb-4">
-                <CardTitle className="flex items-center space-x-3">
-                  <div className="p-2 bg-gradient-to-r from-amber-500 to-orange-500 rounded-lg">
-                    <Crown className="h-5 w-5 text-white" />
+            <div className="card-neon">
+              <div className="p-6 border-b border-cyan-400/20">
+                <h3 className="flex items-center space-x-3 font-orbitron">
+                  <div className="p-2 bg-gradient-to-r from-fuchsia-500 to-amber-500 rounded-lg shadow-neon">
+                    <Crown className="h-5 w-5 text-gray-950" />
                   </div>
-                  <span className="text-gray-900 dark:text-white">Chanakya's Arsenal</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+                  <span className="text-white">Chanakya's Arsenal</span>
+                </h3>
+              </div>
+              <div className="p-6">
                 <div className="space-y-3">
-                  <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                    <Brain className="h-4 w-4 text-purple-500 flex-shrink-0" />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">Ancient wisdom meets modern logic</span>
+                  <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-800/50 transition-colors border border-gray-700/30 hover:border-cyan-400/30">
+                    <Brain className="h-4 w-4 text-cyan-400 flex-shrink-0" />
+                    <span className="text-sm text-gray-300">Ancient wisdom meets modern logic</span>
                   </div>
-                  <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                    <Zap className="h-4 w-4 text-yellow-500 flex-shrink-0" />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">Lightning-fast strategic responses</span>
+                  <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-800/50 transition-colors border border-gray-700/30 hover:border-cyan-400/30">
+                    <Zap className="h-4 w-4 text-yellow-400 flex-shrink-0" />
+                    <span className="text-sm text-gray-300">Lightning-fast strategic responses</span>
                   </div>
-                  <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                    <Target className="h-4 w-4 text-blue-500 flex-shrink-0" />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">Adaptive combat difficulty scaling</span>
+                  <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-800/50 transition-colors border border-gray-700/30 hover:border-cyan-400/30">
+                    <Target className="h-4 w-4 text-blue-400 flex-shrink-0" />
+                    <span className="text-sm text-gray-300">Adaptive combat difficulty scaling</span>
                   </div>
-                  <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                    <MessageSquare className="h-4 w-4 text-green-500 flex-shrink-0" />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">Voice synthesis & real-time responses</span>
+                  <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-800/50 transition-colors border border-gray-700/30 hover:border-cyan-400/30">
+                    <MessageSquare className="h-4 w-4 text-green-400 flex-shrink-0" />
+                    <span className="text-sm text-gray-300">Voice synthesis & real-time responses</span>
                   </div>
-                  <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                    <TrendingUp className="h-4 w-4 text-orange-500 flex-shrink-0" />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">Performance analytics & growth insights</span>
+                  <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-800/50 transition-colors border border-gray-700/30 hover:border-cyan-400/30">
+                    <TrendingUp className="h-4 w-4 text-orange-400 flex-shrink-0" />
+                    <span className="text-sm text-gray-300">Performance analytics & growth insights</span>
                   </div>
-                  <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                    <Swords className="h-4 w-4 text-red-500 flex-shrink-0" />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">Strategic counter-argument mastery</span>
+                  <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-800/50 transition-colors border border-gray-700/30 hover:border-cyan-400/30">
+                    <Swords className="h-4 w-4 text-red-400 flex-shrink-0" />
+                    <span className="text-sm text-gray-300">Strategic counter-argument mastery</span>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         </div>
       </div>

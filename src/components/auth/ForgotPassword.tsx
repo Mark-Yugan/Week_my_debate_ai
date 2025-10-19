@@ -70,15 +70,15 @@ const ForgotPassword = ({ onBack }: ForgotPasswordProps) => {
   if (emailSent) {
     return (
       <div className="text-center space-y-4">
-        <Mail className="h-12 w-12 mx-auto text-indigo-600" />
-        <h3 className="text-lg font-medium">Check your email</h3>
-        <p className="text-sm text-gray-600">
+        <Mail className="h-12 w-12 mx-auto text-cyan-400" />
+        <h3 className="text-lg font-medium text-gray-50">Check your email</h3>
+        <p className="text-sm text-gray-300">
           We've sent a password reset link to {form.getValues('email')}
         </p>
         <Button
           variant="outline"
           onClick={onBack}
-          className="w-full"
+          className="w-full btn-neon-outline"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to sign in
@@ -90,8 +90,8 @@ const ForgotPassword = ({ onBack }: ForgotPasswordProps) => {
   return (
     <div className="space-y-4">
       <div className="text-center">
-        <h3 className="text-lg font-medium mb-2">Reset your password</h3>
-        <p className="text-sm text-gray-600">
+        <h3 className="text-lg font-medium mb-2 text-glow-cyan">Reset your password</h3>
+        <p className="text-sm text-gray-300">
           Enter your email address and we'll send you a link to reset your password.
         </p>
       </div>
@@ -103,15 +103,15 @@ const ForgotPassword = ({ onBack }: ForgotPasswordProps) => {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className="text-gray-50">Email</FormLabel>
                 <FormControl>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                    <Mail className="absolute left-3 top-3 h-4 w-4 text-cyan-400" />
                     <Input
                       type="email"
                       placeholder="Enter your email"
                       {...field}
-                      className="pl-10"
+                      className="input-neon pl-10"
                     />
                   </div>
                 </FormControl>
@@ -123,7 +123,7 @@ const ForgotPassword = ({ onBack }: ForgotPasswordProps) => {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full gradient-indigo text-white"
+            className="w-full btn-neon-primary"
           >
             {loading ? 'Sending...' : 'Send reset email'}
           </Button>
@@ -133,7 +133,7 @@ const ForgotPassword = ({ onBack }: ForgotPasswordProps) => {
       <Button
         variant="outline"
         onClick={onBack}
-        className="w-full"
+        className="w-full btn-neon-outline"
       >
         <ArrowLeft className="h-4 w-4 mr-2" />
         Back to sign in

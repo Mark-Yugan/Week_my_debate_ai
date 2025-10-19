@@ -93,65 +93,62 @@ const FreudAnalysisCard = ({ isAuthenticated = true }: FreudAnalysisCardProps) =
     { 
       skill: 'Id (Instinctive)', 
       level: freudData.id, 
-      color: 'from-red-500 to-rose-600', 
-      bgColor: 'bg-gradient-to-r from-red-100 to-red-50',
+      color: 'from-red-400 to-red-500', 
+      bgColor: 'bg-red-500/20 border-red-400/30',
       description: 'Aggressive/Impulsive arguments' 
     },
     { 
       skill: 'Ego (Rational)', 
       level: freudData.ego, 
-      color: 'from-[#009] to-[#0066cc]', 
-      bgColor: 'bg-gradient-to-r from-[#009]/10 to-[#0066cc]/10',
+      color: 'from-cyan-400 to-cyan-500', 
+      bgColor: 'bg-cyan-500/20 border-cyan-400/30',
       description: 'Structure & Logic' 
     },
     { 
       skill: 'Superego (Moral)', 
       level: freudData.superego, 
-      color: 'from-green-500 to-emerald-600', 
-      bgColor: 'bg-gradient-to-r from-green-100 to-green-50',
+      color: 'from-green-400 to-green-500', 
+      bgColor: 'bg-green-500/20 border-green-400/30',
       description: 'Ethics & Empathy' 
     },
   ] : [];
 
   return (
-    <Card className="group relative overflow-hidden border border-gray-200/50 bg-white/80 backdrop-blur-sm hover:bg-white hover:shadow-xl hover:shadow-[#009]/10 transition-all duration-500 shadow-lg">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#009]/5 via-[#0066cc]/5 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#009] to-[#0066cc] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
-      
-      <CardHeader className="relative z-10 pb-6">
-        <CardTitle className="flex items-center space-x-3 text-xl font-semibold text-gray-900 group-hover:text-[#009] transition-colors duration-300">
+    <div className="card-neon">
+      <div className="p-6 border-b border-cyan-400/30">
+        <div className="flex items-center space-x-3">
           <div className="relative">
-            <div className="absolute inset-0 bg-[#009] rounded-xl blur-xl opacity-20 group-hover:opacity-30 transition-all duration-500"></div>
-            <div className="relative bg-gradient-to-br from-[#009] to-[#0066cc] p-3 rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-500">
-              <Brain className="h-6 w-6 text-white" />
+            <div className="absolute inset-0 gradient-neon-primary rounded-xl blur-xl opacity-50"></div>
+            <div className="relative gradient-neon-primary p-3 rounded-xl shadow-neon">
+              <Brain className="h-6 w-6 text-gray-950" />
             </div>
           </div>
-          <span>Freud Theory Analysis</span>
-        </CardTitle>
-        <CardDescription className="text-gray-600 group-hover:text-gray-700 transition-colors duration-300 font-light">
-          Your debate personality based on Freud's theory
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="relative z-10 space-y-6">
+          <div>
+            <h3 className="text-xl font-bold text-white font-orbitron neon-text">Freud Theory Analysis</h3>
+            <p className="text-gray-400 font-light text-sm">Your debate personality based on Freud's theory</p>
+          </div>
+        </div>
+      </div>
+      <div className="p-6 space-y-6">
         {loading ? (
           <div className="flex items-center justify-center py-12">
             <div className="text-center space-y-3">
               <div className="relative">
-                <div className="absolute inset-0 bg-[#009] rounded-full blur-xl opacity-20 animate-pulse"></div>
-                <Loader2 className="relative h-8 w-8 animate-spin text-[#009]" />
+                <div className="absolute inset-0 bg-cyan-400 rounded-full blur-xl opacity-50 animate-pulse"></div>
+                <Loader2 className="relative h-8 w-8 animate-spin text-cyan-400" />
               </div>
-              <span className="text-gray-600 font-light">Analyzing your debate patterns...</span>
+              <span className="text-gray-300 font-light">Analyzing your debate patterns...</span>
             </div>
           </div>
         ) : error ? (
           <div className="flex items-center justify-center py-12 text-center">
             <div className="space-y-3">
               <div className="relative">
-                <div className="absolute inset-0 bg-red-500 rounded-full blur-xl opacity-20"></div>
-                <AlertCircle className="relative h-8 w-8 text-red-500 mx-auto" />
+                <div className="absolute inset-0 bg-red-400 rounded-full blur-xl opacity-50"></div>
+                <AlertCircle className="relative h-8 w-8 text-red-400 mx-auto" />
               </div>
               <div>
-                <p className="text-sm text-red-600 font-medium">{error}</p>
+                <p className="text-sm text-red-400 font-medium">{error}</p>
                 <p className="text-xs text-gray-500 mt-1">Please try again later</p>
               </div>
             </div>
@@ -160,11 +157,11 @@ const FreudAnalysisCard = ({ isAuthenticated = true }: FreudAnalysisCardProps) =
           <div className="text-center py-12">
             <div className="space-y-4">
               <div className="relative">
-                <div className="absolute inset-0 bg-[#009] rounded-full blur-2xl opacity-10"></div>
-                <Brain className="relative h-12 w-12 text-[#009] mx-auto opacity-60" />
+                <div className="absolute inset-0 bg-cyan-400 rounded-full blur-2xl opacity-30"></div>
+                <Brain className="relative h-12 w-12 text-cyan-400 mx-auto opacity-60" />
               </div>
               <div>
-                <p className="text-sm text-gray-600 font-medium">No analysis available yet</p>
+                <p className="text-sm text-gray-300 font-medium">No analysis available yet</p>
                 <p className="text-xs text-gray-500 mt-1">Complete a few debates to see your psychological profile</p>
               </div>
             </div>
@@ -172,11 +169,11 @@ const FreudAnalysisCard = ({ isAuthenticated = true }: FreudAnalysisCardProps) =
         ) : (
           <>
             {skillProgress.map((skill, index) => (
-              <div key={index} className={`group/skill p-4 rounded-xl ${skill.bgColor} border border-gray-200/50 hover:shadow-md transition-all duration-300 space-y-3`}>
+              <div key={index} className={`p-4 rounded-lg ${skill.bgColor} border transition-all duration-300 space-y-3 hover:shadow-neon`}>
                 <div className="flex justify-between items-center">
                   <div className="space-y-1">
-                    <span className="text-sm font-semibold text-gray-800 group-hover/skill:text-gray-900 transition-colors duration-300">{skill.skill}</span>
-                    <p className="text-xs text-gray-600 font-light">{skill.description}</p>
+                    <span className="text-sm font-semibold text-white">{skill.skill}</span>
+                    <p className="text-xs text-gray-400 font-light">{skill.description}</p>
                   </div>
                   <div className="text-right">
                     <span className={`text-lg font-bold bg-gradient-to-r ${skill.color} bg-clip-text text-transparent`}>{skill.level}</span>
@@ -184,23 +181,22 @@ const FreudAnalysisCard = ({ isAuthenticated = true }: FreudAnalysisCardProps) =
                   </div>
                 </div>
                 <div className="relative">
-                  <div className="w-full bg-gray-200/50 rounded-full h-3 overflow-hidden">
+                  <div className="w-full bg-gray-700/50 rounded-full h-3 overflow-hidden">
                     <div 
-                      className={`h-full bg-gradient-to-r ${skill.color} rounded-full transition-all duration-500 ease-out shadow-sm`}
+                      className={`h-full bg-gradient-to-r ${skill.color} rounded-full transition-all duration-500 ease-out shadow-neon`}
                       style={{ width: `${skill.level}%` }}
                     ></div>
                   </div>
-                  <div className="absolute inset-0 bg-white/20 rounded-full opacity-0 group-hover/skill:opacity-100 transition-opacity duration-300"></div>
                 </div>
               </div>
             ))}
-            <div className="mt-6 p-4 bg-gradient-to-r from-[#009]/5 to-[#0066cc]/5 rounded-xl border border-[#009]/10 space-y-3">
+            <div className="mt-6 p-4 bg-gray-800/50 rounded-lg border border-cyan-400/30 space-y-3">
               <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-gradient-to-r from-[#009] to-[#0066cc] rounded-full animate-pulse"></div>
-                <p className="text-sm font-semibold text-gray-800">Latest Summary</p>
+                <div className="w-2 h-2 bg-gradient-to-r from-cyan-400 to-fuchsia-400 rounded-full animate-pulse"></div>
+                <p className="text-sm font-semibold text-white">Latest Summary</p>
               </div>
-              <p className="text-sm text-gray-700 font-light italic leading-relaxed">"{freudData.summary}"</p>
-              <div className="flex items-center justify-between text-xs text-gray-500 pt-2 border-t border-gray-200/50">
+              <p className="text-sm text-gray-300 font-light italic leading-relaxed">"{freudData.summary}"</p>
+              <div className="flex items-center justify-between text-xs text-gray-500 pt-2 border-t border-gray-600/50">
                 <span className="font-medium">
                   Based on {freudData.totalDebates} debate{freudData.totalDebates !== 1 ? 's' : ''}
                 </span>
@@ -209,8 +205,8 @@ const FreudAnalysisCard = ({ isAuthenticated = true }: FreudAnalysisCardProps) =
             </div>
           </>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

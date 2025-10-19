@@ -191,34 +191,47 @@ const AuthPage = ({ onAuthSuccess }: AuthPageProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <AuthCard
-        title="Welcome to mydebate.ai"
-        description={
-          showForgotPassword 
-            ? 'Reset your password' 
-            : isLogin 
-              ? 'Sign in to your account' 
-              : 'Create your account'
-        }
-      >
-        {showForgotPassword ? (
-          <ForgotPassword onBack={handleBackToLogin} />
-        ) : (
-          <>
-            <GoogleSignInButton onClick={handleGoogleLogin} isLoading={googleLoading} />
-            <OrSeparator />
-            <AuthForm
-              form={form}
-              onSubmit={onSubmit}
-              isLogin={isLogin}
-              loading={loading}
-              onForgotPassword={handleForgotPassword}
-            />
-            <AuthToggle isLogin={isLogin} onClick={toggleAuthMode} />
-          </>
-        )}
-      </AuthCard>
+    <div className="min-h-screen bg-gray-950 flex items-center justify-center p-4 font-primary">
+      {/* Neon Background Effects */}
+      <div className="fixed inset-0">
+        <div className="absolute inset-0" style={{
+          background: `
+            radial-gradient(circle at 20% 50%, rgba(34, 211, 238, 0.08) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(217, 70, 239, 0.08) 0%, transparent 50%),
+            radial-gradient(circle at 40% 90%, rgba(34, 211, 238, 0.05) 0%, transparent 50%)
+          `
+        }}></div>
+      </div>
+      
+      <div className="relative z-10">
+        <AuthCard
+          title="Welcome to MyDebate AI"
+          description={
+            showForgotPassword 
+              ? 'Reset your password' 
+              : isLogin 
+                ? 'Sign in to your account' 
+                : 'Create your account'
+          }
+        >
+          {showForgotPassword ? (
+            <ForgotPassword onBack={handleBackToLogin} />
+          ) : (
+            <>
+              <GoogleSignInButton onClick={handleGoogleLogin} isLoading={googleLoading} />
+              <OrSeparator />
+              <AuthForm
+                form={form}
+                onSubmit={onSubmit}
+                isLogin={isLogin}
+                loading={loading}
+                onForgotPassword={handleForgotPassword}
+              />
+              <AuthToggle isLogin={isLogin} onClick={toggleAuthMode} />
+            </>
+          )}
+        </AuthCard>
+      </div>
     </div>
   );
 };

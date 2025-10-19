@@ -2,7 +2,6 @@
 // @ts-nocheck
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navigation from '@/components/Navigation';
 import ViewManager from '@/components/ViewManager';
 import { useAppHandlers } from '@/hooks/useAppHandlers';
 import { useCustomAuth } from '@/hooks/useCustomAuth';
@@ -110,18 +109,7 @@ const AuthenticatedApp = ({ isAuthenticated, requireAuth }: AuthenticatedAppProp
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Only show Navigation when NOT on dashboard */}
-      {currentView !== 'dashboard' && (
-        <Navigation 
-          userTokens={userTokens} 
-          userRole={userRole} 
-          onRoleSwitch={setUserRole}
-          onGetPremium={handleGetPremium}
-          onSignOut={signOut}
-          user={user}
-          isAuthenticated={isAuthenticated}
-        />
-      )}
+      {/* Navigation component removed as requested */}
       
       <main className="animate-fade-in">
         <ViewManager

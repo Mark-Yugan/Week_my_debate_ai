@@ -225,16 +225,16 @@ const VideoConferencePanel: React.FC<VideoConferencePanelProps> = ({
         <div className="text-center text-white">
           <div className="relative mb-4">
             {/* AI Avatar */}
-            <div className="w-20 h-20 mx-auto bg-gradient-to-br from-purple-600 to-indigo-700 rounded-full flex items-center justify-center mb-3 relative overflow-hidden">
-              <Bot className="h-10 w-10 text-white" />
+            <div className="w-20 h-20 mx-auto bg-gradient-to-br from-fuchsia-500 to-cyan-400 rounded-full flex items-center justify-center mb-3 relative overflow-hidden shadow-neon">
+              <Bot className="h-10 w-10 text-white drop-shadow-lg" />
               
               {/* Animated rings */}
-              <div className="absolute inset-0 rounded-full border-2 border-purple-400 animate-ping opacity-20"></div>
-              <div className="absolute inset-0 rounded-full border-2 border-indigo-400 animate-ping opacity-20" style={{ animationDelay: '0.5s' }}></div>
+              <div className="absolute inset-0 rounded-full border-2 border-cyan-400 animate-ping opacity-30"></div>
+              <div className="absolute inset-0 rounded-full border-2 border-fuchsia-400 animate-ping opacity-30" style={{ animationDelay: '0.5s' }}></div>
               
               {/* Thinking indicator */}
               {aiThinking && (
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full animate-pulse">
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full animate-pulse shadow-neon">
                   <Brain className="h-2 w-2 text-yellow-800 mx-auto mt-0.5" />
                 </div>
               )}
@@ -242,9 +242,9 @@ const VideoConferencePanel: React.FC<VideoConferencePanelProps> = ({
             
             {/* AI Name and Status */}
             <div className="space-y-2">
-              <h3 className="text-lg font-bold text-white">Chanakya AI</h3>
+              <h3 className="text-lg font-bold text-white font-orbitron neon-text">Chanakya AI</h3>
               <div className="flex items-center justify-center space-x-2">
-                <Sparkles className="h-4 w-4 text-yellow-400" />
+                <Sparkles className="h-4 w-4 text-yellow-400 drop-shadow-neon" />
                 <span className="text-sm text-gray-300">
                   {aiThinking ? 'Analyzing arguments...' : 'Ready for debate'}
                 </span>
@@ -254,16 +254,16 @@ const VideoConferencePanel: React.FC<VideoConferencePanelProps> = ({
           
           {/* AI Stats */}
           <div className="grid grid-cols-3 gap-4 mt-4 text-xs">
-            <div className="bg-purple-800/50 rounded p-2">
-              <div className="font-bold text-purple-300">Expertise</div>
+            <div className="bg-fuchsia-500/20 rounded p-2 border border-fuchsia-400/30">
+              <div className="font-bold text-fuchsia-400">Expertise</div>
               <div className="text-white">98%</div>
             </div>
-            <div className="bg-indigo-800/50 rounded p-2">
-              <div className="font-bold text-indigo-300">Speed</div>
+            <div className="bg-cyan-500/20 rounded p-2 border border-cyan-400/30">
+              <div className="font-bold text-cyan-400">Speed</div>
               <div className="text-white">Instant</div>
             </div>
-            <div className="bg-blue-800/50 rounded p-2">
-              <div className="font-bold text-blue-300">Wins</div>
+            <div className="bg-blue-500/20 rounded p-2 border border-blue-400/30">
+              <div className="font-bold text-blue-400">Wins</div>
               <div className="text-white">∞</div>
             </div>
           </div>
@@ -271,9 +271,9 @@ const VideoConferencePanel: React.FC<VideoConferencePanelProps> = ({
           {/* Animated dots */}
           {aiThinking && (
             <div className="flex justify-center space-x-1 mt-4">
-              <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"></div>
-              <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-              <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+              <div className="w-2 h-2 bg-fuchsia-400 rounded-full animate-bounce shadow-neon"></div>
+              <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce shadow-neon" style={{ animationDelay: '0.1s' }}></div>
+              <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce shadow-neon" style={{ animationDelay: '0.2s' }}></div>
             </div>
           )}
         </div>
@@ -282,31 +282,29 @@ const VideoConferencePanel: React.FC<VideoConferencePanelProps> = ({
   };
 
   return (
-    <Card className="h-full">
-      <CardHeader className="pb-2 pt-3">
+    <div className="card-neon h-full">
+      <div className="p-4 border-b border-cyan-400/30">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center space-x-2 text-sm">
-            <Video className="h-4 w-4 text-blue-600" />
-            <span>Video Conference</span>
-          </CardTitle>
+          <h3 className="flex items-center space-x-2 text-lg font-bold text-white font-orbitron">
+            <Video className="h-5 w-5 text-cyan-400 drop-shadow-neon" />
+            <span className="neon-text">Video Conference</span>
+          </h3>
           <div className="flex items-center space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
+            <button
               onClick={toggleFullscreen}
-              className="h-7 px-2"
+              className="p-2 bg-gray-800/50 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-700/50 hover:border-gray-500 transition-all duration-300"
             >
-              {isFullscreen ? <Minimize className="h-3 w-3" /> : <Maximize className="h-3 w-3" />}
-            </Button>
+              {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+            </button>
           </div>
         </div>
-      </CardHeader>
+      </div>
       
-      <CardContent className="space-y-4">
+      <div className="p-4 space-y-4">
         {/* Video Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-64 lg:h-80">
           {/* Local Video */}
-          <div className="relative bg-gray-900 rounded-lg overflow-hidden">
+          <div className="relative bg-gray-900 rounded-lg overflow-hidden border border-cyan-400/30 shadow-neon">
             {isCameraOn && localStream ? (
               <video
                 ref={localVideoRef}
@@ -317,33 +315,33 @@ const VideoConferencePanel: React.FC<VideoConferencePanelProps> = ({
               />
             ) : (
               <div className="flex items-center justify-center h-full">
-                <div className="text-center text-white">
-                  <CameraOff className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                  <p className="text-sm opacity-75">Camera Off</p>
+                <div className="text-center text-gray-300">
+                  <CameraOff className="h-12 w-12 mx-auto mb-2 text-gray-500" />
+                  <p className="text-sm">Camera Off</p>
                 </div>
               </div>
             )}
             
             {/* Local Video Overlay */}
             <div className="absolute top-2 left-2">
-              <Badge className={`${getParticipantSideColor('FOR')} text-white text-xs`}>
+              <div className="badge-neon text-xs">
                 You (FOR)
-              </Badge>
+              </div>
             </div>
             
             {/* Audio Indicator */}
             {!isMicOn && (
               <div className="absolute top-2 right-2">
-                <Badge variant="destructive" className="text-xs">
-                  <MicOff className="h-3 w-3 mr-1" />
-                  Muted
-                </Badge>
+                <div className="px-2 py-1 bg-red-500/80 text-white text-xs rounded-md flex items-center space-x-1">
+                  <MicOff className="h-3 w-3" />
+                  <span>Muted</span>
+                </div>
               </div>
             )}
           </div>
 
           {/* Remote Video / AI Opponent */}
-          <div className="relative bg-gray-900 rounded-lg overflow-hidden">
+          <div className="relative bg-gray-900 rounded-lg overflow-hidden border border-cyan-400/30 shadow-neon">
             {debateType === 'ai' ? (
               renderAIOpponent()
             ) : remoteStream ? (
@@ -355,9 +353,9 @@ const VideoConferencePanel: React.FC<VideoConferencePanelProps> = ({
               />
             ) : (
               <div className="flex items-center justify-center h-full">
-                <div className="text-center text-white">
-                  <Users className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                  <p className="text-sm opacity-75">Waiting for opponent...</p>
+                <div className="text-center text-gray-300">
+                  <Users className="h-12 w-12 mx-auto mb-2 text-gray-500" />
+                  <p className="text-sm">Waiting for opponent...</p>
                 </div>
               </div>
             )}
@@ -365,26 +363,26 @@ const VideoConferencePanel: React.FC<VideoConferencePanelProps> = ({
             {/* Remote Video Overlay */}
             {debateType === 'ai' ? (
               <div className="absolute top-2 left-2">
-                <Badge className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-xs">
-                  <Bot className="h-3 w-3 mr-1" />
-                  Chanakya AI
-                </Badge>
+                <div className="px-2 py-1 bg-gradient-to-r from-fuchsia-500 to-cyan-400 text-white text-xs rounded-md flex items-center space-x-1">
+                  <Bot className="h-3 w-3" />
+                  <span>Chanakya AI</span>
+                </div>
               </div>
             ) : remoteStream && (
               <div className="absolute top-2 left-2">
-                <Badge className={`${getParticipantSideColor('AGAINST')} text-white text-xs`}>
+                <div className="px-2 py-1 bg-red-500/80 text-white text-xs rounded-md">
                   Opponent (AGAINST)
-                </Badge>
+                </div>
               </div>
             )}
             
             {/* AI Status Indicator */}
             {debateType === 'ai' && (
               <div className="absolute top-2 right-2">
-                <Badge className={`text-xs ${aiThinking ? 'bg-yellow-500 text-black' : 'bg-green-500 text-white'}`}>
-                  <Zap className="h-3 w-3 mr-1" />
-                  {aiThinking ? 'Thinking' : 'Ready'}
-                </Badge>
+                <div className={`px-2 py-1 text-xs rounded-md flex items-center space-x-1 ${aiThinking ? 'bg-yellow-500/80 text-black' : 'bg-green-500/80 text-white'}`}>
+                  <Zap className="h-3 w-3" />
+                  <span>{aiThinking ? 'Thinking' : 'Ready'}</span>
+                </div>
               </div>
             )}
           </div>
@@ -392,7 +390,7 @@ const VideoConferencePanel: React.FC<VideoConferencePanelProps> = ({
 
         {/* Screen Share Video (if active) */}
         {isScreenSharing && (
-          <div className="relative bg-gray-900 rounded-lg overflow-hidden">
+          <div className="relative bg-gray-900 rounded-lg overflow-hidden border border-orange-400/50">
             <video
               ref={screenShareRef}
               autoPlay
@@ -400,54 +398,56 @@ const VideoConferencePanel: React.FC<VideoConferencePanelProps> = ({
               className="w-full h-32 object-contain"
             />
             <div className="absolute top-2 left-2">
-              <Badge className="bg-orange-500 text-white text-xs">
+              <div className="px-2 py-1 bg-orange-500/80 text-white text-xs rounded-md">
                 Screen Sharing
-              </Badge>
+              </div>
             </div>
           </div>
         )}
 
         {/* Controls */}
         <div className="flex items-center justify-center space-x-4">
-          <Button
-            variant={isCameraOn ? "default" : "outline"}
-            size="lg"
+          <button
             onClick={toggleCamera}
-            className="rounded-full w-12 h-12 p-0"
+            className={`rounded-full w-12 h-12 p-0 flex items-center justify-center transition-all duration-300 ${
+              isCameraOn 
+                ? 'btn-neon-primary' 
+                : 'bg-gray-800/50 border border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:border-gray-500'
+            }`}
           >
             {isCameraOn ? <Camera className="h-5 w-5" /> : <CameraOff className="h-5 w-5" />}
-          </Button>
+          </button>
           
-          <Button
-            variant={isMicOn ? "default" : "outline"}
-            size="lg"
+          <button
             onClick={toggleMicrophone}
-            className="rounded-full w-12 h-12 p-0"
+            className={`rounded-full w-12 h-12 p-0 flex items-center justify-center transition-all duration-300 ${
+              isMicOn 
+                ? 'btn-neon-primary' 
+                : 'bg-gray-800/50 border border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:border-gray-500'
+            }`}
           >
             {isMicOn ? <Mic className="h-5 w-5" /> : <MicOff className="h-5 w-5" />}
-          </Button>
+          </button>
           
-          <Button
-            variant={isScreenSharing ? "default" : "outline"}
-            size="lg"
+          <button
             onClick={toggleScreenShare}
-            className="rounded-full w-12 h-12 p-0"
+            className={`rounded-full w-12 h-12 p-0 flex items-center justify-center transition-all duration-300 ${
+              isScreenSharing 
+                ? 'btn-neon-primary' 
+                : 'bg-gray-800/50 border border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:border-gray-500'
+            }`}
           >
             {isScreenSharing ? <VideoOff className="h-5 w-5" /> : <Video className="h-5 w-5" />}
-          </Button>
+          </button>
           
-          <Button
-            variant="outline"
-            size="lg"
-            className="rounded-full w-12 h-12 p-0"
-          >
+          <button className="rounded-full w-12 h-12 p-0 flex items-center justify-center bg-gray-800/50 border border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:border-gray-500 transition-all duration-300">
             <Settings className="h-5 w-5" />
-          </Button>
+          </button>
         </div>
 
         {/* Participants List */}
-        <div className="border-t pt-4">
-          <h4 className="font-semibold text-sm text-gray-700 mb-2 flex items-center">
+        <div className="border-t border-cyan-400/30 pt-4">
+          <h4 className="font-semibold text-sm text-cyan-400 mb-3 flex items-center">
             <Users className="h-4 w-4 mr-2" />
             Participants ({participants.length})
           </h4>
@@ -455,16 +455,16 @@ const VideoConferencePanel: React.FC<VideoConferencePanelProps> = ({
             {participants.map((participant) => (
               <div
                 key={participant.id}
-                className="flex items-center justify-between p-2 bg-gray-50 rounded-lg"
+                className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg border border-gray-700/50"
               >
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-3">
                   <div className={`w-2 h-2 rounded-full ${getParticipantSideColor(participant.side)}`} />
-                  <span className="text-sm font-medium">{participant.name}</span>
-                  <Badge className={`${getParticipantSideColor(participant.side)} text-white text-xs`}>
+                  <span className="text-sm font-medium text-white">{participant.name}</span>
+                  <div className={`px-2 py-1 text-white text-xs rounded-md ${getParticipantSideColor(participant.side)}`}>
                     {getParticipantSideText(participant.side)}
-                  </Badge>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-1">
+                <div className="flex items-center space-x-2">
                   {!participant.videoEnabled && (
                     <CameraOff className="h-3 w-3 text-gray-400" />
                   )}
@@ -472,15 +472,15 @@ const VideoConferencePanel: React.FC<VideoConferencePanelProps> = ({
                     <MicOff className="h-3 w-3 text-gray-400" />
                   )}
                   {participant.isSpeaking && (
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-neon" />
                   )}
                 </div>
               </div>
             ))}
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

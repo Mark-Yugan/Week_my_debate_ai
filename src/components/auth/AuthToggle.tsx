@@ -13,7 +13,7 @@ const AuthToggle = ({ isLogin, onClick }: AuthToggleProps) => {
       <Button
         variant="link"
         onClick={onClick}
-        className="text-sm"
+        className="text-sm text-cyan-400 hover:text-cyan-300"
       >
         {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
       </Button>

@@ -132,142 +132,148 @@ const PricingPage = ({ onBack }: PricingPageProps) => {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
-      <div className="flex items-center justify-between mb-8">
-        <div className="text-center mx-auto">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Choose Your Plan</h1>
-          <p className="text-xl text-gray-600">Unlock your debating potential with our premium features</p>
+    <div className="min-h-screen bg-gray-950 relative overflow-hidden">
+      {/* Cyberpunk Background Effects */}
+      <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/5 via-transparent to-fuchsia-500/5"></div>
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-400/10 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-fuchsia-500/10 rounded-full blur-3xl"></div>
+      
+      <div className="relative max-w-7xl mx-auto p-6">
+        <div className="flex items-center justify-between mb-8">
+          <div className="text-center mx-auto">
+            <h1 className="text-4xl font-bold font-orbitron neon-text mb-4">Choose Your Plan</h1>
+            <p className="text-xl text-gray-300 font-inter">Unlock your debating potential with our premium features</p>
+          </div>
+          <button onClick={onBack} className="btn-neon-secondary absolute left-6">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back
+          </button>
         </div>
-        <Button variant="outline" onClick={onBack} className="absolute left-6">
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back
-        </Button>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-        {plans.map((plan, index) => {
-          const IconComponent = plan.icon;
-          return (
-            <Card 
-              key={plan.name} 
-              className={`card-shadow relative ${plan.popular ? 'ring-2 ring-indigo-500 scale-105' : ''} hover:shadow-xl transition-all`}
-            >
-              {plan.popular && (
-                <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-indigo-600 text-white">
-                  Most Popular
-                </Badge>
-              )}
-              
-              <CardHeader className="text-center pb-6">
-                <div className={`w-16 h-16 ${plan.color} rounded-2xl flex items-center justify-center mx-auto mb-4`}>
-                  <IconComponent className="h-8 w-8" />
-                </div>
-                <CardTitle className="text-2xl font-bold text-gray-900">{plan.name}</CardTitle>
-                <div className="mt-4">
-                  <span className="text-4xl font-bold text-gray-900">${plan.price}</span>
-                  <span className="text-gray-600 ml-2">{plan.period}</span>
-                  {plan.indianPrice && (
-                    <div className="text-lg text-indigo-600 mt-1">
-                      {plan.indianPrice}/year
-                    </div>
-                  )}
-                </div>
-                <p className="text-gray-600 mt-2">{plan.description}</p>
-              </CardHeader>
-
-              <CardContent className="space-y-4">
-                <ul className="space-y-3">
-                  {plan.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-center space-x-3">
-                      <Check className="h-5 w-5 text-green-500 flex-shrink-0" />
-                      <span className="text-gray-700">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                {plan.limitations && (
-                  <div className="mt-6 pt-4 border-t border-gray-200">
-                    <p className="text-sm text-gray-500 mb-2">Limitations:</p>
-                    <ul className="space-y-1">
-                      {plan.limitations.map((limitation, limitIndex) => (
-                        <li key={limitIndex} className="text-sm text-gray-500">
-                          • {limitation}
-                        </li>
-                      ))}
-                    </ul>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+          {plans.map((plan, index) => {
+            const IconComponent = plan.icon;
+            return (
+              <div 
+                key={plan.name} 
+                className={`card-neon relative ${plan.popular ? 'ring-2 ring-cyan-400 scale-105 shadow-neon' : ''} hover:shadow-neon transition-all`}
+              >
+                {plan.popular && (
+                  <div className="badge-neon absolute -top-3 left-1/2 transform -translate-x-1/2 bg-cyan-400/20 text-cyan-400 border-cyan-400/30">
+                    Most Popular
                   </div>
                 )}
-
-                <Button 
-                  className={`w-full mt-6 ${plan.popular ? 'bg-indigo-600 hover:bg-indigo-700 text-white' : ''}`}
-                  variant={plan.popular ? 'default' : 'outline'}
-                >
-                  {plan.price === '0' ? 'Get Started Free' : 'Upgrade Now'}
-                </Button>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-
-      {/* Training Options */}
-      <div className="mt-16">
-        <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Specialized Training Programs</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {trainingOptions.map((training, index) => {
-            const IconComponent = training.icon;
-            return (
-              <Card key={index} className="card-shadow hover:shadow-xl transition-all">
-                <CardHeader className="text-center">
-                  <div className={`w-16 h-16 ${training.color} rounded-2xl flex items-center justify-center mx-auto mb-4`}>
-                    <IconComponent className="h-8 w-8" />
+                
+                <div className="text-center pb-6">
+                  <div className={`w-16 h-16 bg-cyan-400/20 border border-cyan-400/30 rounded-2xl flex items-center justify-center mx-auto mb-4`}>
+                    <IconComponent className="h-8 w-8 text-cyan-400" />
                   </div>
-                  <CardTitle className="text-xl font-bold text-gray-900">{training.title}</CardTitle>
-                  <p className="text-gray-600 mt-2">{training.description}</p>
-                  <Badge className="mt-2 bg-indigo-100 text-indigo-700">{training.batchSize}</Badge>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    {training.features.map((feature, featureIndex) => (
+                  <h3 className="text-2xl font-bold text-gray-200 font-orbitron">{plan.name}</h3>
+                  <div className="mt-4">
+                    <span className="text-4xl font-bold text-cyan-400 font-orbitron">${plan.price}</span>
+                    <span className="text-gray-300 ml-2 font-inter">{plan.period}</span>
+                    {plan.indianPrice && (
+                      <div className="text-lg text-fuchsia-400 mt-1 font-inter">
+                        {plan.indianPrice}/year
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-gray-300 mt-2 font-inter">{plan.description}</p>
+                </div>
+
+                <div className="space-y-4">
+                  <ul className="space-y-3">
+                    {plan.features.map((feature, featureIndex) => (
                       <li key={featureIndex} className="flex items-center space-x-3">
-                        <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
-                        <span className="text-sm text-gray-700">{feature}</span>
+                        <Check className="h-5 w-5 text-green-400 flex-shrink-0" />
+                        <span className="text-gray-300 font-inter">{feature}</span>
                       </li>
                     ))}
                   </ul>
-                  <Button className="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white">
-                    Learn More
-                  </Button>
-                </CardContent>
-              </Card>
+
+                  {plan.limitations && (
+                    <div className="mt-6 pt-4 border-t border-gray-700">
+                      <p className="text-sm text-gray-400 mb-2 font-inter">Limitations:</p>
+                      <ul className="space-y-1">
+                        {plan.limitations.map((limitation, limitIndex) => (
+                          <li key={limitIndex} className="text-sm text-gray-400 font-inter">
+                            • {limitation}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  <button 
+                    className={`w-full mt-6 ${plan.popular ? 'btn-neon-primary' : 'btn-neon-secondary'}`}
+                  >
+                    {plan.price === '0' ? 'Get Started Free' : 'Upgrade Now'}
+                  </button>
+                </div>
+              </div>
+          );
+          })}
+        </div>
+
+        {/* Training Options */}
+        <div className="mt-16">
+          <h2 className="text-3xl font-bold font-orbitron neon-text mb-8 text-center">Specialized Training Programs</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {trainingOptions.map((training, index) => {
+              const IconComponent = training.icon;
+              return (
+                <div key={index} className="card-neon hover:shadow-neon transition-all">
+                  <div className="text-center">
+                    <div className={`w-16 h-16 bg-fuchsia-400/20 border border-fuchsia-400/30 rounded-2xl flex items-center justify-center mx-auto mb-4`}>
+                      <IconComponent className="h-8 w-8 text-fuchsia-400" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-200 font-orbitron">{training.title}</h3>
+                    <p className="text-gray-300 mt-2 font-inter">{training.description}</p>
+                    <div className="badge-neon mt-2 bg-fuchsia-400/20 text-fuchsia-400 border-fuchsia-400/30">{training.batchSize}</div>
+                  </div>
+                  <div>
+                    <ul className="space-y-2">
+                      {training.features.map((feature, featureIndex) => (
+                        <li key={featureIndex} className="flex items-center space-x-3">
+                          <Check className="h-4 w-4 text-green-400 flex-shrink-0" />
+                          <span className="text-sm text-gray-300 font-inter">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <button className="btn-neon-primary w-full mt-4">
+                      Learn More
+                    </button>
+                  </div>
+                </div>
             );
           })}
         </div>
       </div>
 
-      <div className="mt-16 text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Why Choose Premium?</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
-          <div className="text-center">
-            <div className="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <Zap className="h-8 w-8" />
+        <div className="mt-16 text-center">
+          <h2 className="text-2xl font-bold font-orbitron neon-text mb-4">Why Choose Premium?</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-cyan-400/20 border border-cyan-400/30 text-cyan-400 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <Zap className="h-8 w-8" />
+              </div>
+              <h3 className="font-semibold text-gray-200 mb-2 font-orbitron">Unlimited Practice</h3>
+              <p className="text-gray-300 font-inter">Debate as much as you want without restrictions</p>
             </div>
-            <h3 className="font-semibold text-gray-900 mb-2">Unlimited Practice</h3>
-            <p className="text-gray-600">Debate as much as you want without restrictions</p>
-          </div>
-          <div className="text-center">
-            <div className="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <Crown className="h-8 w-8" />
+            <div className="text-center">
+              <div className="w-16 h-16 bg-fuchsia-400/20 border border-fuchsia-400/30 text-fuchsia-400 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <Crown className="h-8 w-8" />
+              </div>
+              <h3 className="font-semibold text-gray-200 mb-2 font-orbitron">Personal Training</h3>
+              <p className="text-gray-300 font-inter">1-on-1 sessions with expert trainers</p>
             </div>
-            <h3 className="font-semibold text-gray-900 mb-2">Personal Training</h3>
-            <p className="text-gray-600">1-on-1 sessions with expert trainers</p>
-          </div>
-          <div className="text-center">
-            <div className="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <GraduationCap className="h-8 w-8" />
+            <div className="text-center">
+              <div className="w-16 h-16 bg-violet-400/20 border border-violet-400/30 text-violet-400 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <GraduationCap className="h-8 w-8" />
+              </div>
+              <h3 className="font-semibold text-gray-200 mb-2 font-orbitron">Campus Ready</h3>
+              <p className="text-gray-300 font-inter">Complete preparation for campus interviews</p>
             </div>
-            <h3 className="font-semibold text-gray-900 mb-2">Campus Ready</h3>
-            <p className="text-gray-600">Complete preparation for campus interviews</p>
           </div>
         </div>
       </div>

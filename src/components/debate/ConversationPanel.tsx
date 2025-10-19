@@ -93,36 +93,36 @@ const ConversationPanel = ({ messages, showAI = true }: ConversationPanelProps) 
   const getMessageStyles = (type: string) => {
     switch (type) {
       case 'user':
-        return 'bg-gradient-to-br from-indigo-500 to-indigo-600 text-white shadow-lg';
+        return 'bg-gradient-to-br from-cyan-500 to-cyan-600 text-white shadow-neon border border-cyan-400/50';
       case 'gabbar-ai':
-        return 'bg-gradient-to-br from-purple-600 to-purple-700 text-white shadow-xl border-2 border-purple-400';
+        return 'bg-gradient-to-br from-fuchsia-600 to-fuchsia-700 text-white shadow-neon border border-fuchsia-400/50';
       case 'deepseek-ai':
-        return 'bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-xl border-2 border-emerald-400';
+        return 'bg-gradient-to-br from-cyan-600 to-blue-700 text-white shadow-neon border border-cyan-400/50';
       default:
-        return 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-md';
+        return 'bg-gray-800/70 text-gray-100 shadow-md border border-gray-600/50';
     }
   };
 
   return (
-    <Card className="flex-1 card-shadow-lg border-0 bg-white/70 dark:bg-gray-800/70 backdrop-blur-lg">
-      <CardHeader className="pb-2 pt-3">
-        <CardTitle className="flex items-center space-x-2 text-sm">
-          <MessageSquare className="h-4 w-4 text-indigo-600" />
-          <span>Live Conversation</span>
+    <div className="card-neon flex-1 h-full">
+      <div className="p-4 border-b border-cyan-400/30">
+        <div className="flex items-center space-x-2">
+          <MessageSquare className="h-5 w-5 text-cyan-400 drop-shadow-neon" />
+          <h3 className="text-lg font-bold text-white font-orbitron neon-text">Live Conversation</h3>
           {showAI && (
-            <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200 text-xs px-2 py-0">
+            <div className="badge-neon text-xs">
               Chanakya AI
-            </Badge>
+            </div>
           )}
-        </CardTitle>
-      </CardHeader>
+        </div>
+      </div>
       
-      <CardContent className="flex-1 p-0">
-        <ScrollArea className="h-[400px] px-6">
+      <div className="flex-1 p-0">
+        <div className="h-[400px] overflow-y-auto px-4">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center py-12">
-              <MessageSquare className="h-16 w-16 text-gray-300 mb-6" />
-              <h3 className="text-xl font-semibold text-gray-500 mb-3">
+              <MessageSquare className="h-16 w-16 text-gray-500 mb-6" />
+              <h3 className="text-xl font-semibold text-gray-300 mb-3 font-orbitron">
                 Start Your Debate
               </h3>
               <p className="text-sm text-gray-400 max-w-sm leading-relaxed">
@@ -169,8 +169,8 @@ const ConversationPanel = ({ messages, showAI = true }: ConversationPanelProps) 
 
                         {/* Speaking indicator */}
                         {isSpeaking && (
-                          <div className="flex items-center space-x-1 text-xs text-yellow-200">
-                            <div className="animate-pulse w-2 h-2 bg-yellow-400 rounded-full"></div>
+                          <div className="flex items-center space-x-1 text-xs text-yellow-300">
+                            <div className="animate-pulse w-2 h-2 bg-yellow-400 rounded-full shadow-neon"></div>
                             <span>Speaking...</span>
                           </div>
                         )}
@@ -189,13 +189,13 @@ const ConversationPanel = ({ messages, showAI = true }: ConversationPanelProps) 
                       {(message.type === 'gabbar-ai' || message.type === 'deepseek-ai') && (
                         <div className="mt-4 pt-3 border-t border-white/40">
                           <div className="flex items-center justify-between">
-                            <Badge className={`text-xs font-bold px-3 py-1 ${
+                            <div className={`text-xs font-bold px-3 py-1 rounded-full ${
                               message.type === 'deepseek-ai' 
-                                ? 'bg-emerald-400 text-black' 
-                                : 'bg-yellow-400 text-black'
+                                ? 'bg-cyan-400 text-black' 
+                                : 'bg-fuchsia-400 text-black'
                             }`}>
                               {message.type === 'deepseek-ai' ? '🧠 Chanakya AI' : '🤖 AI OPPONENT'}
-                            </Badge>
+                            </div>
                             
                             {message.relevance && (
                               <div className="flex items-center space-x-2 text-xs opacity-80">
@@ -211,13 +211,13 @@ const ConversationPanel = ({ messages, showAI = true }: ConversationPanelProps) 
 
                       {/* Message Tail */}
                       {message.type === 'user' && (
-                        <div className="absolute -bottom-1 -right-1 w-0 h-0 border-l-8 border-l-indigo-600 border-t-8 border-t-transparent"></div>
+                        <div className="absolute -bottom-1 -right-1 w-0 h-0 border-l-8 border-l-cyan-400 border-t-8 border-t-transparent"></div>
                       )}
                       {message.type === 'gabbar-ai' && (
-                        <div className="absolute -bottom-1 -left-1 w-0 h-0 border-r-8 border-r-purple-700 border-t-8 border-t-transparent"></div>
+                        <div className="absolute -bottom-1 -left-1 w-0 h-0 border-r-8 border-r-fuchsia-500 border-t-8 border-t-transparent"></div>
                       )}
                       {message.type === 'deepseek-ai' && (
-                        <div className="absolute -bottom-1 -left-1 w-0 h-0 border-r-8 border-r-teal-700 border-t-8 border-t-transparent"></div>
+                        <div className="absolute -bottom-1 -left-1 w-0 h-0 border-r-8 border-r-cyan-500 border-t-8 border-t-transparent"></div>
                       )}
                     </div>
                   </div>
@@ -225,9 +225,9 @@ const ConversationPanel = ({ messages, showAI = true }: ConversationPanelProps) 
               })}
             </div>
           )}
-        </ScrollArea>
-      </CardContent>
-    </Card>
+        </div>
+      </div>
+    </div>
   );
 };
 

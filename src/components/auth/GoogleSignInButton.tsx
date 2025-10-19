@@ -12,10 +12,10 @@ const GoogleSignInButton = ({ onClick, isLoading }: GoogleSignInButtonProps) => 
     <Button
       onClick={onClick}
       disabled={isLoading}
-      className="w-full bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 flex items-center justify-center gap-2"
+      className="w-full btn-neon-outline flex items-center justify-center gap-2"
     >
       {isLoading ? (
-        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-700"></div>
+        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-cyan-400"></div>
       ) : (
         <img
           src="https://www.svgrepo.com/show/475656/google-color.svg"

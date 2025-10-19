@@ -169,125 +169,106 @@ const UtilityViews = ({ currentView, userTokens, selectedDebate, selectedEvent, 
     case 'events':
       return (
         <>
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-white">
-          {/* Hero Section */}
-          <div className="relative overflow-hidden bg-gradient-to-br from-[#009] via-[#0066cc] to-[#004499]">
-            {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-10">
-              <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width%3D%22100%22 height%3D%22100%22 viewBox%3D%220 0 100 100%22 xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cdefs%3E%3Cpattern id%3D%22grain%22 width%3D%22100%22 height%3D%22100%22 patternUnits%3D%22userSpaceOnUse%22%3E%3Ccircle cx%3D%2250%22 cy%3D%2250%22 r%3D%221%22 fill%3D%22%23ffffff%22 opacity%3D%220.4%22/%3E%3Ccircle cx%3D%2220%22 cy%3D%2220%22 r%3D%220.5%22 fill%3D%22%23ffffff%22 opacity%3D%220.3%22/%3E%3Ccircle cx%3D%2280%22 cy%3D%2230%22 r%3D%220.5%22 fill%3D%22%23ffffff%22 opacity%3D%220.3%22/%3E%3C/pattern%3E%3C/defs%3E%3Crect width%3D%22100%22 height%3D%22100%22 fill%3D%22url(%23grain)%22/%3E%3C/svg%3E')] animate-pulse"></div>
-            </div>
+        <div className="min-h-screen bg-gray-950 relative overflow-hidden">
+          {/* Cyberpunk Background Effects */}
+          <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/5 via-transparent to-fuchsia-500/5"></div>
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-400/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-fuchsia-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute top-1/3 right-1/3 w-64 h-64 bg-cyan-400/5 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '2s' }}></div>
             
-            {/* Floating Elements */}
-            <div className="absolute top-20 left-10 w-20 h-20 bg-white/10 rounded-full blur-xl animate-pulse"></div>
-            <div className="absolute top-40 right-20 w-32 h-32 bg-white/5 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-            <div className="absolute bottom-20 left-1/4 w-16 h-16 bg-white/10 rounded-full blur-lg animate-pulse" style={{ animationDelay: '2s' }}></div>
-            
-            <div className="relative max-w-7xl mx-auto px-6 py-16">
-              <div className="flex items-center justify-between">
-                <div className="space-y-6">
-                  <div className="flex items-center space-x-4">
-                    <div className="relative">
-                      <div className="absolute inset-0 bg-white/20 rounded-2xl blur-2xl opacity-50 animate-pulse"></div>
-                      <div className="relative bg-white/15 backdrop-blur-lg rounded-2xl p-4 border border-white/20 shadow-2xl">
-                        <Calendar className="h-12 w-12 text-white" />
-                      </div>
-                    </div>
-                    <div>
-                      <h1 className="text-4xl md:text-5xl font-extralight text-white leading-tight tracking-wide">
-                        Debate{' '}
-                        <span className="font-bold bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
-                          Events
-                        </span>
-                      </h1>
-                      <p className="text-xl text-blue-100 max-w-3xl font-light leading-relaxed mt-4">
-                        Discover upcoming debate tournaments, workshops, and community competitions
-                      </p>
-                    </div>
+          
+          <div className="relative max-w-7xl mx-auto p-6 space-y-8">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <div className="space-y-2">
+                <div className="flex items-center space-x-3">
+                  <div className="p-3 bg-cyan-400/20 border border-cyan-400/30 rounded-2xl">
+                    <Calendar className="h-8 w-8 text-cyan-400" />
+                  </div>
+                  <div>
+                    <h1 className="text-3xl font-bold font-orbitron neon-text">
+                      Debate Events
+                    </h1>
+                    <p className="text-gray-300 text-lg font-inter">Discover upcoming tournaments and competitions</p>
                   </div>
                 </div>
-                
-                <Button 
-                  variant="ghost" 
-                  onClick={handlers.handleBackToDashboard}
-                  className="bg-white/10 backdrop-blur-sm text-white border border-white/30 hover:bg-white/20 hover:border-white/50 font-medium px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                >
-                  <ArrowLeft className="h-5 w-5 mr-2" />
-                  Back to Dashboard
-                </Button>
               </div>
+              <button 
+                onClick={handlers.handleBackToDashboard}
+                className="btn-neon-secondary"
+              >
+                <ArrowLeft className="h-5 w-5 mr-2" />
+                Back to Dashboard
+              </button>
             </div>
-          </div>
 
-          {/* Events Grid */}
-          <div className="max-w-7xl mx-auto px-6 py-16">
-            <div className="space-y-12">
+            {/* Events Grid */}
+            <div className="space-y-8">
               <div className="text-center space-y-4">
-                <h2 className="text-3xl md:text-4xl font-light bg-gradient-to-r from-[#009] via-[#0066cc] to-[#004499] bg-clip-text text-transparent tracking-wide">
+                <h2 className="text-2xl md:text-3xl font-bold font-orbitron neon-text">
                   Upcoming Events
                 </h2>
-                <p className="text-xl text-gray-700 font-light max-w-2xl mx-auto">
+                <p className="text-gray-300 text-lg font-inter max-w-2xl mx-auto">
                   Join our vibrant community of debaters in these exciting events
                 </p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {events.map((event) => (
-                  <Card key={event.id} className="group relative overflow-hidden border border-gray-200/50 bg-white/80 backdrop-blur-sm hover:bg-white hover:shadow-xl hover:shadow-[#009]/10 transition-all duration-500 cursor-pointer hover:scale-[1.02] hover:-translate-y-2 shadow-lg">
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#009]/5 via-[#0066cc]/5 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#009] to-[#0066cc] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                  <div key={event.id} className="card-neon group hover:shadow-neon transition-all duration-500 cursor-pointer hover:scale-[1.02]">
+                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/5 via-transparent to-fuchsia-500/5 opacity-0 group-hover:opacity-100 transition-all duration-500 rounded-xl"></div>
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-fuchsia-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-t-xl"></div>
                     
-                    <CardHeader className="relative z-10 pb-4 px-6 pt-8">
+                    <div className="relative z-10 p-6">
                       <div className="flex items-start justify-between mb-4">
                         <div className="relative">
-                          <div className="absolute inset-0 bg-[#009] rounded-xl blur-xl opacity-20 group-hover:opacity-30 transition-all duration-500"></div>
-                          <div className="relative bg-gradient-to-br from-[#009] to-[#0066cc] p-3 rounded-xl w-16 h-16 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-500 transform group-hover:scale-110">
-                            {event.id === 1 ? <Globe className="h-8 w-8 text-white" /> : <Award className="h-8 w-8 text-white" />}
+                          <div className="absolute inset-0 bg-cyan-400/20 rounded-xl blur-xl opacity-50 group-hover:opacity-70 transition-all duration-500"></div>
+                          <div className="relative bg-gradient-to-br from-cyan-400/20 to-fuchsia-500/20 border border-cyan-400/30 p-3 rounded-xl w-16 h-16 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-500 transform group-hover:scale-110">
+                            {event.id === 1 ? <Globe className="h-8 w-8 text-cyan-400" /> : <Award className="h-8 w-8 text-cyan-400" />}
                           </div>
                         </div>
                         <div className="flex flex-wrap gap-2">
                           {event.badges.map((badge, index) => (
-                            <Badge key={index} className="bg-gradient-to-r from-[#009] to-[#0066cc] text-white border-0 px-3 py-1 text-xs font-medium shadow-sm">
+                            <span key={index} className="badge-neon text-cyan-300 border-cyan-400/50 bg-cyan-400/10 px-3 py-1 text-xs font-medium">
                               {badge.text}
-                            </Badge>
+                            </span>
                           ))}
                         </div>
                       </div>
                       
-                      <CardTitle className="text-xl font-semibold text-gray-900 group-hover:text-[#009] transition-colors duration-300 mb-3">
+                      <h3 className="text-xl font-semibold text-white group-hover:text-cyan-400 transition-colors duration-300 mb-3 font-orbitron">
                         {event.emoji} {event.title}
-                      </CardTitle>
+                      </h3>
                       
-                      <CardDescription className="text-gray-600 group-hover:text-gray-700 transition-colors duration-300 text-sm leading-relaxed font-light">
+                      <p className="text-gray-300 group-hover:text-gray-200 transition-colors duration-300 text-sm leading-relaxed font-inter">
                         {event.shortDesc}
-                      </CardDescription>
-                    </CardHeader>
+                      </p>
+                    </div>
                     
-                    <CardContent className="relative z-10 px-6 pb-6">
+                    <div className="relative z-10 px-6 pb-6">
                       <div className="space-y-3 mb-6">
-                        <div className="flex items-center text-sm text-gray-600 group-hover:text-gray-700 transition-colors duration-300">
+                        <div className="flex items-center text-sm text-gray-300 group-hover:text-gray-200 transition-colors duration-300">
                           <div className="relative mr-3">
-                            <Calendar className="h-4 w-4 text-[#009]" />
-                            <div className="absolute -top-1 -right-1 w-2 h-2 bg-[#0066cc] rounded-full animate-pulse"></div>
+                            <Calendar className="h-4 w-4 text-cyan-400" />
+                            <div className="absolute -top-1 -right-1 w-2 h-2 bg-fuchsia-500 rounded-full animate-pulse"></div>
                           </div>
                           <span className="font-medium">{event.date}</span>
                         </div>
                         
-                        <div className="flex items-center text-sm text-gray-600 group-hover:text-gray-700 transition-colors duration-300">
-                          {event.venue ? <MapPin className="h-4 w-4 text-[#009] mr-3" /> : <Globe className="h-4 w-4 text-[#009] mr-3" />}
+                        <div className="flex items-center text-sm text-gray-300 group-hover:text-gray-200 transition-colors duration-300">
+                          {event.venue ? <MapPin className="h-4 w-4 text-cyan-400 mr-3" /> : <Globe className="h-4 w-4 text-cyan-400 mr-3" />}
                           <span className="font-medium">{event.venue || event.format}</span>
                         </div>
                       </div>
                       
                       <div className="flex gap-3">
-                        <Button 
+                        <button 
                           onClick={() => handlers.handleViewEvent && handlers.handleViewEvent(event)}
-                          variant="outline" 
-                          size="sm" 
-                          className="flex-1 text-sm hover:bg-[#009]/5 hover:border-[#009]/20 hover:text-[#009] transition-all duration-300 font-medium"
+                          className="flex-1 btn-neon-secondary text-sm font-medium"
                         >
                           <Info className="h-4 w-4 mr-2" />
                           Details
-                        </Button>
-                        <Button 
+                        </button>
+                        <button 
                           onClick={() => {
                             setSelectedEventForRegistration({
                               ...event,
@@ -297,14 +278,13 @@ const UtilityViews = ({ currentView, userTokens, selectedDebate, selectedEvent, 
                             });
                             setRegistrationModalOpen(true);
                           }}
-                          size="sm" 
-                          className="flex-1 bg-gradient-to-r from-[#009] to-[#0066cc] hover:from-[#0066cc] hover:to-[#004499] text-white text-sm font-medium shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                          className="flex-1 btn-neon-primary text-sm font-medium"
                         >
                           Register ₹200
-                        </Button>
+                        </button>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>

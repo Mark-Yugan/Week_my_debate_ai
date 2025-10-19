@@ -554,61 +554,62 @@ const ChanakyaDebateRoom = ({ config, onBack, onComplete }: ChanakyaDebateRoomPr
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900">
+    <div className="min-h-screen bg-gray-950 bg-gradient-radial-neon">
       {/* Compact Single Row Header */}
-      <div className="sticky top-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-6 py-3">
+      <div className="sticky top-0 z-50 bg-gray-950/95 backdrop-blur-xl border-b border-cyan-400/30 shadow-neon">
+        <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             {/* Left Side - Title and Topic */}
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
-                <Trophy className="h-5 w-5 text-purple-600" />
-                <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
+                <Trophy className="h-6 w-6 text-cyan-400 drop-shadow-neon" />
+                <h1 className="text-xl font-bold text-white font-orbitron neon-text">
                   Chanakya AI
                 </h1>
                 {isTextMode && (
-                  <Badge variant="secondary" className="text-xs">
+                  <div className="badge-neon text-xs">
                     <Type className="h-3 w-3 mr-1" />
                     Text Mode
-                  </Badge>
+                  </div>
                 )}
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400 max-w-md truncate">
+              <div className="text-sm text-gray-300 max-w-md truncate font-medium">
                 {config.topic}
               </div>
             </div>
             
             {/* Center - Compact Score Display */}
-            <div className="hidden lg:flex items-center space-x-3 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-lg px-3 py-1 border border-gray-200/50 dark:border-gray-700/50">
+            <div className="hidden lg:flex items-center space-x-3 card-neon-sm px-4 py-2">
               <div className="text-xs text-center">
-                <div className="text-xs text-gray-500">Overall</div>
-                <div className="text-sm font-bold text-purple-600">{scores.overall}%</div>
+                <div className="text-xs text-gray-400 mb-1">Overall</div>
+                <div className="text-lg font-bold text-cyan-400 neon-text">{scores.overall}%</div>
               </div>
             </div>
             
             {/* Right Side - Control Buttons */}
-            <div className="flex items-center space-x-2">
-              <Button 
-                variant="destructive" 
-                size="sm" 
-                onClick={handleExit} 
-                className="flex items-center space-x-1 bg-red-600 hover:bg-red-700"
+            <div className="flex items-center space-x-3">
+              <button 
+                onClick={handleExit}
+                className="btn-neon-secondary text-sm px-4 py-2 flex items-center space-x-2"
               >
                 <Square className="h-4 w-4" />
                 <span>End Debate</span>
-              </Button>
-              <Button variant="outline" size="sm" onClick={handleExit} className="flex items-center space-x-1">
+              </button>
+              <button 
+                onClick={handleExit}
+                className="px-4 py-2 bg-gray-800/50 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-700/50 hover:border-gray-500 transition-all duration-300 flex items-center space-x-2"
+              >
                 <ArrowLeft className="h-4 w-4" />
                 <span>Exit</span>
-              </Button>
+              </button>
             </div>
           </div>
         </div>
       </div>
 
       {/* Main Content - Maximized Space for Debate */}
-      <div className="max-w-7xl mx-auto px-4 py-2">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-[calc(100vh-100px)]">
+      <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-120px)]">
           {/* Left Column - Video Conference Only */}
           <div className="flex flex-col">
             <VideoConferencePanel 
@@ -637,56 +638,51 @@ const ChanakyaDebateRoom = ({ config, onBack, onComplete }: ChanakyaDebateRoomPr
             </div>
             
             {/* Text Input Area */}
-            <div className="mt-2 p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center space-x-2">
-                  <Button
-                    variant={isTextMode ? "default" : "outline"}
-                    size="sm"
+            <div className="mt-3 p-4 card-neon">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center space-x-3">
+                  <button
                     onClick={() => setIsTextMode(!isTextMode)}
-                    className="flex items-center space-x-1"
+                    className={isTextMode ? "btn-neon-primary text-sm px-4 py-2" : "px-4 py-2 bg-gray-800/50 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-700/50 hover:border-gray-500 transition-all duration-300 text-sm"}
                   >
-                    <Type className="h-4 w-4" />
+                    <Type className="h-4 w-4 mr-2" />
                     <span>Text Mode</span>
-                  </Button>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                  </button>
+                  <div className="text-xs text-gray-400">
                     {isTextMode ? 'Type your argument' : 'Use voice or switch to text mode'}
                   </div>
                 </div>
-                <Button 
-                  variant="destructive" 
-                  size="sm" 
-                  onClick={handleExit} 
-                  className="flex items-center space-x-1 bg-red-600 hover:bg-red-700 lg:hidden"
+                <button 
+                  onClick={handleExit}
+                  className="btn-neon-secondary text-sm px-3 py-2 lg:hidden flex items-center space-x-1"
                 >
                   <Square className="h-4 w-4" />
                   <span>End</span>
-                </Button>
+                </button>
               </div>
               
               {isTextMode && (
-                <div className="space-y-2">
-                  <Textarea
+                <div className="space-y-3">
+                  <textarea
                     value={textInput}
                     onChange={(e) => setTextInput(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder="Type your argument here... (Press Enter to send, Shift+Enter for new line)"
-                    className="min-h-[80px] max-h-[120px] resize-none"
+                    className="input-neon min-h-[80px] max-h-[120px] resize-none w-full"
                     disabled={isSubmitting}
                   />
                   <div className="flex items-center justify-between">
-                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                    <div className="text-xs text-gray-400">
                       {textInput.length} characters
                     </div>
-                    <Button
+                    <button
                       onClick={handleTextSubmit}
                       disabled={!textInput.trim() || isSubmitting}
-                      size="sm"
-                      className="flex items-center space-x-1"
+                      className="btn-neon-primary text-sm px-4 py-2 flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <Send className="h-4 w-4" />
                       <span>{isSubmitting ? 'Sending...' : 'Send'}</span>
-                    </Button>
+                    </button>
                   </div>
                 </div>
               )}

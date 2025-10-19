@@ -58,45 +58,45 @@ const StudentDashboard = ({
   const { user, signOut } = useCustomAuth();
 
   return (
-    <div className="min-h-screen bg-white relative">
+    <div className="min-h-screen bg-gray-950 relative font-primary">
       {/* Floating User Menu - Top Right for Authenticated Users */}
       {isAuthenticated ? (
         <div className="fixed top-6 right-6 z-50">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className="relative h-12 w-12 rounded-full bg-gradient-primary hover:bg-gradient-hover shadow-glow hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+              <Button className="relative h-12 w-12 rounded-full btn-neon-primary hover:btn-neon-secondary shadow-neon-cyan hover:shadow-neon-pink transform hover:scale-105 transition-all duration-300">
                 <Avatar className="h-12 w-12">
                   <AvatarImage src={user?.avatar_url} className="object-cover" />
-                  <AvatarFallback className="bg-white text-black font-bold">
+                  <AvatarFallback className="bg-gray-900 text-cyan-400 font-bold">
                     <User className="h-6 w-6" />
                   </AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-64 bg-white border border-gray-200 shadow-glow rounded-2xl p-2" align="end" forceMount>
-              <div className="px-4 py-3 bg-gray-50 rounded-xl mb-2">
+            <DropdownMenuContent className="w-64 card-neon" align="end" forceMount>
+              <div className="px-4 py-3 bg-gray-800/50 rounded-xl mb-2">
                 <div className="flex items-center space-x-3">
                   <Avatar className="h-10 w-10">
                     <AvatarImage src={user?.avatar_url} />
-                    <AvatarFallback className="bg-gradient-primary text-white">
+                    <AvatarFallback className="gradient-neon-primary text-gray-950">
                       <User className="h-5 w-5" />
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="text-sm font-medium text-black">{user?.email || 'User'}</p>
+                    <p className="text-sm font-medium text-gray-50">{user?.email || 'User'}</p>
                     <div className="flex items-center space-x-2 mt-1">
-                      <Coins className="h-3 w-3 text-gray-500" />
-                      <span className="text-xs text-gray-500">{userTokens} tokens</span>
+                      <Coins className="h-3 w-3 text-cyan-400" />
+                      <span className="text-xs text-cyan-400">{userTokens} tokens</span>
                     </div>
                   </div>
                 </div>
               </div>
-              <DropdownMenuItem className="rounded-xl hover:bg-gray-50 text-black transition-colors duration-200">
+              <DropdownMenuItem className="rounded-xl hover:bg-gray-800 text-gray-50 transition-colors duration-200">
                 <Settings className="mr-3 h-4 w-4" />
                 <span>Settings</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => signOut()} className="rounded-xl hover:bg-red-50 text-red-600 transition-colors duration-200">
+              <DropdownMenuItem onClick={() => signOut()} className="rounded-xl hover:bg-red-900/50 text-red-400 transition-colors duration-200">
                 <LogOut className="mr-3 h-4 w-4" />
                 <span>Sign out</span>
               </DropdownMenuItem>
@@ -106,16 +106,16 @@ const StudentDashboard = ({
       ) : (
         /* Floating Auth Pill Card - Top Right for Guests */
         <div className="fixed top-6 right-6 z-50">
-          <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 border border-gray-200 shadow-xl">
+          <div className="card-neon backdrop-dark p-2">
             <div className="flex items-center space-x-2">
               <Button 
-                className="bg-gradient-to-r from-blue-600 to-teal-500 hover:from-blue-700 hover:to-teal-600 text-white px-6 py-2 rounded-full font-semibold text-sm shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 border-0"
+                className="btn-neon-primary px-6 py-2 text-sm"
                 onClick={() => window.location.href = '/signup'}
               >
                 Sign Up
               </Button>
               <Button 
-                className="bg-transparent hover:bg-gray-100 text-gray-700 px-6 py-2 rounded-full font-semibold text-sm transition-all duration-300"
+                className="btn-neon-outline px-6 py-2 text-sm"
                 onClick={() => window.location.href = '/login'}
               >
                 Login
@@ -125,94 +125,101 @@ const StudentDashboard = ({
         </div>
       )}
 
-      {/* Clean Professional Hero Section */}
-      <div className="min-h-screen relative overflow-hidden flex flex-col" style={{
-        background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.3) 0%, rgba(20, 184, 166, 0.25) 100%)'
-      }}>
-        {/* Enhanced Highly Visible Professional Background Layer */}
-        <div className="absolute inset-0" style={{
-          background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.25) 0%, rgba(255, 255, 255, 0.4) 30%, rgba(255, 255, 255, 0.4) 70%, rgba(20, 184, 166, 0.25) 100%)'
-        }}></div>
+      {/* Dark Cyberpunk Hero Section */}
+      <div className="min-h-screen relative overflow-hidden flex flex-col bg-gray-950">
+        {/* Neon Background Effects */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0" style={{
+            background: `
+              radial-gradient(circle at 20% 50%, rgba(34, 211, 238, 0.08) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(217, 70, 239, 0.08) 0%, transparent 50%),
+              radial-gradient(circle at 40% 90%, rgba(34, 211, 238, 0.05) 0%, transparent 50%)
+            `
+          }}></div>
+        </div>
         
         <div className="flex-1 flex items-center justify-center relative z-10">
           <div className="max-w-6xl mx-auto px-6 text-center space-y-8">
             
-            {/* Professional Brand Logo */}
+            {/* Neon Brand Logo */}
             <div className="flex justify-center mb-8">
-              <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-teal-500 rounded-2xl blur-lg opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
-                <div className="relative bg-white rounded-2xl p-6 shadow-xl border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
-                  <Brain className="h-16 w-16 text-black" />
+              <div className="relative group animate-float">
+                <div className="absolute inset-0 gradient-neon-primary rounded-2xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-300 animate-neon-pulse"></div>
+                <div className="relative card-neon-glow p-6">
+                  <Brain className="h-16 w-16 text-cyan-400" />
                 </div>
               </div>
             </div>
-            
+
             {/* AI-Powered Header */}
             <div className="space-y-2">
-              <p className="text-lg md:text-xl text-gray-600 font-medium tracking-wide uppercase">
-                AI-Powered Debate Training
+              <p className="text-lg md:text-xl text-gray-300 font-display tracking-wide uppercase">
+                Your Ultimate Speaking Coach
               </p>
             </div>
             
-            {/* Professional Brand Name */}
+            {/* Cyberpunk Brand Name */}
             <div className="space-y-4">
-              <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-none">
-                <span className="bg-gradient-to-r from-blue-600 to-teal-500 bg-clip-text text-transparent">
-                  Mydebate AI
+              <h1 className="text-5xl md:text-7xl font-display font-black tracking-tight leading-none">
+                <span className="text-glow-cyan">
+                  MYDEBATE
+                </span>
+                <span className="text-glow-pink">
+                  AI
                 </span>
               </h1>
-              <div className="w-32 h-1 bg-gradient-to-r from-blue-600 to-teal-500 mx-auto rounded-full"></div>
+              <div className="w-32 h-1 gradient-neon-mixed mx-auto rounded-full animate-neon-pulse"></div>
             </div>
             
             {/* Compelling Tagline */}
-            <p className="text-xl md:text-2xl text-black max-w-4xl mx-auto leading-relaxed font-medium">
+            <p className="text-xl md:text-2xl text-gray-50 max-w-4xl mx-auto leading-relaxed font-medium">
               {isAuthenticated 
-                ? "Master the art of debate with AI-powered coaching and live competitions"
-                : "Let Your Debate Skills Rise to Excellence"
+                ? "Stop Scrolling. Start Speaking. Master Any Conversation."
+                : "Level up your voice! Transform from hesitant speaker to confident force."
               }
             </p>
 
-            {/* Simple Process Flow */}
+            {/* Neon Process Flow */}
             <div className="flex flex-wrap justify-center gap-4 max-w-5xl mx-auto mt-12 mb-12">
-              <div className="bg-white/80 backdrop-blur-sm rounded-full px-6 py-3 border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <div className="card-neon backdrop-dark rounded-full px-6 py-3 border-neon hover:border-neon-glow transition-all duration-300 hover:scale-105">
                 <div className="flex items-center space-x-3">
-                  <BookOpen className="h-5 w-5 text-blue-600" />
-                  <span className="text-sm font-semibold text-gray-700">Choose Topic</span>
+                  <BookOpen className="h-5 w-5 text-cyan-400" />
+                  <span className="text-sm font-semibold text-gray-50">Practice 24/7</span>
                 </div>
               </div>
-              <div className="bg-white/80 backdrop-blur-sm rounded-full px-6 py-3 border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <div className="card-neon backdrop-dark rounded-full px-6 py-3 border-neon hover:border-neon-glow transition-all duration-300 hover:scale-105">
                 <div className="flex items-center space-x-3">
-                  <Target className="h-5 w-5 text-teal-600" />
-                  <span className="text-sm font-semibold text-gray-700">Select Level</span>
+                  <Target className="h-5 w-5 text-fuchsia-500" />
+                  <span className="text-sm font-semibold text-gray-50">Get Feedback</span>
                 </div>
               </div>
-              <div className="bg-white/80 backdrop-blur-sm rounded-full px-6 py-3 border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <div className="card-neon backdrop-dark rounded-full px-6 py-3 border-neon hover:border-neon-glow transition-all duration-300 hover:scale-105">
                 <div className="flex items-center space-x-3">
-                  <Mic className="h-5 w-5 text-purple-600" />
-                  <span className="text-sm font-semibold text-gray-700">Start Debate</span>
+                  <Mic className="h-5 w-5 text-cyan-400" />
+                  <span className="text-sm font-semibold text-gray-50">Drop the Mic</span>
                 </div>
               </div>
-              <div className="bg-white/80 backdrop-blur-sm rounded-full px-6 py-3 border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <div className="card-neon backdrop-dark rounded-full px-6 py-3 border-neon hover:border-neon-glow transition-all duration-300 hover:scale-105">
                 <div className="flex items-center space-x-3">
-                  <Bot className="h-5 w-5 text-blue-500" />
-                  <span className="text-sm font-semibold text-gray-700">Get AI Feedback</span>
+                  <Bot className="h-5 w-5 text-fuchsia-500" />
+                  <span className="text-sm font-semibold text-gray-50">Get AI Feedback</span>
                 </div>
               </div>
-              <div className="bg-white/80 backdrop-blur-sm rounded-full px-6 py-3 border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <div className="card-neon backdrop-dark rounded-full px-6 py-3 border-neon hover:border-neon-glow transition-all duration-300 hover:scale-105">
                 <div className="flex items-center space-x-3">
-                  <TrendingUp className="h-5 w-5 text-green-600" />
-                  <span className="text-sm font-semibold text-gray-700">View Analytics</span>
+                  <TrendingUp className="h-5 w-5 text-cyan-400" />
+                  <span className="text-sm font-semibold text-gray-50">View Analytics</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Simple Scroll Indicator */}
+        {/* Neon Scroll Indicator */}
         <div className="pb-8 flex justify-center relative z-10">
           <div className="animate-bounce">
-            <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center bg-white/50 backdrop-blur-sm shadow-lg">
-              <div className="w-1 h-3 bg-gradient-to-b from-blue-600 to-teal-500 rounded-full mt-2 animate-pulse"></div>
+            <div className="w-6 h-10 border-2 border-cyan-400/50 rounded-full flex justify-center card-neon backdrop-dark">
+              <div className="w-1 h-3 gradient-neon-primary rounded-full mt-2 animate-neon-pulse"></div>
             </div>
           </div>
         </div>
@@ -225,119 +232,103 @@ const StudentDashboard = ({
           {/* Main Feature Categories */}
           <div className="space-y-12">
             <div className="text-center space-y-4">
-              <h2 className="text-3xl md:text-4xl font-bold text-black tracking-tight">
-                Explore Your Debate Journey
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-50 tracking-tight">
+                🔥 Key Features That Slay
               </h2>
-              <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                Discover powerful features designed to elevate your debate skills and connect with a global community
+              <p className="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
+                Transform learning into a high-stakes, low-pressure gamified experience with cutting-edge AI
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
               
-              {/* Debate with Chanakya - Modern Card Design */}
+              {/* Debate with Chanakya - Neon Card Design */}
               <div className="h-80 group cursor-pointer" onClick={() => requireAuth ? requireAuth(onChanakyaDebate || onInstantDebate) : (onChanakyaDebate ? onChanakyaDebate() : onInstantDebate())}>
-                <div className="h-full bg-white/90 backdrop-blur-sm rounded-xl p-6 border border-gray-200/60 shadow-sm hover:shadow-xl hover:border-blue-200 transition-all duration-500 hover:-translate-y-2 group-hover:bg-gradient-to-b group-hover:from-white group-hover:to-blue-50/30 flex flex-col relative overflow-hidden">
-                  {/* Subtle background gradient matching CTA card */}
-                  <div className="absolute inset-0 rounded-xl" style={{
-                    background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(20, 184, 166, 0.06) 100%)'
-                  }}></div>
-                  <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-blue-100/40 to-transparent rounded-bl-3xl"></div>
+                <div className="h-full card-neon p-6 hover:card-neon-glow transition-all duration-500 hover:-translate-y-2 flex flex-col relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-cyan-400/20 to-transparent rounded-bl-3xl"></div>
                   <div className="flex justify-center mb-4 relative z-10">
-                    <div className="bg-gradient-to-r from-blue-600 to-teal-500 p-4 rounded-xl shadow-lg group-hover:shadow-blue-200 group-hover:scale-110 transition-all duration-300">
-                      <Brain className="h-8 w-8 text-white" />
+                    <div className="gradient-neon-primary p-4 rounded-xl shadow-neon-cyan group-hover:scale-110 transition-all duration-300">
+                      <Brain className="h-8 w-8 text-gray-950" />
                     </div>
                   </div>
-                  <h3 className="text-lg font-semibold text-black mb-3 text-center relative z-10">
-                    Debate with Chanakya
+                  <h3 className="text-lg font-semibold text-gray-50 mb-3 text-center relative z-10">
+                    Chanakya AI
                   </h3>
-                  <p className="text-gray-600 text-center text-sm leading-relaxed mb-4 flex-grow relative z-10">
-                    Challenge the strategic AI master in instant debates with voice synthesis and advanced reasoning
+                  <p className="text-gray-300 text-center text-sm leading-relaxed mb-4 flex-grow relative z-10">
+                    Practice 24/7 with AI that adapts to your skill level. From climate change to pop culture debates
                   </p>
                   <div className="flex justify-center mt-auto relative z-10">
-                    <span className="bg-gradient-to-r from-gray-100 to-gray-50 text-gray-700 px-4 py-2 rounded-full text-xs font-medium border border-gray-200 group-hover:border-blue-200 group-hover:bg-blue-50 transition-all duration-300">
-                      AI Powered
+                    <span className="badge-neon font-medium">
+                      24/7 Ready
                     </span>
                   </div>
                 </div>
               </div>
 
-              {/* MUN World - Modern Card Design */}
+              {/* MUN World - Neon Card Design */}
               <div className="h-80 group cursor-pointer" onClick={() => requireAuth ? requireAuth(onJoinMUN) : onJoinMUN()}>
-                <div className="h-full bg-white/90 backdrop-blur-sm rounded-xl p-6 border border-gray-200/60 shadow-sm hover:shadow-xl hover:border-teal-200 transition-all duration-500 hover:-translate-y-2 group-hover:bg-gradient-to-b group-hover:from-white group-hover:to-teal-50/30 flex flex-col relative overflow-hidden">
-                  {/* Subtle background gradient matching CTA card */}
-                  <div className="absolute inset-0 rounded-xl" style={{
-                    background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(20, 184, 166, 0.06) 100%)'
-                  }}></div>
-                  <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-teal-100/40 to-transparent rounded-bl-3xl"></div>
+                <div className="h-full card-neon p-6 hover:card-neon-glow transition-all duration-500 hover:-translate-y-2 flex flex-col relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-fuchsia-500/20 to-transparent rounded-bl-3xl"></div>
                   <div className="flex justify-center mb-4 relative z-10">
-                    <div className="bg-gradient-to-r from-blue-600 to-teal-500 p-4 rounded-xl shadow-lg group-hover:shadow-teal-200 group-hover:scale-110 transition-all duration-300">
+                    <div className="gradient-neon-secondary p-4 rounded-xl shadow-neon-pink group-hover:scale-110 transition-all duration-300">
                       <Globe className="h-8 w-8 text-white" />
                     </div>
                   </div>
-                  <h3 className="text-lg font-semibold text-black mb-3 text-center relative z-10">
+                  <h3 className="text-lg font-semibold text-gray-50 mb-3 text-center relative z-10">
                     MUN World
                   </h3>
-                  <p className="text-gray-600 text-center text-sm leading-relaxed mb-4 flex-grow relative z-10">
-                    Model United Nations simulations with Gavel Bro AI moderator and diplomatic challenges
+                  <p className="text-gray-300 text-center text-sm leading-relaxed mb-4 flex-grow relative z-10">
+                    Real-time analytics on clarity, pace, filler words, and argument structure. Drop the anxiety
                   </p>
                   <div className="flex justify-center mt-auto relative z-10">
-                    <span className="bg-gradient-to-r from-gray-100 to-gray-50 text-gray-700 px-4 py-2 rounded-full text-xs font-medium border border-gray-200 group-hover:border-teal-200 group-hover:bg-teal-50 transition-all duration-300">
-                      Global Diplomacy
+                    <span className="badge-neon-pink font-medium">
+                      Non-Judgmental
                     </span>
                   </div>
                 </div>
               </div>
 
-              {/* Events - Modern Card Design */}
+              {/* Events - Neon Card Design */}
               <div className="h-80 group cursor-pointer" onClick={onViewEvents}>
-                <div className="h-full bg-white/90 backdrop-blur-sm rounded-xl p-6 border border-gray-200/60 shadow-sm hover:shadow-xl hover:border-blue-200 transition-all duration-500 hover:-translate-y-2 group-hover:bg-gradient-to-b group-hover:from-white group-hover:to-blue-50/30 flex flex-col relative overflow-hidden">
-                  {/* Subtle background gradient matching CTA card */}
-                  <div className="absolute inset-0 rounded-xl" style={{
-                    background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(20, 184, 166, 0.06) 100%)'
-                  }}></div>
-                  <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-blue-100/40 to-transparent rounded-bl-3xl"></div>
+                <div className="h-full card-neon p-6 hover:card-neon-glow transition-all duration-500 hover:-translate-y-2 flex flex-col relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-cyan-400/20 to-transparent rounded-bl-3xl"></div>
                   <div className="flex justify-center mb-4 relative z-10">
-                    <div className="bg-gradient-to-r from-blue-600 to-teal-500 p-4 rounded-xl shadow-lg group-hover:shadow-blue-200 group-hover:scale-110 transition-all duration-300">
-                      <Calendar className="h-8 w-8 text-white" />
+                    <div className="gradient-neon-primary p-4 rounded-xl shadow-neon-cyan group-hover:scale-110 transition-all duration-300">
+                      <Calendar className="h-8 w-8 text-gray-950" />
                     </div>
                   </div>
-                  <h3 className="text-lg font-semibold text-black mb-3 text-center relative z-10">
+                  <h3 className="text-lg font-semibold text-gray-50 mb-3 text-center relative z-10">
                     Events
                   </h3>
-                  <p className="text-gray-600 text-center text-sm leading-relaxed mb-4 flex-grow relative z-10">
-                    Discover upcoming debate tournaments, workshops, and community events worldwide
+                  <p className="text-gray-300 text-center text-sm leading-relaxed mb-4 flex-grow relative z-10">
+                    Bite-sized video lessons on persuasive hooks, stage fright, power vocabulary, and body language
                   </p>
                   <div className="flex justify-center mt-auto relative z-10">
-                    <span className="bg-gradient-to-r from-gray-100 to-gray-50 text-gray-700 px-4 py-2 rounded-full text-xs font-medium border border-gray-200 group-hover:border-blue-200 group-hover:bg-blue-50 transition-all duration-300">
-                      Live Events
+                    <span className="badge-neon font-medium">
+                      Video Lessons
                     </span>
                   </div>
                 </div>
               </div>
 
-              {/* My History - Modern Card Design */}
+              {/* My History - Neon Card Design */}
               <div className="h-80 group cursor-pointer" onClick={() => requireAuth ? requireAuth(onDebateHistory) : onDebateHistory()}>
-                <div className="h-full bg-white/90 backdrop-blur-sm rounded-xl p-6 border border-gray-200/60 shadow-sm hover:shadow-xl hover:border-teal-200 transition-all duration-500 hover:-translate-y-2 group-hover:bg-gradient-to-b group-hover:from-white group-hover:to-teal-50/30 flex flex-col relative overflow-hidden">
-                  {/* Subtle background gradient matching CTA card */}
-                  <div className="absolute inset-0 rounded-xl" style={{
-                    background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(20, 184, 166, 0.06) 100%)'
-                  }}></div>
-                  <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-teal-100/40 to-transparent rounded-bl-3xl"></div>
+                <div className="h-full card-neon p-6 hover:card-neon-glow transition-all duration-500 hover:-translate-y-2 flex flex-col relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-fuchsia-500/20 to-transparent rounded-bl-3xl"></div>
                   <div className="flex justify-center mb-4 relative z-10">
-                    <div className="bg-gradient-to-r from-blue-600 to-teal-500 p-4 rounded-xl shadow-lg group-hover:shadow-teal-200 group-hover:scale-110 transition-all duration-300">
+                    <div className="gradient-neon-secondary p-4 rounded-xl shadow-neon-pink group-hover:scale-110 transition-all duration-300">
                       <History className="h-8 w-8 text-white" />
                     </div>
                   </div>
-                  <h3 className="text-lg font-semibold text-black mb-3 text-center relative z-10">
-                    My History
+                  <h3 className="text-lg font-semibold text-gray-50 mb-3 text-center relative z-10">
+                    History
                   </h3>
-                  <p className="text-gray-600 text-center text-sm leading-relaxed mb-4 flex-grow relative z-10">
-                    Review and replay your past debates, track progress and analyze conversation patterns
+                  <p className="text-gray-300 text-center text-sm leading-relaxed mb-4 flex-grow relative z-10">
+                    Track stats on global leaderboard. Earn badges, unlock topics, see skills level up in real-time
                   </p>
                   <div className="flex justify-center mt-auto relative z-10">
-                    <span className="bg-gradient-to-r from-gray-100 to-gray-50 text-gray-700 px-4 py-2 rounded-full text-xs font-medium border border-gray-200 group-hover:border-teal-200 group-hover:bg-teal-50 transition-all duration-300">
-                      Personal Archive
+                    <span className="badge-neon-pink font-medium">
+                      Gamified
                     </span>
                   </div>
                 </div>
@@ -349,10 +340,10 @@ const StudentDashboard = ({
           {isAuthenticated && (
             <div className="space-y-12">
               <div className="text-center space-y-6">
-                <h2 className="text-3xl md:text-4xl font-bold text-black tracking-tight">
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-50 tracking-tight">
                   Track & Analyze Performance
                 </h2>
-                <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                <p className="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
                   Monitor your progress and get insights into your debate performance with advanced analytics
                 </p>
               </div>
@@ -367,33 +358,28 @@ const StudentDashboard = ({
             </div>
           )}
 
-          {/* Modern Call to Action */}
-          <div className="relative overflow-hidden rounded-2xl bg-white/90 backdrop-blur-sm border border-gray-200/60 shadow-xl">
-            {/* Subtle background gradient matching hero section */}
-            <div className="absolute inset-0" style={{
-              background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(20, 184, 166, 0.06) 100%)'
-            }}></div>
-            
+          {/* Neon Call to Action */}
+          <div className="relative overflow-hidden rounded-2xl card-neon-glow">
             <div className="relative z-10 p-12 text-center">
               <div className="max-w-4xl mx-auto space-y-6">
-                <h3 className="text-3xl md:text-4xl font-bold text-black tracking-tight">
-                  Ready to Start Your Debate Journey?
+                <h3 className="text-3xl md:text-4xl font-bold text-gray-50 tracking-tight">
+                  Stop talking to your screen. <span className="text-glow-cyan">Start debating with it.</span>
                 </h3>
-                <p className="text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto">
-                  Choose from AI debates, live competitions, or MUN simulations to enhance your skills and join a global community of debaters
+                <p className="text-lg text-gray-300 leading-relaxed max-w-2xl mx-auto">
+                  Transform from a hesitant speaker to a confident, articulate force. Your future voice starts now.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
                   <Button 
-                    className="bg-gradient-to-r from-blue-600 to-teal-500 hover:from-blue-700 hover:to-teal-600 text-white font-semibold text-lg px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 border-0"
+                    className="btn-neon-primary text-lg px-8 py-3"
                     onClick={onStartDebate}
                   >
-                    Start AI Debate
+                    Start Speaking Coach
                   </Button>
                   <Button 
-                    className="bg-white hover:bg-gray-50 text-gray-700 border-2 border-gray-200 hover:border-blue-300 font-semibold px-8 py-3 text-lg rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+                    className="btn-neon-secondary text-lg px-8 py-3"
                     onClick={onDebateLive}
                   >
-                    Join Live Room
+                    Practice Live Debates
                   </Button>
                 </div>
               </div>
