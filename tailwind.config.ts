@@ -21,8 +21,6 @@ export default {
 		extend: {
 			fontFamily: {
 				sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-				display: ['Orbitron', 'Inter', 'monospace'],
-				hero: ['Exo 2', 'Inter', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',

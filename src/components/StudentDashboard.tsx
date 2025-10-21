@@ -154,14 +154,14 @@ const StudentDashboard = ({
 
             {/* AI-Powered Header */}
             <div className="space-y-2">
-              <p className="text-lg md:text-xl text-gray-300 font-hero tracking-wide uppercase">
+              <p className="text-lg md:text-xl text-gray-300 font-display tracking-wide uppercase">
                 Your Ultimate Speaking Coach
               </p>
             </div>
             
             {/* Cyberpunk Brand Name */}
             <div className="space-y-4">
-              <h1 className="text-5xl md:text-7xl font-hero font-black tracking-tight leading-none">
+              <h1 className="text-5xl md:text-7xl font-display font-black tracking-tight leading-none">
                 <span className="text-glow-cyan">
                   MYDEBATE
                 </span>
@@ -185,31 +185,31 @@ const StudentDashboard = ({
               <div className="card-neon backdrop-dark rounded-full px-6 py-3 border-neon hover:border-neon-glow transition-all duration-300 hover:scale-105">
                 <div className="flex items-center space-x-3">
                   <BookOpen className="h-5 w-5 text-cyan-400" />
-                  <span className="text-sm font-semibold text-gray-50">Practice 24/7</span>
+                  <span className="text-sm font-semibold text-gray-50">{CT.dashboard.buttons.prepare}</span>
                 </div>
               </div>
               <div className="card-neon backdrop-dark rounded-full px-6 py-3 border-neon hover:border-neon-glow transition-all duration-300 hover:scale-105">
                 <div className="flex items-center space-x-3">
                   <Target className="h-5 w-5 text-fuchsia-500" />
-                  <span className="text-sm font-semibold text-gray-50">Get Feedback</span>
+                  <span className="text-sm font-semibold text-gray-50">{CT.dashboard.buttons.practiceAI}</span>
                 </div>
               </div>
               <div className="card-neon backdrop-dark rounded-full px-6 py-3 border-neon hover:border-neon-glow transition-all duration-300 hover:scale-105">
                 <div className="flex items-center space-x-3">
-                  <Mic className="h-5 w-5 text-cyan-400" />
-                  <span className="text-sm font-semibold text-gray-50">Drop the Mic</span>
+                  <Users className="h-5 w-5 text-cyan-400" />
+                  <span className="text-sm font-semibold text-gray-50">{CT.dashboard.buttons.performPeers}</span>
                 </div>
               </div>
               <div className="card-neon backdrop-dark rounded-full px-6 py-3 border-neon hover:border-neon-glow transition-all duration-300 hover:scale-105">
                 <div className="flex items-center space-x-3">
                   <Bot className="h-5 w-5 text-fuchsia-500" />
-                  <span className="text-sm font-semibold text-gray-50">Get AI Feedback</span>
+                  <span className="text-sm font-semibold text-gray-50">{CT.dashboard.buttons.feedback}</span>
                 </div>
               </div>
               <div className="card-neon backdrop-dark rounded-full px-6 py-3 border-neon hover:border-neon-glow transition-all duration-300 hover:scale-105">
                 <div className="flex items-center space-x-3">
-                  <TrendingUp className="h-5 w-5 text-cyan-400" />
-                  <span className="text-sm font-semibold text-gray-50">View Analytics</span>
+                  <Mic className="h-5 w-5 text-cyan-400" />
+                  <span className="text-sm font-semibold text-gray-50">{CT.dashboard.buttons.dropMic}</span>
                 </div>
               </div>
             </div>
