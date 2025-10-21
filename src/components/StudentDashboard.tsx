@@ -15,6 +15,7 @@ import MainMenuCard from '@/components/dashboard/MainMenuCard';
 import RecentDebatesCard from '@/components/dashboard/RecentDebatesCard';
 import FreudAnalysisCard from '@/components/dashboard/FreudAnalysisCard';
 import { useCustomAuth } from '@/hooks/useCustomAuth';
+import { CT } from '@/lib/content';
 
 interface StudentDashboardProps {
   userTokens: number;
@@ -153,14 +154,14 @@ const StudentDashboard = ({
 
             {/* AI-Powered Header */}
             <div className="space-y-2">
-              <p className="text-lg md:text-xl text-gray-300 font-display tracking-wide uppercase">
+              <p className="text-lg md:text-xl text-gray-300 font-hero tracking-wide uppercase">
                 Your Ultimate Speaking Coach
               </p>
             </div>
             
             {/* Cyberpunk Brand Name */}
             <div className="space-y-4">
-              <h1 className="text-5xl md:text-7xl font-display font-black tracking-tight leading-none">
+              <h1 className="text-5xl md:text-7xl font-hero font-black tracking-tight leading-none">
                 <span className="text-glow-cyan">
                   MYDEBATE
                 </span>
@@ -233,10 +234,10 @@ const StudentDashboard = ({
           <div className="space-y-12">
             <div className="text-center space-y-4">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-50 tracking-tight">
-                🔥 Key Features That Slay
+                {CT.dashboard.features.title}
               </h2>
               <p className="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
-                Transform learning into a high-stakes, low-pressure gamified experience with cutting-edge AI
+                {CT.dashboard.features.subtitle}
               </p>
             </div>
 
@@ -252,14 +253,14 @@ const StudentDashboard = ({
                     </div>
                   </div>
                   <h3 className="text-lg font-semibold text-gray-50 mb-3 text-center relative z-10">
-                    Chanakya AI
+                    {CT.dashboard.features.chanakyaAI.title}
                   </h3>
                   <p className="text-gray-300 text-center text-sm leading-relaxed mb-4 flex-grow relative z-10">
-                    Practice 24/7 with AI that adapts to your skill level. From climate change to pop culture debates
+                    {CT.dashboard.features.chanakyaAI.description}
                   </p>
                   <div className="flex justify-center mt-auto relative z-10">
                     <span className="badge-neon font-medium">
-                      24/7 Ready
+                      {CT.dashboard.features.chanakyaAI.badge}
                     </span>
                   </div>
                 </div>
@@ -275,14 +276,14 @@ const StudentDashboard = ({
                     </div>
                   </div>
                   <h3 className="text-lg font-semibold text-gray-50 mb-3 text-center relative z-10">
-                    MUN World
+                    {CT.dashboard.features.munWorld.title}
                   </h3>
                   <p className="text-gray-300 text-center text-sm leading-relaxed mb-4 flex-grow relative z-10">
-                    Real-time analytics on clarity, pace, filler words, and argument structure. Drop the anxiety
+                    {CT.dashboard.features.munWorld.description}
                   </p>
                   <div className="flex justify-center mt-auto relative z-10">
                     <span className="badge-neon-pink font-medium">
-                      Non-Judgmental
+                      {CT.dashboard.features.munWorld.badge}
                     </span>
                   </div>
                 </div>
@@ -298,14 +299,14 @@ const StudentDashboard = ({
                     </div>
                   </div>
                   <h3 className="text-lg font-semibold text-gray-50 mb-3 text-center relative z-10">
-                    Events
+                    {CT.dashboard.features.events.title}
                   </h3>
                   <p className="text-gray-300 text-center text-sm leading-relaxed mb-4 flex-grow relative z-10">
-                    Bite-sized video lessons on persuasive hooks, stage fright, power vocabulary, and body language
+                    {CT.dashboard.features.events.description}
                   </p>
                   <div className="flex justify-center mt-auto relative z-10">
                     <span className="badge-neon font-medium">
-                      Video Lessons
+                      {CT.dashboard.features.events.badge}
                     </span>
                   </div>
                 </div>
@@ -321,14 +322,14 @@ const StudentDashboard = ({
                     </div>
                   </div>
                   <h3 className="text-lg font-semibold text-gray-50 mb-3 text-center relative z-10">
-                    History
+                    {CT.dashboard.features.history.title}
                   </h3>
                   <p className="text-gray-300 text-center text-sm leading-relaxed mb-4 flex-grow relative z-10">
-                    Track stats on global leaderboard. Earn badges, unlock topics, see skills level up in real-time
+                    {CT.dashboard.features.history.description}
                   </p>
                   <div className="flex justify-center mt-auto relative z-10">
                     <span className="badge-neon-pink font-medium">
-                      Gamified
+                      {CT.dashboard.features.history.badge}
                     </span>
                   </div>
                 </div>
