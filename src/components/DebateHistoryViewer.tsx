@@ -1,12 +1,14 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { DebateService } from '../services/DebateService.js';
 import { useCustomAuth } from '@/hooks/useCustomAuth';
-import { Search, Filter, Calendar, Clock, Trophy, User, Bot, ChevronDown, Eye, Trash2, Download, Share2, SortDesc, SortAsc } from 'lucide-react';
+import { Search, Filter, Calendar, Clock, Trophy, User, Bot, ChevronDown, Eye, Trash2, Download, Share2, SortDesc, SortAsc, BarChart3 } from 'lucide-react';
+import DebateAnalysis from './DebateAnalysis';
 
 interface DebateHistoryViewerProps {
   onViewSession?: (sessionId: string) => void;
   onBack?: () => void;
   onViewDebate?: (debate: any) => void;
+  onViewAnalysis?: (sessionId: string) => void;
 }
 
 interface FilterState {
@@ -22,13 +24,18 @@ interface SortState {
   direction: 'asc' | 'desc';
 }
 
-export default function DebateHistoryViewer({ onViewSession, onBack, onViewDebate }: DebateHistoryViewerProps) {
+export default function DebateHistoryViewer({ onViewSession, onBack, onViewDebate, onViewAnalysis }: DebateHistoryViewerProps) {
   const { user, isAuthenticated } = useCustomAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [sessions, setSessions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
+  
+  // Analysis viewing state
+  const [viewingAnalysis, setViewingAnalysis] = useState<string | null>(null);
+  const [analysisData, setAnalysisData] = useState(null);
+  const [loadingAnalysis, setLoadingAnalysis] = useState(false);
   
   const [filters, setFilters] = useState<FilterState>({
     status: 'all',
@@ -52,7 +59,7 @@ export default function DebateHistoryViewer({ onViewSession, onBack, onViewDebat
     avgDuration: 0
   });
   
-  // Load debate history from database
+  // Load debate history from database and merge with localStorage analysis
   useEffect(() => {
     const loadDebateHistory = async () => {
       if (!isAuthenticated || !user?.id) {
@@ -71,7 +78,21 @@ export default function DebateHistoryViewer({ onViewSession, onBack, onViewDebat
         ]);
         
         if (historyResult.success && historyResult.data) {
-          setSessions(historyResult.data);
+          // Get all stored analyses from localStorage
+          const storedAnalyses = DebateService.getAllStoredAnalyses();
+          
+          // Merge analysis data with sessions
+          const sessionsWithAnalysis = historyResult.data.map(session => {
+            const hasAnalysis = storedAnalyses[session.id];
+            return {
+              ...session,
+              hasAnalysis: !!hasAnalysis,
+              analysisStoredAt: hasAnalysis?.storedAt || null
+            };
+          });
+          
+          setSessions(sessionsWithAnalysis);
+          console.log(`Loaded ${sessionsWithAnalysis.length} sessions, ${Object.keys(storedAnalyses).length} with analysis`);
         } else {
           setError(historyResult.error || 'Failed to load debate history');
         }
@@ -96,7 +117,37 @@ export default function DebateHistoryViewer({ onViewSession, onBack, onViewDebat
     loadDebateHistory();
   }, [isAuthenticated, user?.id]);
 
-  // Advanced filtering and sorting
+  // Handle viewing analysis for a session
+  const handleViewAnalysis = async (sessionId: string) => {
+    setViewingAnalysis(sessionId);
+    setLoadingAnalysis(true);
+    
+    try {
+      const result = await DebateService.getDebateAnalysis(sessionId);
+      
+      if (result.success && result.data) {
+        setAnalysisData(result.data);
+      } else {
+        // Show fallback message if no analysis is available
+        console.log('No analysis available for this session');
+        setAnalysisData(null);
+        setViewingAnalysis(null);
+        // Could show a toast notification here
+      }
+    } catch (error) {
+      console.error('Error loading analysis:', error);
+      setViewingAnalysis(null);
+    } finally {
+      setLoadingAnalysis(false);
+    }
+  };
+
+  const handleBackFromAnalysis = () => {
+    setViewingAnalysis(null);
+    setAnalysisData(null);
+  };
+
+  // Advanced filtering and sorting (MUST be called before any conditional returns)
   const filteredAndSortedSessions = React.useMemo(() => {
     let filtered = sessions.filter(session => {
       // Search filter
@@ -140,13 +191,16 @@ export default function DebateHistoryViewer({ onViewSession, onBack, onViewDebat
           case 'month':
             if (diffDays > 30) return false;
             break;
+          case 'quarter':
+            if (diffDays > 90) return false;
+            break;
         }
       }
       
       return true;
     });
-    
-    // Sort filtered results
+
+    // Sort the filtered results
     filtered.sort((a, b) => {
       let aValue = a[sort.field];
       let bValue = b[sort.field];
@@ -165,6 +219,31 @@ export default function DebateHistoryViewer({ onViewSession, onBack, onViewDebat
     
     return filtered;
   }, [sessions, searchTerm, filters, sort]);
+
+  // Show analysis if viewing one (moved after hooks to comply with Rules of Hooks)
+  if (viewingAnalysis && analysisData) {
+    return (
+      <DebateAnalysis 
+        analysisData={analysisData}
+        onBack={handleBackFromAnalysis}
+        onContinue={handleBackFromAnalysis}
+        isLoading={loadingAnalysis}
+      />
+    );
+  }
+
+  // Show loading screen while fetching analysis (moved after hooks)
+  if (loadingAnalysis) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400 mx-auto mb-4"></div>
+          <h2 className="text-xl font-bold text-white mb-2">Loading Analysis</h2>
+          <p className="text-gray-400">Retrieving your debate performance analysis...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-950 relative overflow-hidden">
@@ -530,6 +609,12 @@ export default function DebateHistoryViewer({ onViewSession, onBack, onViewDebat
                             <span className="badge-neon text-xs font-medium bg-violet-400/20 text-violet-400 border-violet-400/30 font-inter">
                               {session.topic_type === 'custom' ? '✏️ Custom' : '🎭 Scenario'}
                             </span>
+                            {/* Analysis Available Badge */}
+                            {session.hasAnalysis && (
+                              <span className="badge-neon text-xs font-medium bg-green-400/20 text-green-400 border-green-400/30 font-inter animate-pulse">
+                                📊 Analysis Available
+                              </span>
+                            )}
                           </div>
                         </div>
                         
@@ -551,6 +636,18 @@ export default function DebateHistoryViewer({ onViewSession, onBack, onViewDebat
                             >
                               <Eye className="w-4 h-4" />
                               <span className="hidden sm:inline">View Debate</span>
+                            </button>
+                          )}
+                          {/* View Analysis Button - show for sessions with stored analysis */}
+                          {session.hasAnalysis && (
+                            <button
+                              onClick={() => handleViewAnalysis(session.id)}
+                              className="p-2 text-gray-400 hover:text-blue-400 hover:bg-blue-400/20 rounded-xl transition-all duration-200 tooltip relative"
+                              title={`View Analysis (Stored ${session.analysisStoredAt ? new Date(session.analysisStoredAt).toLocaleDateString() : 'locally'})`}
+                            >
+                              <BarChart3 className="w-5 h-5" />
+                              {/* Analysis available indicator */}
+                              <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-gray-950 animate-pulse"></div>
                             </button>
                           )}
                           <button className="p-2 text-gray-400 hover:text-green-400 hover:bg-green-400/20 rounded-xl transition-all duration-200 tooltip" title="Share">

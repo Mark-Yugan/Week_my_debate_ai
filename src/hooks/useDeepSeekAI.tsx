@@ -25,11 +25,11 @@ export const useDeepSeekAI = ({ topic, context, autoSpeak = true }: UseDeepSeekA
   // Update the ref when autoSpeak prop changes
   useEffect(() => {
     autoSpeakRef.current = autoSpeak;
-    console.log('AutoSpeak updated:', autoSpeak);
+    console.log('AutoSpeak updated in useDeepSeekAI:', autoSpeak);
   }, [autoSpeak]);
 
   const { speakText, isSupported, cancel } = useAutoTextToSpeech({
-    enabled: autoSpeak,
+    enabled: true, // Always enabled, but we'll control it with autoSpeakRef
     rate: 0.9,
     pitch: 1.0,
     volume: 0.8,

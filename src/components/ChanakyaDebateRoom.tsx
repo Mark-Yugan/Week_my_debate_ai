@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -6,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Mic, MicOff, Video, VideoOff, Users, Trophy, ArrowLeft, Send, Type, Square } from 'lucide-react';
 import { useDeepSeekAI } from '@/hooks/useDeepSeekAI';
+import { useAutoTextToSpeech } from '@/hooks/useAutoTextToSpeech';
 import { useCustomAuth } from '@/hooks/useCustomAuth';
 import { DebateService } from '@/services/DebateService';
 import VideoConferencePanel from './debate/VideoConferencePanel';
@@ -13,6 +13,7 @@ import ConversationPanel from './debate/ConversationPanel';
 import CompactScorePanel from './debate/CompactScorePanel';
 import VoiceInputButton from './debate/VoiceInputButton';
 import FloatingMicrophone from './debate/FloatingMicrophone';
+import DebateAnalysis from './DebateAnalysis';
 
 interface ChanakyaDebateConfig {
   topic: string;
@@ -64,7 +65,9 @@ const ChanakyaDebateRoom = ({ config, onBack, onComplete }: ChanakyaDebateRoomPr
   const { user } = useCustomAuth();
   const [isRecording, setIsRecording] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [currentSpeaker, setCurrentSpeaker] = useState<'student' | 'opponent'>('student');
+  const [currentSpeaker, setCurrentSpeaker] = useState<'student' | 'opponent'>(
+    config.firstSpeaker === 'ai' ? 'opponent' : 'student'
+  );
   const [assignedSide] = useState<'FOR' | 'AGAINST'>(config.userPosition === 'for' ? 'FOR' : 'AGAINST');
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [isMuted, setIsMuted] = useState(false);
@@ -85,12 +88,46 @@ const ChanakyaDebateRoom = ({ config, onBack, onComplete }: ChanakyaDebateRoomPr
   const [turnNumber, setTurnNumber] = useState(0);
   const [debateStartTime, setDebateStartTime] = useState<Date | null>(null);
   const sessionCreatedRef = useRef(false);
+  const aiFirstMessageSentRef = useRef(false); // Prevent duplicate AI opening messages
+
+  // Analysis state
+  const [showAnalysis, setShowAnalysis] = useState(false);
+  const [analysisData, setAnalysisData] = useState(null);
+  const [isLoadingAnalysis, setIsLoadingAnalysis] = useState(false);
+
+  // Dynamic autoSpeak state that updates with mute changes
+  const [autoSpeakEnabled, setAutoSpeakEnabled] = useState(!isMuted);
+
+  // Update autoSpeak when mute state changes
+  useEffect(() => {
+    setAutoSpeakEnabled(!isMuted);
+    console.log('AutoSpeak updated to:', !isMuted);
+  }, [isMuted]);
 
   const deepSeekAI = useDeepSeekAI({
     topic: config.topic,
     context: `Chanakya Debate - Topic: ${config.topic}, Type: ${config.topicType}, User Position: ${config.userPosition}, Difficulty: ${config.difficulty}`,
-    autoSpeak: !isMuted
+    autoSpeak: autoSpeakEnabled
   });
+
+  // Fallback TTS for manual control
+  const fallbackTTS = useAutoTextToSpeech({
+    enabled: true,
+    rate: 0.9,
+    pitch: 1.0,
+    volume: 0.8,
+    voiceType: 'natural'
+  });
+
+  // Helper function to ensure AI response is spoken
+  const ensureAIResponseSpoken = (text: string) => {
+    if (!isMuted && text) {
+      console.log('🔊 Triggering TTS for AI response:', text);
+      fallbackTTS.speakText(text);
+    } else {
+      console.log('🔇 TTS skipped - muted:', isMuted, 'text:', !!text);
+    }
+  };
 
   // Create debate session on component mount
   useEffect(() => {
@@ -128,6 +165,81 @@ const ChanakyaDebateRoom = ({ config, onBack, onComplete }: ChanakyaDebateRoomPr
 
     createDebateSession();
   }, [config, assignedSide]);
+
+  // Initialize AI first message if AI should speak first
+  useEffect(() => {
+    const initializeAIFirstMessage = async () => {
+      // Debug logging
+      console.log('AI First Message Check:', {
+        firstSpeaker: config.firstSpeaker,
+        messagesLength: messages.length,
+        debateSessionId,
+        alreadySent: aiFirstMessageSentRef.current
+      });
+
+      // Only trigger if AI should speak first, no messages exist yet, session is ready, and not already sent
+      if (config.firstSpeaker === 'ai' && 
+          messages.length === 0 && 
+          debateSessionId && 
+          !aiFirstMessageSentRef.current) {
+        
+        console.log('✅ AI should speak first - initializing AI message...');
+        aiFirstMessageSentRef.current = true; // Prevent multiple executions
+        
+        // Create an opening prompt for the AI
+        const openingPrompt = `You are Chanakya AI, beginning a debate about "${config.topic}". 
+          The user has chosen to ${config.userPosition === 'for' ? 'support' : 'oppose'} this topic.
+          Since you are speaking first, please open the debate with a compelling introduction that:
+          1. Introduces the topic clearly
+          2. States your opposing position (${config.userPosition === 'for' ? 'against' : 'for'})
+          3. Presents your opening argument
+          4. Challenges the user to respond
+          
+          Keep it conversational, engaging, and under 150 words. Set the tone for an intellectual discussion.`;
+
+        try {
+          // Trigger AI response with the opening prompt
+          const aiResponse = await deepSeekAI.sendToDeepSeek(openingPrompt);
+          
+          if (aiResponse) {
+            // Create AI message object
+            const aiMessage: Message = {
+              id: `ai-opening-${Date.now()}`,
+              type: 'deepseek-ai',
+              text: aiResponse.reply,
+              timestamp: new Date(),
+              confidence: aiResponse.confidence,
+              relevance: aiResponse.relevance,
+              processingTime: aiResponse.processingTime,
+              model: aiResponse.model
+            };
+
+            // Add AI message to the conversation
+            setMessages(prev => [...prev, aiMessage]);
+            await saveMessageToDatabase(aiMessage, 'ai');
+            setCurrentSpeaker('student'); // After AI speaks, it's user's turn
+            
+            // Ensure TTS for opening message
+            setTimeout(() => {
+              ensureAIResponseSpoken(aiResponse.reply);
+            }, 500);
+            
+            console.log('✅ AI opening message added successfully');
+          }
+        } catch (error) {
+          console.error('❌ Error initializing AI first message:', error);
+          // Reset the ref in case of error so it can be retried
+          aiFirstMessageSentRef.current = false;
+        }
+      } else {
+        console.log('⏭️ Skipping AI first message initialization');
+      }
+    };
+
+    // Add a slight delay to ensure session is fully created
+    const timer = setTimeout(initializeAIFirstMessage, 1000);
+    return () => clearTimeout(timer);
+  }, [config.firstSpeaker, messages.length, debateSessionId]); // Removed problematic dependencies
 
   // Helper function to save a message to the database
   const saveMessageToDatabase = async (message: Message, speaker: 'user' | 'ai') => {
@@ -178,12 +290,13 @@ const ChanakyaDebateRoom = ({ config, onBack, onComplete }: ChanakyaDebateRoomPr
       
       const result = await DebateService.updateSessionStatus(
         debateSessionId,
-        'completed',
-        sessionDuration
+        'completed'
       );
 
       if (result.success) {
         console.log('Debate session completed in database');
+        // Process analysis after completing the session
+        await processDebateAnalysis();
       } else {
         console.error('Failed to complete session:', result.error);
       }
@@ -192,11 +305,118 @@ const ChanakyaDebateRoom = ({ config, onBack, onComplete }: ChanakyaDebateRoomPr
     }
   };
 
+  const processDebateAnalysis = async () => {
+    if (!debateSessionId) return;
+
+    setIsLoadingAnalysis(true);
+    try {
+      // Use your N8N webhook URL directly
+      const n8nWebhookUrl = 'https://n8n-k6lq.onrender.com/webhook/debate-analysis';
+      
+      console.log('Starting debate analysis for session:', debateSessionId);
+      console.log('Using N8N webhook URL:', n8nWebhookUrl);
+      
+      const analysisResult = await DebateService.processDebateAnalysis(debateSessionId, n8nWebhookUrl);
+      
+      console.log('Analysis result:', analysisResult);
+      
+      if (analysisResult.success && analysisResult.data) {
+        console.log('Analysis successful, setting data and showing analysis');
+        setAnalysisData(analysisResult.data);
+        setShowAnalysis(true);
+      } else {
+        console.error('Failed to process analysis:', analysisResult.error);
+        // Show a fallback analysis or error message
+        showFallbackAnalysis();
+      }
+    } catch (error) {
+      console.error('Error processing analysis:', error);
+      console.error('Error details:', error instanceof Error ? error.message : 'Unknown error');
+      showFallbackAnalysis();
+    } finally {
+      setIsLoadingAnalysis(false);
+    }
+  };
+
+  const showFallbackAnalysis = () => {
+    // Create a basic analysis based on current scores
+    const fallbackAnalysis = {
+      overallScore: scores.overall,
+      performanceMetrics: {
+        argumentation: {
+          score: scores.creativity,
+          strengths: ["Good creative thinking", "Innovative arguments"],
+          weaknesses: ["Could improve structure"],
+          improvement: "Focus on organizing your arguments more systematically"
+        },
+        clarity: {
+          score: scores.fluency,
+          strengths: ["Clear communication", "Good flow"],
+          weaknesses: ["Some hesitation"],
+          improvement: "Practice to reduce pauses and improve fluency"
+        },
+        engagement: {
+          score: scores.confidence,
+          strengths: ["Shows enthusiasm"],
+          weaknesses: ["Could be more assertive"],
+          improvement: "Practice with confident body language and tone"
+        },
+        criticalThinking: {
+          score: scores.grammar,
+          strengths: ["Good language use"],
+          weaknesses: ["Some grammar issues"],
+          improvement: "Review grammar rules and practice"
+        },
+        communication: {
+          score: (scores.fluency + scores.confidence) / 2,
+          strengths: ["Expressive speaking"],
+          weaknesses: ["Needs more precision"],
+          improvement: "Focus on precise word choice"
+        }
+      },
+      keyStrengths: ["Good participation", "Shows knowledge of topic", "Maintains engagement"],
+      areasForImprovement: ["Structure arguments better", "Improve confidence", "Enhanced preparation"],
+      specificFeedback: {
+        content: ["Good understanding of the topic", "Could use more evidence"],
+        delivery: ["Work on confidence", "Maintain eye contact"],
+        strategy: ["Plan your arguments", "Anticipate counterarguments"]
+      },
+      improvementPlan: {
+        immediate: [
+          { action: "Review key arguments", description: "Reflect on the main points discussed", timeframe: "Next 30 minutes" }
+        ],
+        shortTerm: [
+          { action: "Practice structured debates", description: "Work on organizing arguments clearly", timeframe: "This week" }
+        ],
+        mediumTerm: [
+          { action: "Study debate techniques", description: "Learn advanced rhetorical strategies", timeframe: "Next 2-3 weeks" }
+        ],
+        longTerm: [
+          { action: "Join debate club", description: "Get regular practice with peers", timeframe: "This month" }
+        ]
+      },
+      encouragementMessage: "Great job participating in this debate! Every debate is a learning opportunity.",
+      nextSteps: ["Review the feedback", "Practice the suggested improvements", "Try another debate soon"]
+    };
+    
+    setAnalysisData(fallbackAnalysis);
+    setShowAnalysis(true);
+  };
+
   // Custom handler for leaving the debate
   const handleExit = async () => {
-    await completeDebateSession();
-    onComplete(config, messages);
-    onBack();
+    if (!showAnalysis) {
+      // Complete the session and show analysis first
+      await completeDebateSession();
+    } else {
+      // Analysis is shown, now actually exit
+      onComplete(config, messages);
+      onBack();
+    }
+  };
+
+  const handleBackToDebate = () => {
+    setShowAnalysis(false);
   };
 
   // Update the deepSeekAI hook when mute state changes
@@ -311,6 +531,11 @@ const ChanakyaDebateRoom = ({ config, onBack, onComplete }: ChanakyaDebateRoomPr
             setMessages(prev => [deepSeekMessage, ...prev]);
             // Save AI message to database
             saveMessageToDatabase(deepSeekMessage, 'ai');
+            
+            // Ensure TTS for AI response
+            setTimeout(() => {
+              ensureAIResponseSpoken(deepSeekResponse.reply);
+            }, 200);
           }, 1500);
           
         } catch (aiError) {
@@ -490,6 +715,11 @@ const ChanakyaDebateRoom = ({ config, onBack, onComplete }: ChanakyaDebateRoomPr
           setMessages(prev => [deepSeekMessage, ...prev]);
           // Save AI message to database
           saveMessageToDatabase(deepSeekMessage, 'ai');
+          
+          // Ensure TTS for AI response
+          setTimeout(() => {
+            ensureAIResponseSpoken(deepSeekResponse.reply);
+          }, 200);
         }, 1500);
         
       } catch (aiError) {
@@ -553,6 +783,31 @@ const ChanakyaDebateRoom = ({ config, onBack, onComplete }: ChanakyaDebateRoomPr
     return 'Chanakya AI Debate';
   };
 
+  // Show analysis if it's ready
+  if (showAnalysis && analysisData) {
+    return (
+      <DebateAnalysis 
+        analysisData={analysisData}
+        onBack={handleBackToDebate}
+        onContinue={handleExit}
+        isLoading={isLoadingAnalysis}
+      />
+    );
+  }
+
+  // Show loading screen while processing analysis
+  if (isLoadingAnalysis) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400 mx-auto mb-4"></div>
+          <h2 className="text-xl font-bold text-white mb-2">Analyzing Your Debate Performance</h2>
+          <p className="text-gray-400">Our AI is reviewing your debate and preparing detailed feedback...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-950 bg-gradient-radial-neon">
       {/* Compact Single Row Header */}
@@ -593,7 +848,7 @@ const ChanakyaDebateRoom = ({ config, onBack, onComplete }: ChanakyaDebateRoomPr
                 className="btn-neon-secondary text-sm px-4 py-2 flex items-center space-x-2"
               >
                 <Square className="h-4 w-4" />
-                <span>End Debate</span>
+                <span>View Analysis</span>
               </button>
               <button 
                 onClick={handleExit}

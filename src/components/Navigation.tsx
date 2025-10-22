@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Brain } from 'lucide-react';
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -39,11 +40,7 @@ const Navigation = ({
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-3 group hover:opacity-80 transition-all duration-200">
           <div className="bg-neutral-100 p-2 rounded-xl shadow-sm group-hover:shadow-md transition-all duration-200 border border-neutral-200">
-            <img 
-              src="/lovable-uploads/80a86b55-ac06-4e1e-905b-e5574803f537.png" 
-              alt="MyDebate.ai Logo" 
-              className="h-8 w-8 object-contain"
-            />
+            <Brain className="h-8 w-8 text-cyan-600" />
           </div>
           <h1 className="text-2xl font-medium text-azul tracking-wide">
             MyDebate.ai

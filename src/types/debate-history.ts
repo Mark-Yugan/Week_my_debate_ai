@@ -14,6 +14,52 @@ export interface DebateSession {
   total_turns: number;
   session_duration?: number; // in seconds
   metadata: Record<string, any>;
+  analysis_data?: DebateAnalysisData; // Add analysis data
+}
+
+// Debate Analysis Types
+export interface PerformanceMetric {
+  score: number;
+  strengths: string[];
+  weaknesses: string[];
+  improvement: string;
+}
+
+export interface DebateAnalysisData {
+  overallScore: number;
+  performanceMetrics: {
+    argumentation: PerformanceMetric;
+    clarity: PerformanceMetric;
+    engagement: PerformanceMetric;
+    criticalThinking: PerformanceMetric;
+    communication: PerformanceMetric;
+  };
+  keyStrengths: string[];
+  areasForImprovement: string[];
+  specificFeedback: {
+    content: string[];
+    delivery: string[];
+    strategy: string[];
+  };
+  improvementPlan: {
+    immediate: Array<{
+      action: string;
+      description: string;
+      timeframe: string;
+    }>;
+    shortTerm: Array<{
+      action: string;
+      description: string;
+      timeframe: string;
+    }>;
+    longTerm: Array<{
+      action: string;
+      description: string;
+      timeframe: string;
+    }>;
+  };
+  encouragementMessage: string;
+  nextSteps: string[];
 }
 
 export interface DebateMessage {
@@ -106,4 +152,16 @@ export interface DebateStatsResponse {
   success: boolean;
   data?: UserDebateStats;
   error?: string;
+}
+
+// Analysis response types
+export interface DebateAnalysisResponse {
+  success: boolean;
+  data?: DebateAnalysisData;
+  error?: string;
+}
+
+export interface CreateDebateAnalysisInput {
+  session_id: string;
+  analysis_data: DebateAnalysisData;
 }

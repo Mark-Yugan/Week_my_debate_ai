@@ -1,0 +1,237 @@
+{
+  "name": "Debate Analysis Workflow - Gemini 2.0 Flash",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "debate-analysis",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "f48b39b0-82b5-4bfb-9ed5-1234567890ab",
+      "name": "Webhook - Debate Analysis Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "debate-analysis-webhook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "validation-001",
+              "leftValue": "={{ $json.debateData }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists"
+              }
+            },
+            {
+              "id": "validation-002", 
+              "leftValue": "={{ $json.debateData.messages }}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "f48b39b0-82b5-4bfb-9ed5-1234567890ac",
+      "name": "Validate Input Data",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract and prepare debate data for analysis\nconst debateData = $input.first().json.debateData;\nconst messages = debateData.messages || [];\nconst config = debateData.config || {};\n\n// Separate user and AI messages\nconst userMessages = messages.filter(msg => msg.type === 'user');\nconst aiMessages = messages.filter(msg => msg.type === 'deepseek-ai');\n\n// Calculate basic metrics\nconst totalMessages = messages.length;\nconst userMessageCount = userMessages.length;\nconst aiMessageCount = aiMessages.length;\nconst avgUserMessageLength = userMessages.length > 0 ? \n  userMessages.reduce((sum, msg) => sum + msg.text.length, 0) / userMessages.length : 0;\n\n// Prepare conversation transcript\nconst conversationTranscript = messages\n  .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))\n  .map(msg => {\n    const speaker = msg.type === 'user' ? 'User' : 'Chanakya AI';\n    const timestamp = new Date(msg.timestamp).toISOString();\n    return `[${timestamp}] ${speaker}: ${msg.text}`;\n  })\n  .join('\\n\\n');\n\n// Extract debate context\nconst debateContext = {\n  topic: config.topic || 'Unknown Topic',\n  userPosition: config.userPosition || 'Unknown',\n  firstSpeaker: config.firstSpeaker || 'Unknown',\n  difficulty: config.difficulty || 'medium',\n  topicType: config.topicType || 'custom',\n  duration: debateData.duration || 0,\n  sessionId: debateData.sessionId || null\n};\n\n// Prepare structured data for Gemini analysis\nconst analysisInput = {\n  conversationTranscript,\n  debateContext,\n  metrics: {\n    totalMessages,\n    userMessageCount,\n    aiMessageCount,\n    avgUserMessageLength,\n    conversationLength: conversationTranscript.length\n  },\n  userMessages: userMessages.map(msg => ({\n    text: msg.text,\n    timestamp: msg.timestamp,\n    confidence: msg.confidence || 0,\n    length: msg.text.length\n  })),\n  rawData: debateData\n};\n\nreturn [{ json: analysisInput }];"
+      },
+      "id": "f48b39b0-82b5-4bfb-9ed5-1234567890ad",
+      "name": "Process Debate Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "AIzaSyBoUtmHN_zVYD1o2ro6idslSTxQ5y5Rpd8"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ \n  {\n    \"contents\": [\n      {\n        \"parts\": [\n          {\n            \"text\": \"You are an expert debate coach and communication analyst. Analyze this debate performance comprehensively and provide detailed, actionable feedback.\\n\\n**DEBATE CONTEXT:**\\nTopic: \" + $json.debateContext.topic + \"\\nUser Position: \" + $json.debateContext.userPosition + \"\\nFirst Speaker: \" + $json.debateContext.firstSpeaker + \"\\nDifficulty Level: \" + $json.debateContext.difficulty + \"\\nTopic Type: \" + $json.debateContext.topicType + \"\\n\\n**PERFORMANCE METRICS:**\\n- Total Messages: \" + $json.metrics.totalMessages + \"\\n- User Messages: \" + $json.metrics.userMessageCount + \"\\n- AI Messages: \" + $json.metrics.aiMessageCount + \"\\n- Average User Message Length: \" + $json.metrics.avgUserMessageLength + \" characters\\n\\n**FULL CONVERSATION TRANSCRIPT:**\\n\" + $json.conversationTranscript + \"\\n\\n**ANALYSIS REQUIREMENTS:**\\nReturn ONLY a valid JSON object with this exact structure:\\n\\n{\\n  \\\"overallScore\\\": 85,\\n  \\\"performanceMetrics\\\": {\\n    \\\"argumentation\\\": {\\n      \\\"score\\\": 82,\\n      \\\"strengths\\\": [\\\"Clear logical structure\\\", \\\"Good use of evidence\\\"],\\n      \\\"weaknesses\\\": [\\\"Could improve counter-argument responses\\\"],\\n      \\\"improvement\\\": \\\"Practice anticipating opposing viewpoints and prepare stronger rebuttals\\\"\\n    },\\n    \\\"clarity\\\": {\\n      \\\"score\\\": 88,\\n      \\\"strengths\\\": [\\\"Clear expression of ideas\\\", \\\"Good vocabulary usage\\\"],\\n      \\\"weaknesses\\\": [\\\"Occasional repetition\\\"],\\n      \\\"improvement\\\": \\\"Vary sentence structure and avoid repetitive phrases\\\"\\n    },\\n    \\\"engagement\\\": {\\n      \\\"score\\\": 79,\\n      \\\"strengths\\\": [\\\"Active participation\\\", \\\"Responsive to AI points\\\"],\\n      \\\"weaknesses\\\": [\\\"Could ask more probing questions\\\"],\\n      \\\"improvement\\\": \\\"Use more rhetorical questions to engage audience\\\"\\n    },\\n    \\\"criticalThinking\\\": {\\n      \\\"score\\\": 86,\\n      \\\"strengths\\\": [\\\"Good analysis depth\\\", \\\"Multiple perspectives considered\\\"],\\n      \\\"weaknesses\\\": [\\\"Could challenge assumptions more\\\"],\\n      \\\"improvement\\\": \\\"Practice identifying and questioning underlying assumptions\\\"\\n    },\\n    \\\"communication\\\": {\\n      \\\"score\\\": 84,\\n      \\\"strengths\\\": [\\\"Clear message delivery\\\", \\\"Good flow\\\"],\\n      \\\"weaknesses\\\": [\\\"Could use more persuasive techniques\\\"],\\n      \\\"improvement\\\": \\\"Incorporate storytelling and emotional appeals effectively\\\"\\n    }\\n  },\\n  \\\"keyStrengths\\\": [\\n    \\\"Maintained consistent position throughout debate\\\",\\n    \\\"Demonstrated good subject knowledge\\\",\\n    \\\"Responded thoughtfully to AI challenges\\\"\\n  ],\\n  \\\"areasForImprovement\\\": [\\n    \\\"Strengthen opening statements with more compelling hooks\\\",\\n    \\\"Develop more sophisticated counter-argument strategies\\\",\\n    \\\"Enhance closing arguments with stronger calls to action\\\"\\n  ],\\n  \\\"specificFeedback\\\": {\\n    \\\"openingStatement\\\": {\\n      \\\"analysis\\\": \\\"Good foundation but could be more compelling\\\",\\n      \\\"suggestion\\\": \\\"Start with a striking statistic or thought-provoking question\\\"\\n    },\\n    \\\"argumentDevelopment\\\": {\\n      \\\"analysis\\\": \\\"Logical progression with room for more depth\\\",\\n      \\\"suggestion\\\": \\\"Use the PEEL structure: Point, Evidence, Explain, Link\\\"\\n    },\\n    \\\"rebuttals\\\": {\\n      \\\"analysis\\\": \\\"Adequate responses but missed opportunities for stronger counters\\\",\\n      \\\"suggestion\\\": \\\"Practice the 'Yes, but...' technique for more effective rebuttals\\\"\\n    },\\n    \\\"closingStatement\\\": {\\n      \\\"analysis\\\": \\\"Summarized well but lacked emotional impact\\\",\\n      \\\"suggestion\\\": \\\"End with a memorable call to action or powerful imagery\\\"\\n    }\\n  },\\n  \\\"improvementPlan\\\": {\\n    \\\"shortTerm\\\": [\\n      \\\"Practice structuring arguments using frameworks like PREP or PEEL\\\",\\n      \\\"Study common logical fallacies to better identify them in debates\\\",\\n      \\\"Record yourself debating to analyze speech patterns and delivery\\\"\\n    ],\\n    \\\"mediumTerm\\\": [\\n      \\\"Join debate clubs or discussion groups for regular practice\\\",\\n      \\\"Study classic debates and analyze winning strategies\\\",\\n      \\\"Work on expanding vocabulary related to your debate topics\\\"\\n    ],\\n    \\\"longTerm\\\": [\\n      \\\"Develop expertise in multiple domains for broader debate capability\\\",\\n      \\\"Master advanced rhetorical techniques and persuasion methods\\\",\\n      \\\"Build confidence in public speaking through consistent practice\\\"\\n    ]\\n  },\\n  \\\"nextSteps\\\": [\\n    \\\"Focus on strengthening counter-argument skills in next debate\\\",\\n    \\\"Practice with topics outside your comfort zone\\\",\\n    \\\"Work on incorporating more evidence and examples in arguments\\\"\\n  ],\\n  \\\"motivationalInsights\\\": {\\n    \\\"progressHighlights\\\": \\\"Showed excellent logical thinking and maintained composure throughout\\\",\\n    \\\"confidenceBuilders\\\": \\\"Your argument structure demonstrates strong analytical capabilities\\\",\\n    \\\"encouragement\\\": \\\"With focused practice on rebuttals, you'll become a formidable debater\\\"\\n  }\\n}\\n\\nAnalyze the conversation and return only the JSON object with specific feedback based on the actual debate content.\"\n          }\n        ],\n        \"role\": \"user\"\n      }\n    ],\n    \"generationConfig\": {\n      \"temperature\": 0.3,\n      \"topK\": 40,\n      \"topP\": 0.9,\n      \"maxOutputTokens\": 4000,\n      \"candidateCount\": 1\n    }\n  }\n}}",
+        "options": {}
+      },
+      "id": "f48b39b0-82b5-4bfb-9ed5-1234567890ae",
+      "name": "Gemini HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Enhanced Analysis Result Processor for Direct Gemini HTTP API\nconst requestStartTime = Date.now();\n\ntry {\n  const data = $input.first().json || $input.first();\n  \n  // Extract Gemini response from HTTP API format\n  const geminiText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';\n  \n  let analysisResult;\n  \n  if (geminiText) {\n    try {\n      // Try to parse the JSON response directly\n      analysisResult = JSON.parse(geminiText.trim());\n      \n      // Validate that we have the required structure\n      if (!analysisResult.overallScore || !analysisResult.performanceMetrics) {\n        throw new Error('Invalid analysis structure');\n      }\n      \n    } catch (parseError) {\n      console.error('Failed to parse Gemini JSON response:', parseError);\n      \n      // Try to extract JSON from markdown code blocks if present\n      const jsonMatch = geminiText.match(/```json\\n([\\s\\S]*?)\\n```/) || \n                       geminiText.match(/\\{[\\s\\S]*\\}/);\n      \n      if (jsonMatch) {\n        try {\n          const jsonString = jsonMatch[1] || jsonMatch[0];\n          analysisResult = JSON.parse(jsonString);\n        } catch (secondParseError) {\n          throw new Error('Could not parse extracted JSON');\n        }\n      } else {\n        throw new Error('No valid JSON found in response');\n      }\n    }\n  } else {\n    throw new Error('No response text from Gemini');\n  }\n  \n} catch (error) {\n  console.error('Failed to process Gemini response:', error);\n  \n  // Enhanced fallback analysis structure matching frontend expectations\n  analysisResult = {\n    overallScore: 75,\n    performanceMetrics: {\n      argumentation: {\n        score: 75,\n        strengths: [\"Participated actively in debate\"],\n        weaknesses: [\"Analysis unavailable due to processing error\"],\n        improvement: \"Continue practicing debate skills and argument structure\"\n      },\n      clarity: {\n        score: 75,\n        strengths: [\"Communicated ideas clearly\"],\n        weaknesses: [\"Detailed analysis unavailable\"],\n        improvement: \"Focus on clear, concise expression of ideas\"\n      },\n      engagement: {\n        score: 75,\n        strengths: [\"Engaged with AI responses\"],\n        weaknesses: [\"Could not analyze engagement patterns\"],\n        improvement: \"Maintain active participation and ask probing questions\"\n      },\n      criticalThinking: {\n        score: 75,\n        strengths: [\"Demonstrated reasoning abilities\"],\n        weaknesses: [\"Analysis limited due to technical issue\"],\n        improvement: \"Continue developing analytical and critical thinking skills\"\n      },\n      communication: {\n        score: 75,\n        strengths: [\"Successfully communicated viewpoints\"],\n        weaknesses: [\"Communication analysis incomplete\"],\n        improvement: \"Practice clear, persuasive communication techniques\"\n      }\n    },\n    keyStrengths: [\n      \"Completed the debate session successfully\",\n      \"Engaged with challenging AI opponent\",\n      \"Maintained debate throughout entire session\"\n    ],\n    areasForImprovement: [\n      \"Technical analysis unavailable - general improvement recommended\",\n      \"Practice argument structure and logical flow\",\n      \"Continue regular debate practice for skill development\"\n    ],\n    specificFeedback: {\n      openingStatement: {\n        analysis: \"Analysis unavailable due to processing error\",\n        suggestion: \"Practice creating compelling opening statements with strong hooks\"\n      },\n      argumentDevelopment: {\n        analysis: \"Detailed analysis could not be completed\",\n        suggestion: \"Focus on logical argument progression using frameworks like PREP\"\n      },\n      rebuttals: {\n        analysis: \"Rebuttal analysis unavailable\",\n        suggestion: \"Practice counter-argument techniques and anticipating opposing views\"\n      },\n      closingStatement: {\n        analysis: \"Closing analysis incomplete\",\n        suggestion: \"Work on creating impactful conclusions with clear calls to action\"\n      }\n    },\n    improvementPlan: {\n      shortTerm: [\n        { action: \"Practice debate fundamentals\", description: \"Work on basic argument structure and delivery\", timeframe: \"This week\" },\n        { action: \"Focus on clear communication\", description: \"Practice expressing ideas clearly and concisely\", timeframe: \"Daily practice\" }\n      ],\n      mediumTerm: [\n        { action: \"Join practice sessions\", description: \"Participate in regular debate practice with others\", timeframe: \"This month\" },\n        { action: \"Study debate techniques\", description: \"Learn advanced argumentation and persuasion methods\", timeframe: \"Next 2 months\" }\n      ],\n      longTerm: [\n        { action: \"Develop topic expertise\", description: \"Build deep knowledge in preferred debate subjects\", timeframe: \"Next 6 months\" },\n        { action: \"Master debate strategies\", description: \"Become proficient in advanced debate tactics\", timeframe: \"Ongoing\" }\n      ]\n    },\n    nextSteps: [\n      \"Continue practicing with AI debates to build skills\",\n      \"Focus on one improvement area at a time for better results\",\n      \"Seek feedback from multiple sources to get diverse perspectives\"\n    ],\n    motivationalInsights: {\n      progressHighlights: \"Successfully completed debate session with AI - shows commitment to improvement\",\n      confidenceBuilders: \"Demonstrates willingness to engage in challenging discussions\",\n      encouragement: \"Every debate is a learning opportunity - keep practicing and you'll see improvement!\"\n    },\n    analysisMetadata: {\n      error: error.message,\n      fallbackUsed: true,\n      processingTime: Date.now() - requestStartTime,\n      originalResponse: data.candidates?.[0]?.content?.parts?.[0]?.text?.substring(0, 500) + '...' || 'No response'\n    }\n  };\n}\n\n// Add comprehensive metadata\nanalysisResult.metadata = {\n  analysisDate: new Date().toISOString(),\n  model: 'gemini-2.0-flash-exp',\n  version: '2.0',\n  processingTime: Date.now() - requestStartTime,\n  responseSource: 'direct-http-api'\n};\n\n// Add original debate data for storage\nanalysisResult.originalDebateData = $('Process Debate Data').first().json.rawData;\n\n// Add token usage information if available\nif ($input.first().json.usageMetadata) {\n  analysisResult.metadata.tokenUsage = $input.first().json.usageMetadata;\n}\n\nreturn [{ json: analysisResult }];"
+      },
+      "id": "f48b39b0-82b5-4bfb-9ed5-1234567890af",
+      "name": "Process Analysis Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin", 
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "POST, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type, Authorization"
+              }
+            ]
+          }
+        }
+      },
+      "id": "f48b39b0-82b5-4bfb-9ed5-1234567890ag",
+      "name": "Return Analysis Result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1340, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"error\": \"Invalid input data\", \"message\": \"Missing required debate data or messages\", \"required\": [\"debateData\", \"debateData.messages\"] } }}",
+        "options": {
+          "responseCode": 400,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "id": "f48b39b0-82b5-4bfb-9ed5-1234567890ah",
+      "name": "Return Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [680, 500]
+    }
+  ],
+  "connections": {
+    "Webhook - Debate Analysis Request": {
+      "main": [
+        [
+          {
+            "node": "Validate Input Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Input Data": {
+      "main": [
+        [
+          {
+            "node": "Process Debate Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Debate Data": {
+      "main": [
+        [
+          {
+            "node": "Gemini HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Process Analysis Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Analysis Result": {
+      "main": [
+        [
+          {
+            "node": "Return Analysis Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-10-22T00:00:00.000Z",
+  "versionId": "1"
+}

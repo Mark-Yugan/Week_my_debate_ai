@@ -1,6 +1,7 @@
 
 // @ts-nocheck
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Brain } from 'lucide-react';
 
 interface AuthCardProps {
   title: string;
@@ -16,11 +17,7 @@ const AuthCard = ({ title, description, children }: AuthCardProps) => {
         <div className="flex justify-center mb-4">
           <div className="relative group">
             <div className="absolute inset-0 gradient-neon-primary rounded-full blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
-            <img
-              src="/lovable-uploads/80a86b55-ac06-4e1e-905b-e5574803f537.png"
-              alt="MyDebate.ai Logo"
-              className="h-16 w-16 relative z-10"
-            />
+            <Brain className="h-16 w-16 relative z-10 text-cyan-400" />
           </div>
         </div>
         <CardTitle className="text-2xl font-display text-glow-cyan">{title}</CardTitle>

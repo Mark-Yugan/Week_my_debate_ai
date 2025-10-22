@@ -147,7 +147,11 @@ const StudentDashboard = ({
               <div className="relative group animate-float">
                 <div className="absolute inset-0 gradient-neon-primary rounded-2xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-300 animate-neon-pulse"></div>
                 <div className="relative card-neon-glow p-6">
-                  <Brain className="h-16 w-16 text-cyan-400" />
+                  <img 
+                    src="/lovable-uploads/80a86b55-ac06-4e1e-905b-e5574803f537.png" 
+                    alt="Speak Your Mind Logo" 
+                    className="h-16 w-16 rounded-full object-cover"
+                  />
                 </div>
               </div>
             </div>
@@ -337,6 +341,37 @@ const StudentDashboard = ({
             </div>
           </div>
 
+          {/* Neon Call to Action */}
+          <div className="relative overflow-hidden rounded-2xl card-neon-glow">
+            <div className="relative z-10 p-12 text-center">
+              <div className="max-w-4xl mx-auto space-y-6">
+                <h3 className="text-3xl md:text-4xl font-bold text-gray-50 tracking-tight">
+                  Stop talking to your screen. <span className="text-glow-cyan">Start debating with it.</span>
+                </h3>
+                <p className="text-lg text-gray-300 leading-relaxed max-w-2xl mx-auto">
+                  Transform from a hesitant speaker to a confident, articulate force. Your future voice starts now.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+                  
+                  {/* 
+                  <Button 
+                    className="btn-neon-primary text-lg px-8 py-3"
+                    onClick={onStartDebate}
+                  >
+                    Start Speaking Coach
+                  </Button>
+                   */}
+                  <Button 
+                    className="btn-neon-secondary text-lg px-8 py-3"
+                    onClick={onDebateLive}
+                  >
+                    Practice Live Debates
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Track & Analyze Section - Only show when authenticated */}
           {isAuthenticated && (
             <div className="space-y-12">
@@ -358,34 +393,6 @@ const StudentDashboard = ({
               </div>
             </div>
           )}
-
-          {/* Neon Call to Action */}
-          <div className="relative overflow-hidden rounded-2xl card-neon-glow">
-            <div className="relative z-10 p-12 text-center">
-              <div className="max-w-4xl mx-auto space-y-6">
-                <h3 className="text-3xl md:text-4xl font-bold text-gray-50 tracking-tight">
-                  Stop talking to your screen. <span className="text-glow-cyan">Start debating with it.</span>
-                </h3>
-                <p className="text-lg text-gray-300 leading-relaxed max-w-2xl mx-auto">
-                  Transform from a hesitant speaker to a confident, articulate force. Your future voice starts now.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                  <Button 
-                    className="btn-neon-primary text-lg px-8 py-3"
-                    onClick={onStartDebate}
-                  >
-                    Start Speaking Coach
-                  </Button>
-                  <Button 
-                    className="btn-neon-secondary text-lg px-8 py-3"
-                    onClick={onDebateLive}
-                  >
-                    Practice Live Debates
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>

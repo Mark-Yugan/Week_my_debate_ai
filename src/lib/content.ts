@@ -12,7 +12,7 @@ export const CT = {
     },
     
     features: {
-      title: "Key Features That Empower Your Voice",
+      title: "Prepare, Practice, Perform - Your safe space to speak and grow",
       subtitle: "Transform every idea into impact through adaptive AI, real-time feedback, and global collaboration.",
       
       chanakyaAI: {
@@ -28,7 +28,7 @@ export const CT = {
       },
       
       events: {
-        title: "Our World, Your Stage",
+        title: "Events",
         description: "Step into a world where ideas collide and voices matter. Welcome to Our World represent nations, exchange ideas, and grow with peers across the globe.",
         badge: "Our World,Your Stage"
       },
