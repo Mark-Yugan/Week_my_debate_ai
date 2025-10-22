@@ -411,7 +411,7 @@ const VideoConferencePanel: React.FC<VideoConferencePanelProps> = ({
             onClick={toggleCamera}
             className={`rounded-full w-12 h-12 p-0 flex items-center justify-center transition-all duration-300 ${
               isCameraOn 
-                ? 'btn-neon-primary' 
+                ? 'bg-green-500 hover:bg-green-400 text-white border border-green-400/50 shadow-[0_0_15px_rgba(34,197,94,0.4)]' 
                 : 'bg-gray-800/50 border border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:border-gray-500'
             }`}
           >
@@ -422,7 +422,7 @@ const VideoConferencePanel: React.FC<VideoConferencePanelProps> = ({
             onClick={toggleMicrophone}
             className={`rounded-full w-12 h-12 p-0 flex items-center justify-center transition-all duration-300 ${
               isMicOn 
-                ? 'btn-neon-primary' 
+                ? 'bg-blue-500 hover:bg-blue-400 text-white border border-blue-400/50 shadow-[0_0_15px_rgba(59,130,246,0.4)]' 
                 : 'bg-gray-800/50 border border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:border-gray-500'
             }`}
           >
@@ -433,7 +433,7 @@ const VideoConferencePanel: React.FC<VideoConferencePanelProps> = ({
             onClick={toggleScreenShare}
             className={`rounded-full w-12 h-12 p-0 flex items-center justify-center transition-all duration-300 ${
               isScreenSharing 
-                ? 'btn-neon-primary' 
+                ? 'bg-orange-500 hover:bg-orange-400 text-white border border-orange-400/50 shadow-[0_0_15px_rgba(249,115,22,0.4)]' 
                 : 'bg-gray-800/50 border border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:border-gray-500'
             }`}
           >
