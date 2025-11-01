@@ -1,7 +1,7 @@
 
 // @ts-nocheck
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -34,6 +34,7 @@ const Navigation = ({
   user,
   isAuthenticated 
 }: NavigationProps) => {
+  const navigate = useNavigate();
   return (
     <nav className="bg-white border-b border-neutral-200 px-6 py-4 shadow-sm">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -105,11 +106,10 @@ const Navigation = ({
                       </div>
                     </div>
                   </div>
-                  <DropdownMenuItem className="rounded-lg hover:bg-neutral-50 transition-colors duration-200">
-                    <User className="mr-3 h-4 w-4 text-azul" />
-                    <span className="text-neutral-700">Profile</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="rounded-lg hover:bg-neutral-50 transition-colors duration-200">
+                  <DropdownMenuItem 
+                    className="rounded-lg hover:bg-neutral-50 transition-colors duration-200"
+                    onClick={() => navigate('/settings')}
+                  >
                     <Settings className="mr-3 h-4 w-4 text-azul" />
                     <span className="text-neutral-700">Settings</span>
                   </DropdownMenuItem>

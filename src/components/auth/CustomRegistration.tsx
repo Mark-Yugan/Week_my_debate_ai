@@ -15,6 +15,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Mail, Lock, User, ArrowLeft } from 'lucide-react';
 import { useCustomAuth } from '@/hooks/useCustomAuth';
+import { CustomAuthService } from '@/services/customAuthService';
+import ProfileCreation from './ProfileCreation';
 
 const registrationSchema = z.object({
   fullName: z.string().min(2, { message: "Full name must be at least 2 characters." }),
@@ -41,12 +43,15 @@ interface CustomRegistrationProps {
 }
 
 const CustomRegistration = ({ onSwitchToLogin, onRegistrationSuccess }: CustomRegistrationProps) => {
-  const [step, setStep] = useState<'register' | 'verify'>('register');
+  const [step, setStep] = useState<'register' | 'verify' | 'profile'>('register');
   const [registrationEmail, setRegistrationEmail] = useState('');
+  const [registrationPassword, setRegistrationPassword] = useState('');
+  const [registrationFullName, setRegistrationFullName] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   const [loading, setLoading] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
   const { toast } = useToast();
-  const { register, verifyEmail } = useCustomAuth();
+  const { register, verifyEmail, login } = useCustomAuth();
 
   const registrationForm = useForm<z.infer<typeof registrationSchema>>({
     resolver: zodResolver(registrationSchema),
@@ -75,6 +80,8 @@ const CustomRegistration = ({ onSwitchToLogin, onRegistrationSuccess }: CustomRe
       
       if (response.success) {
         setRegistrationEmail(values.email);
+        setRegistrationPassword(values.password);
+        setRegistrationFullName(values.fullName);
         // Clear the verification form before switching
         verificationForm.reset({ verificationCode: "" });
         setStep('verify');
@@ -114,7 +121,8 @@ const CustomRegistration = ({ onSwitchToLogin, onRegistrationSuccess }: CustomRe
           title: "Email Verified",
           description: "Your account has been verified successfully!"
         });
-        onRegistrationSuccess();
+        // Move to profile creation step instead of completing registration
+        setStep('profile');
       } else {
         toast({
           title: "Verification Failed",
@@ -132,6 +140,100 @@ const CustomRegistration = ({ onSwitchToLogin, onRegistrationSuccess }: CustomRe
       setLoading(false);
     }
   };
+
+  const handleProfileComplete = async (profileData: {
+    avatarUrl?: string;
+    age?: number;
+    institution?: string;
+    userRole?: 'student' | 'teacher' | 'admin';
+  }) => {
+    setLoading(true);
+    
+    try {
+      // Re-register with profile data, or update profile after login
+      // Since register_user now accepts profile fields, we need to call it again
+      // But we already registered, so we'll login first and then update profile
+      const loginResponse = await login(registrationEmail, registrationPassword);
+      
+      if (loginResponse.success && loginResponse.user) {
+        // Update profile if profile data was provided
+        if (profileData.avatarUrl || profileData.age || profileData.institution || profileData.userRole) {
+          await CustomAuthService.updateProfile(
+            loginResponse.user.id,
+            registrationFullName,
+            profileData.avatarUrl,
+            profileData.age,
+            profileData.institution,
+            profileData.userRole
+          );
+        }
+        
+        toast({
+          title: "Welcome!",
+          description: "Your account has been created successfully!"
+        });
+        onRegistrationSuccess();
+      } else {
+        // Even if login fails, try to proceed
+        toast({
+          title: "Profile Created",
+          description: "Please login to continue."
+        });
+        onRegistrationSuccess();
+      }
+    } catch (error) {
+      console.error('Profile completion error:', error);
+      toast({
+        title: "Profile Created",
+        description: "Please login to continue."
+      });
+      onRegistrationSuccess();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleProfileSkip = async () => {
+    setLoading(true);
+    
+    try {
+      // Login without profile data
+      const loginResponse = await login(registrationEmail, registrationPassword);
+      
+      if (loginResponse.success) {
+        toast({
+          title: "Welcome!",
+          description: "Your account has been created successfully!"
+        });
+        onRegistrationSuccess();
+      } else {
+        toast({
+          title: "Registration Complete",
+          description: "Please login to continue."
+        });
+        onRegistrationSuccess();
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      toast({
+        title: "Registration Complete",
+        description: "Please login to continue."
+      });
+      onRegistrationSuccess();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (step === 'profile') {
+    return (
+      <ProfileCreation
+        email={registrationEmail}
+        onComplete={(profileData) => handleProfileComplete(profileData)}
+        onSkip={handleProfileSkip}
+      />
+    );
+  }
 
   if (step === 'verify') {
     console.log('Verification step - registrationEmail:', registrationEmail);

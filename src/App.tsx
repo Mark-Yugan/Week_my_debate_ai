@@ -9,6 +9,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CustomAuthProvider } from "./hooks/useCustomAuth";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
+import Settings from "./pages/Settings";
 import NewAuthPage from "./components/NewAuthPage";
 import AuthTestPage from "./components/AuthTestPage";
 import DebugVerificationInput from "./components/debug/DebugVerificationInput";
@@ -30,6 +31,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/settings" element={<Settings />} />
             <Route path="/auth-test" element={<AuthTestPage />} />
             <Route path="/debug-input" element={<DebugVerificationInput />} />
             <Route path="/simple-test" element={<SimpleVerificationTest />} />

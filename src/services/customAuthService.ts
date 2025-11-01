@@ -11,7 +11,11 @@ export interface User {
   id: string;
   email: string;
   full_name?: string;
+  avatar_url?: string;
+  age?: number;
+  institution?: string;
   user_role: 'student' | 'teacher' | 'admin';
+  speech_level?: 'beginner' | 'amateur' | 'expert';
   tokens: number;
   email_verified: boolean;
 }
@@ -41,7 +45,11 @@ export class CustomAuthService {
   static async register(
     email: string, 
     password: string, 
-    fullName?: string
+    fullName?: string,
+    avatarUrl?: string,
+    age?: number,
+    institution?: string,
+    userRole?: 'student' | 'teacher' | 'admin'
   ): Promise<AuthResponse> {
     try {
       console.log('Registering user:', email);
@@ -50,7 +58,11 @@ export class CustomAuthService {
       const { data, error } = await supabase.rpc('register_user', {
         p_email: email,
         p_password: password,
-        p_full_name: fullName || null
+        p_full_name: fullName || null,
+        p_avatar_url: avatarUrl || null,
+        p_age: age || null,
+        p_institution: institution || null,
+        p_user_role: userRole || 'student'
       });
 
       if (error) {
@@ -402,6 +414,70 @@ export class CustomAuthService {
       return {
         success: true,
         message: 'Logged out successfully'
+      };
+    }
+  }
+
+  /**
+   * Update user profile
+   */
+  static async updateProfile(
+    userId: string,
+    fullName?: string,
+    avatarUrl?: string,
+    age?: number,
+    institution?: string,
+    userRole?: 'student' | 'teacher' | 'admin',
+    speechLevel?: 'beginner' | 'amateur' | 'expert'
+  ): Promise<AuthResponse> {
+    try {
+      console.log('Updating profile for user:', userId);
+
+      const { data, error } = await supabase.rpc('update_user_profile', {
+        p_user_id: userId,
+        p_full_name: fullName || null,
+        p_avatar_url: avatarUrl || null,
+        p_age: age || null,
+        p_institution: institution || null,
+        p_user_role: userRole || null,
+        p_speech_level: speechLevel || null
+      });
+
+      if (error) {
+        console.error('Profile update error:', error);
+        return {
+          success: false,
+          error: error.message || 'Profile update failed'
+        };
+      }
+
+      const result = data as any;
+      
+      if (!result.success) {
+        return {
+          success: false,
+          error: result.error || 'Profile update failed'
+        };
+      }
+
+      // Update session data with new user info
+      const sessionData = this.getSessionData();
+      if (sessionData && result.user) {
+        sessionData.user = result.user;
+        this.setSessionData(sessionData);
+      }
+
+      return {
+        success: true,
+        user: result.user,
+        message: result.message || 'Profile updated successfully'
+      };
+
+    } catch (error) {
+      console.error('Profile update exception:', error);
+      return {
+        success: false,
+        error: error.message || 'Profile update failed'
       };
     }
   }

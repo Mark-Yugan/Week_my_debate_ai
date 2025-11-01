@@ -12,7 +12,7 @@ interface AuthContextType {
   loading: boolean;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<AuthResponse>;
-  register: (email: string, password: string, fullName?: string) => Promise<AuthResponse>;
+  register: (email: string, password: string, fullName?: string, avatarUrl?: string, age?: number, institution?: string, userRole?: 'student' | 'teacher' | 'admin') => Promise<AuthResponse>;
   verifyEmail: (email: string, code: string) => Promise<AuthResponse>;
   requestPasswordReset: (email: string) => Promise<AuthResponse>;
   resetPassword: (email: string, code: string, newPassword: string) => Promise<AuthResponse>;
@@ -79,9 +79,13 @@ export const CustomAuthProvider = ({ children }: { children: React.ReactNode }) 
   const register = async (
     email: string, 
     password: string, 
-    fullName?: string
+    fullName?: string,
+    avatarUrl?: string,
+    age?: number,
+    institution?: string,
+    userRole?: 'student' | 'teacher' | 'admin'
   ): Promise<AuthResponse> => {
-    return await CustomAuthService.register(email, password, fullName);
+    return await CustomAuthService.register(email, password, fullName, avatarUrl, age, institution, userRole);
   };
 
   const verifyEmail = async (email: string, code: string): Promise<AuthResponse> => {
